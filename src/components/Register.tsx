@@ -81,11 +81,11 @@ function Register() {
               className="flex items-center justify-center space-x-2 h-12 border border-black rounded-md hover:bg-gray-50 transition-colors"
               onClick={handleGoogleLogin}
             >
-              <img src="/src/assets/google.svg" alt="" />
+              <img src="/google.svg" alt="" />
               <span>Google</span>
             </button>
             <button className="flex items-center justify-center space-x-2 bg-[#F3F2F1] h-12 rounded-md hover:bg-gray-200 transition-colors">
-              <img src="/src/assets/microsoft.svg" alt="" />
+              <img src="/microsoft.svg" alt="" />
               <span>Microsoft</span>
             </button>
             <button

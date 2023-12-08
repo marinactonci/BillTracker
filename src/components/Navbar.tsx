@@ -48,7 +48,7 @@ function Navbar() {
       <nav className="flex items-center justify-between px-6 border-b h-[8vh]">
         <Link to="/" className="flex gap-3 items-center">
           <img
-            src="/src/assets/logo.svg"
+            src="/logo.svg"
             alt=""
             className="w-8 h-8 hover:scale-110 transform transition duration-300 ease-in-out"
           />
@@ -95,7 +95,7 @@ function Navbar() {
               <label tabIndex={0} className="w-auto cursor-pointer">
                 <div className="flex items-center gap-1">
                   <img
-                    src="src/assets/user.webp"
+                    src="user.webp"
                     alt="Change language"
                     className="w-12 rounded-full border-2"
                   />

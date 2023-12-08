@@ -36,7 +36,7 @@ function Hero({ handleClick }: { handleClick: () => void }) {
             </button>
           </div>
         </div>
-        <img src="/src/assets/landing.png" alt="" className="rounded-full" />
+        <img src="/landing.png" alt="" className="rounded-full" />
       </main>
     </>
   );
