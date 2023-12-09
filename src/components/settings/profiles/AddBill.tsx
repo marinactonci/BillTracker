@@ -2,13 +2,30 @@ import React, { useState } from "react";
 import { Modal, DatePicker } from "antd";
 import dayjs from "dayjs";
 
-function AddBill({ profile }) {
+function AddBill({ profile, onSave }) {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [name, setName] = useState("");
   const [link, setLink] = useState("");
 
   const handleCancel = () => {
+    setOpen(false);
+  };
+
+  const handleSave = () => {
+    const createNewId = () => {
+      if (profile.bills.length === 0) return 1;
+      return profile.bills[profile.bills.length - 1].id + 1;
+    };
+
+    const newBill = {
+      id: createNewId(),
+      name: name,
+      link: link,
+      items: [],
+    };
+
+    onSave(newBill);
     setOpen(false);
   };
 
@@ -93,7 +110,7 @@ function AddBill({ profile }) {
             </button>
             <button
               className="p-2 bg-black min-w-[70px] border border-transparent rounded-md font-semibold text-sm text-white uppercase tracking-widest hover:bg-gray-900 active:bg-gray-700 focus:outline-none focus:border-gray-700 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150"
-              onClick={() => {}}
+              onClick={handleSave}
               disabled={isLoading}
             >
               {isLoading && (

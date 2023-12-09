@@ -84,24 +84,6 @@ export async function googleLogin() {
   }
 }
 
-export async function microsoftLogin() {
-  const provider = new OAuthProvider("microsoft.com");
-  try {
-    await signInWithPopup(auth, provider);
-  } catch (error) {
-    notyf.error(error.message);
-  }
-}
-
-export async function facebookLogin() {
-  const provider = new FacebookAuthProvider();
-  try {
-    await signInWithPopup(auth, provider);
-  } catch (error) {
-    notyf.error(error.message);
-  }
-}
-
 export async function githubLogin() {
   const provider = new OAuthProvider("github.com");
   try {

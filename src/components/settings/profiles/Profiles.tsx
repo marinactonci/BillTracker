@@ -11,8 +11,8 @@ function Profiles({ onCreate, onSave, onDelete, profiles }: any) {
     await onSave(newProfile);
   };
 
-  const handleDelete = async (id) => {
-    await onDelete(id);
+  const handleDelete = async (item, profileId, billId) => {
+    await onDelete(item, profileId, billId ? billId : null);
   };
 
   return (

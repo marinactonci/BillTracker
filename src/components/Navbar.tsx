@@ -103,12 +103,12 @@ function Navbar() {
               </label>
               <ul
                 tabIndex={0}
-                className="dropdown-content z-[1] w-auto menu p-2 shadow bg-base-100 rounded-box"
+                className="dropdown-content w-auto menu p-2 shadow bg-base-100 rounded-box"
               >
                 <li>
-                  <a className="whitespace-nowrap">
+                  <Link className="whitespace-nowrap" to="/settings">
                     {user && user.displayName}
-                  </a>
+                  </Link>
                 </li>
                 <li onClick={handleSignout}>
                   <a className="whitespace-nowrap">Sign Out</a>

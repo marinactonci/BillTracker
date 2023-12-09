@@ -110,22 +110,20 @@ export async function deleteBill(userId, profileId, billId) {
 
   if (docSnap.exists()) {
     const currentProfiles = docSnap.data().profiles;
-    const profile = currentProfiles.find((p: any) => p.id === profileId);
+    const profileIndex = currentProfiles.findIndex(
+      (p: any) => p.id === profileId
+    );
 
-    if (profile) {
-      const currentBills = profile.bills;
-      const bill = currentBills.find((b: any) => b.id === billId);
+    if (profileIndex !== -1) {
+      const currentBills = currentProfiles[profileIndex].bills;
+      const billIndex = currentBills.findIndex((b: any) => b.id === billId);
 
-      if (bill) {
-        await updateDoc(docRef, {
-          profiles: arrayRemove(profile),
-        });
-        await updateDoc(docRef, {
-          profiles: arrayUnion({
-            ...profile,
-            bills: arrayRemove(bill),
-          }),
-        });
+      if (billIndex !== -1) {
+        // Remove the bill from the array
+        currentProfiles[profileIndex].bills.splice(billIndex, 1);
+
+        // Update the document with the new profiles array
+        await updateDoc(docRef, { profiles: currentProfiles });
       } else {
         console.log(`Bill with id ${billId} not found.`);
       }

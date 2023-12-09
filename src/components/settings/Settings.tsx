@@ -3,6 +3,7 @@ import {
   getProfiles,
   updateProfile,
   deleteProfile,
+  deleteBill,
 } from "../../services/firebaseFirestore";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../../services/firebaseAuth";
@@ -39,8 +40,13 @@ function Settings() {
     await fetchProfiles(user.uid);
   };
 
-  const handleOnDelete = async (id) => {
-    await deleteProfile(user.uid, id);
+  const handleOnDelete = async (item, profileId, billId) => {
+    if (item === "bill") {
+      await deleteBill(user.uid, profileId, billId);
+    } else {
+      await deleteProfile(user.uid, profileId);
+    }
+
     await fetchProfiles(user.uid);
   };
 

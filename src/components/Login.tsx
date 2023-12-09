@@ -4,9 +4,7 @@ import {
   login,
   googleLogin,
   getCurrentUser,
-  microsoftLogin,
   githubLogin,
-  facebookLogin,
 } from "../services/firebaseAuth";
 
 function Login() {
@@ -43,26 +41,6 @@ function Login() {
     navigate("/");
   };
 
-  const handleMicrosoftLogin = async () => {
-    setLoading(true);
-
-    await microsoftLogin();
-
-    setLoading(false);
-
-    navigate("/");
-  };
-
-  const handleFacebookLogin = async () => {
-    setLoading(true);
-
-    await facebookLogin();
-
-    setLoading(false);
-
-    navigate("/");
-  };
-
   const handleGithubLogin = async () => {
     setLoading(true);
 
@@ -82,20 +60,13 @@ function Login() {
           <h2 className="text-2xl font-semibold text-center text-gray-700">
             Log in to your account
           </h2>
-          <div className="grid grid-cols-3 gap-4 my-4">
+          <div className="grid grid-cols-2 gap-4 my-4">
             <button
               className="flex items-center justify-center space-x-2 h-12 border border-black rounded-md hover:bg-gray-50 transition-colors"
               onClick={handleGoogleLogin}
             >
               <img src="/google.svg" alt="" />
               <span>Google</span>
-            </button>
-            <button
-              className="flex items-center justify-center space-x-2 bg-[#F3F2F1] h-12 rounded-md hover:bg-gray-200 transition-colors"
-              onClick={handleFacebookLogin}
-            >
-              <img src="/microsoft.svg" alt="" />
-              <span>Microsoft</span>
             </button>
             <button
               className="flex items-center justify-center space-x-2 h-12 bg-black text-white rounded-md hover:bg-slate-900 transition-colors"

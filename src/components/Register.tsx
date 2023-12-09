@@ -76,17 +76,13 @@ function Register() {
           <h2 className="text-2xl font-semibold text-center text-gray-700">
             Register a new account
           </h2>
-          <div className="grid grid-cols-3 gap-4 my-4">
+          <div className="grid grid-cols-2 gap-4 my-4">
             <button
               className="flex items-center justify-center space-x-2 h-12 border border-black rounded-md hover:bg-gray-50 transition-colors"
               onClick={handleGoogleLogin}
             >
               <img src="/google.svg" alt="" />
               <span>Google</span>
-            </button>
-            <button className="flex items-center justify-center space-x-2 bg-[#F3F2F1] h-12 rounded-md hover:bg-gray-200 transition-colors">
-              <img src="/microsoft.svg" alt="" />
-              <span>Microsoft</span>
             </button>
             <button
               className="flex items-center justify-center space-x-2 h-12 bg-black text-white rounded-md hover:bg-slate-900 transition-colors"
@@ -156,7 +152,7 @@ function Register() {
               />
             </div>
             <button
-              className="w-full p-2 mt-1 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-500 active:bg-indigo-700 focus:outline-none focus:border-indigo-700 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150"
+              className="w-full p-2 mt-1 bg-black border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-900 active:bg-gray-700 focus:outline-none focus:border-gray-700 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150"
               type="submit"
               onClick={handleRegister}
               disabled={isDisabled}
@@ -169,7 +165,7 @@ function Register() {
               Already have an account?{" "}
             </span>
             <Link
-              className="ml-1 text-sm font-medium text-indigo-600 hover:underline"
+              className="ml-1 text-sm font-medium text-gray-600 hover:underline"
               to="/login"
             >
               Log In
