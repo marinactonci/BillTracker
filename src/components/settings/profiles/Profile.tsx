@@ -237,7 +237,7 @@ function Profile({ onSave, onDelete, profile }) {
                       <div className="flex gap-3">
                         <a
                           className="text-blue-500 hover:text-blue-600"
-                          href={bill.link}
+                          href={bill.eBill.link}
                           target="_blank"
                           rel="noreferrer"
                         >

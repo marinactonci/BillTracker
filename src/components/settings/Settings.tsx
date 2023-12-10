@@ -15,6 +15,7 @@ function Settings() {
   const [profiles, setProfiles] = useState([] as any);
   const [user, setUser] = useState({} as any);
   const [isLoggedIn, setIsLoggedIn] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigator = useNavigate();
 

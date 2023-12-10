@@ -1,12 +1,24 @@
 import React, { useState } from "react";
-import { Modal, DatePicker } from "antd";
-import dayjs from "dayjs";
+import { Modal } from "antd";
+import { Notyf } from "notyf";
+import "notyf/notyf.min.css";
 
 function AddBill({ profile, onSave }) {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [name, setName] = useState("");
   const [link, setLink] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const notyf = new Notyf({
+    duration: 4000,
+    position: {
+      x: "right",
+      y: "top",
+    },
+    dismissible: true,
+  });
 
   const handleCancel = () => {
     setOpen(false);
@@ -18,10 +30,19 @@ function AddBill({ profile, onSave }) {
       return profile.bills[profile.bills.length - 1].id + 1;
     };
 
+    if (name === "") {
+      notyf.error("Please enter a name");
+      return;
+    }
+
     const newBill = {
       id: createNewId(),
       name: name,
-      link: link,
+      eBill: {
+        link: link,
+        username: username,
+        password: password,
+      },
       items: [],
     };
 
@@ -54,6 +75,7 @@ function AddBill({ profile, onSave }) {
             <span className="text-gray-700">Name</span>
             <input
               type="text"
+              placeholder="Bill name"
               className="input input-bordered text-sm placeholder:font-light placeholder:text-sm placeholder:text-gray-400"
               onChange={(e) => {
                 setName(e.target.value);
@@ -87,14 +109,40 @@ function AddBill({ profile, onSave }) {
               }}
             />
           </label> */}
+          <label className="text-gray-900 mt-3 text-lg">
+            E-bill (optional)
+          </label>
           <label className="flex flex-col w-full">
             <span className="text-gray-700">Link</span>
             <input
               type="text"
               className="input input-bordered text-sm placeholder:font-light placeholder:text-sm placeholder:text-gray-400"
-              placeholder="Eg. New York"
+              placeholder="https://www.example.com"
               onChange={(e) => {
                 setLink(e.target.value);
+              }}
+            />
+          </label>
+          <label className="text-gray-900 text-md">Credentials</label>
+          <label className="flex flex-col w-full">
+            <span className="text-gray-700">Username</span>
+            <input
+              type="text"
+              className="input input-bordered text-sm placeholder:font-light placeholder:text-sm placeholder:text-gray-400"
+              placeholder="Username or email for login"
+              onChange={(e) => {
+                setUsername(e.target.value);
+              }}
+            />
+          </label>
+          <label className="flex flex-col w-full">
+            <span className="text-gray-700">Password</span>
+            <input
+              type="text"
+              className="input input-bordered text-sm placeholder:font-light placeholder:text-sm placeholder:text-gray-400"
+              placeholder="Password for login"
+              onChange={(e) => {
+                setPassword(e.target.value);
               }}
             />
           </label>
@@ -116,7 +164,7 @@ function AddBill({ profile, onSave }) {
               {isLoading && (
                 <span className="loading loading-spinner loading-md"></span>
               )}
-              {!isLoading && "Save"}
+              {!isLoading && "Add"}
             </button>
           </div>
         </div>
