@@ -80,7 +80,10 @@ function CreateProfile({ onCreateProfile }) {
         onOk={() => setOpen(false)}
         onCancel={() => setOpen(false)}
       >
-        <form method="dialog" className="flex flex-col gap-3">
+        <form
+          className="flex flex-col gap-3"
+          onSubmit={(e) => e.preventDefault()}
+        >
           <label className="flex flex-col w-full">
             <span className="text-gray-700">Name</span>
             <input

@@ -89,7 +89,7 @@ function Login() {
               </span>
             </div>
           </div>
-          <form className="space-y-6">
+          <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
             <div>
               <label
                 className="text-sm font-medium text-gray-700"

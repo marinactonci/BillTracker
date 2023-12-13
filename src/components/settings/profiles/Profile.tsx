@@ -4,6 +4,8 @@ import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
 import countries from "../../../utils/countries.json";
 import AddBill from "./AddBill";
+import Bill from "./Bill";
+import ConfirmModal from "../ConfirmModal";
 
 function Profile({ onSave, onDelete, profile }) {
   const [open, setOpen] = useState(false);
@@ -137,7 +139,10 @@ function Profile({ onSave, onDelete, profile }) {
             onChange={() => setTab(1)}
           />
           <div role="tabpanel" className="tab-content pt-4 min-h-[450px]">
-            <form method="dialog" className="flex flex-col gap-3">
+            <form
+              className="flex flex-col gap-3"
+              onSubmit={(e) => e.preventDefault()}
+            >
               <label className="flex flex-col w-full">
                 <span className="text-gray-700">Name</span>
                 <input
@@ -229,28 +234,7 @@ function Profile({ onSave, onDelete, profile }) {
               <>
                 <div className="flex flex-col gap-3 mt-3">
                   {profile.bills.map((bill) => (
-                    <div
-                      key={bill.id}
-                      className="bg-gray-200 flex justify-between p-2 rounded-lg hover:bg-gray-300 transition-colors"
-                    >
-                      <span>{bill.name}</span>
-                      <div className="flex gap-3">
-                        <a
-                          className="text-blue-500 hover:text-blue-600"
-                          href={bill.eBill.link}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <i className="fa-solid fa-external-link"></i>
-                        </a>
-                        <ConfirmModal
-                          onDelete={() => handleDelete(bill.id, "bill")}
-                          isLoading={isLoadingDelete}
-                          name={bill.name}
-                          item={"bill"}
-                        />
-                      </div>
-                    </div>
+                    <Bill bill={bill} onDelete={handleDelete} key={bill.id} />
                   ))}
                 </div>
               </>
@@ -290,69 +274,6 @@ function Profile({ onSave, onDelete, profile }) {
               </button>
             )}
           </div>
-        </div>
-      </Modal>
-    </>
-  );
-}
-
-function ConfirmModal({ onDelete, isLoading, name, item }) {
-  const [openConfirm, setOpenConfirm] = useState(false);
-
-  return (
-    <>
-      {item === "profile" ? (
-        <>
-          <button
-            className="p-2 bg-red-600 min-w-[79px] border border-transparent rounded-md font-semibold text-sm text-white uppercase tracking-widest hover:bg-red-700 active:bg-red-800 focus:outline-none focus:border-red-400 focus:ring ring-red-300 disabled:opacity-25 transition ease-in-out duration-150"
-            onClick={() => {
-              setOpenConfirm(true);
-            }}
-          >
-            Delete
-          </button>
-        </>
-      ) : (
-        <div
-          onClick={() => {
-            setOpenConfirm(true);
-          }}
-        >
-          <i className="fa-solid fa-trash text-red-600 hover:text-red-700 transition-colors hover:cursor-pointer"></i>
-        </div>
-      )}
-
-      <Modal
-        title={"Are you sure you want to delete " + name + "?"}
-        centered
-        open={openConfirm}
-        destroyOnClose
-        keyboard
-        okText="Create"
-        cancelText="Cancel"
-        onOk={() => setOpenConfirm(false)}
-        onCancel={() => setOpenConfirm(false)}
-        footer={null}
-      >
-        <div className="flex gap-3 items-center justify-end mt-12">
-          <button
-            className="p-2 border bg-white border-black rounded-md font-semibold text-sm hover:bg-gray-50 transition-colors uppercase"
-            onClick={() => setOpenConfirm(false)}
-            disabled={isLoading}
-          >
-            Cancel
-          </button>
-          <button
-            className="p-2 bg-red-600 min-w-[79px] border border-transparent rounded-md font-semibold text-sm text-white uppercase tracking-widest hover:bg-red-700 active:bg-red-800 focus:outline-none focus:border-red-400 focus:ring ring-red-300 disabled:opacity-25 transition ease-in-out duration-150"
-            onClick={onDelete}
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <span className="loading loading-spinner loading-md"></span>
-            ) : (
-              "Delete"
-            )}
-          </button>
         </div>
       </Modal>
     </>

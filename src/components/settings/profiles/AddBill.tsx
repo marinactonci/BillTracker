@@ -20,7 +20,15 @@ function AddBill({ profile, onSave }) {
     dismissible: true,
   });
 
+  const reset = () => {
+    setName("");
+    setLink("");
+    setUsername("");
+    setPassword("");
+  };
+
   const handleCancel = () => {
+    reset();
     setOpen(false);
   };
 
@@ -47,6 +55,7 @@ function AddBill({ profile, onSave }) {
     };
 
     onSave(newBill);
+    reset();
     setOpen(false);
   };
 
@@ -70,7 +79,10 @@ function AddBill({ profile, onSave }) {
         onOk={() => setOpen(false)}
         onCancel={() => handleCancel()}
       >
-        <form className="flex flex-col gap-3">
+        <form
+          className="flex flex-col gap-3"
+          onSubmit={(e) => e.preventDefault()}
+        >
           <label className="flex flex-col w-full">
             <span className="text-gray-700">Name</span>
             <input
