@@ -1,7 +1,10 @@
 import React, { useState } from "react";
-import { Modal } from "antd";
+import { Modal, Input } from "antd";
+import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
+import CryptoJS from "crypto-js";
+import { secretKey } from "../../../services/firebaseConfig";
 
 function AddBill({ profile, onSave }) {
   const [open, setOpen] = useState(false);
@@ -10,6 +13,7 @@ function AddBill({ profile, onSave }) {
   const [link, setLink] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
   const notyf = new Notyf({
     duration: 4000,
@@ -32,6 +36,10 @@ function AddBill({ profile, onSave }) {
     setOpen(false);
   };
 
+  const encrypt = (plainText) => {
+    return CryptoJS.AES.encrypt(plainText, secretKey).toString();
+  };
+
   const handleSave = () => {
     const createNewId = () => {
       if (profile.bills.length === 0) return 1;
@@ -48,8 +56,8 @@ function AddBill({ profile, onSave }) {
       name: name,
       eBill: {
         link: link,
-        username: username,
-        password: password,
+        username: encrypt(username),
+        password: encrypt(password),
       },
       items: [],
     };
@@ -85,50 +93,21 @@ function AddBill({ profile, onSave }) {
         >
           <label className="flex flex-col w-full">
             <span className="text-gray-700">Name</span>
-            <input
+            <Input
               type="text"
               placeholder="Bill name"
-              className="input input-bordered text-sm placeholder:font-light placeholder:text-sm placeholder:text-gray-400"
               onChange={(e) => {
                 setName(e.target.value);
               }}
             />
           </label>
-
-          {/* <label className="flex flex-col w-full">
-            <span className="text-gray-700">Due date</span>
-            <DatePicker
-              className="input input-bordered w-full m-0 focus:border-gray-500 !placeholder:font-bold"
-              format={"DD.MM.YYYY."}
-              showToday
-              onChange={(value) => {
-                if (!value) return;
-                console.log(value);
-                setDueDate(value);
-              }}
-            />
-          </label> */}
-          {/* <label className="flex flex-col w-full">
-            <span className="text-gray-700">Month</span>
-            <DatePicker
-              className="input input-bordered w-full m-0 focus:border-gray-500 !placeholder:font-bold"
-              format={"MM.YYYY."}
-              picker="month"
-              onChange={(value) => {
-                if (!value) return;
-                console.log(value);
-                setMonth(value);
-              }}
-            />
-          </label> */}
           <label className="text-gray-900 mt-3 text-lg">
             E-bill (optional)
           </label>
           <label className="flex flex-col w-full">
             <span className="text-gray-700">Link</span>
-            <input
+            <Input
               type="text"
-              className="input input-bordered text-sm placeholder:font-light placeholder:text-sm placeholder:text-gray-400"
               placeholder="https://www.example.com"
               onChange={(e) => {
                 setLink(e.target.value);
@@ -138,9 +117,8 @@ function AddBill({ profile, onSave }) {
           <label className="text-gray-900 text-md">Credentials</label>
           <label className="flex flex-col w-full">
             <span className="text-gray-700">Username</span>
-            <input
+            <Input
               type="text"
-              className="input input-bordered text-sm placeholder:font-light placeholder:text-sm placeholder:text-gray-400"
               placeholder="Username or email for login"
               onChange={(e) => {
                 setUsername(e.target.value);
@@ -149,13 +127,16 @@ function AddBill({ profile, onSave }) {
           </label>
           <label className="flex flex-col w-full">
             <span className="text-gray-700">Password</span>
-            <input
-              type="text"
-              className="input input-bordered text-sm placeholder:font-light placeholder:text-sm placeholder:text-gray-400"
+            <Input.Password
               placeholder="Password for login"
-              onChange={(e) => {
-                setPassword(e.target.value);
+              visibilityToggle={{
+                visible: passwordVisible,
+                onVisibleChange: setPasswordVisible,
               }}
+              iconRender={(visible) =>
+                visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+              }
+              onChange={(e) => setPassword(e.target.value)}
             />
           </label>
         </form>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Modal, AutoComplete } from "antd";
+import { Modal, AutoComplete, Input } from "antd";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
 import { getCurrentUser } from "../../../services/firebaseAuth";
@@ -86,9 +86,8 @@ function CreateProfile({ onCreateProfile }) {
         >
           <label className="flex flex-col w-full">
             <span className="text-gray-700">Name</span>
-            <input
+            <Input
               type="text"
-              className="input input-bordered text-sm placeholder:font-light placeholder:text-sm placeholder:text-gray-400"
               placeholder="Enter profile name"
               onChange={(e) => {
                 setName(e.target.value);
@@ -98,9 +97,8 @@ function CreateProfile({ onCreateProfile }) {
           <label className="text-gray-900 mt-3 text-lg">Address</label>
           <label className="flex flex-col w-full">
             <span className="text-gray-700">Street</span>
-            <input
+            <Input
               type="text"
-              className="input input-bordered text-sm placeholder:font-light placeholder:text-sm placeholder:text-gray-400"
               placeholder="Eg. 123 Main St."
               onChange={(e) => {
                 setStreet(e.target.value);
@@ -109,9 +107,8 @@ function CreateProfile({ onCreateProfile }) {
           </label>
           <label className="flex flex-col w-full">
             <span className="text-gray-700">City</span>
-            <input
+            <Input
               type="text"
-              className="input input-bordered text-sm placeholder:font-light placeholder:text-sm placeholder:text-gray-400"
               placeholder="Eg. New York"
               onChange={(e) => {
                 setCity(e.target.value);
@@ -121,8 +118,6 @@ function CreateProfile({ onCreateProfile }) {
           <label className="flex flex-col w-full">
             <span className="text-gray-700">Country</span>
             <AutoComplete
-              className="input input-bordered w-full m-0 p-0 focus:border-gray-500 !placeholder:font-bold"
-              bordered={false}
               allowClear
               options={countries.map((country) => {
                 return {

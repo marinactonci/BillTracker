@@ -4,6 +4,7 @@ import {
   updateProfile,
   deleteProfile,
   deleteBill,
+  updateBill,
 } from "../../services/firebaseFirestore";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../../services/firebaseAuth";
@@ -38,6 +39,11 @@ function Settings() {
 
   const handleOnSave = async (newProfile) => {
     await updateProfile(user.uid, newProfile);
+    await fetchProfiles(user.uid);
+  };
+
+  const handleOnSaveEdit = async (newProfile) => {
+    await updateBill(user.uid, "1", newProfile);
     await fetchProfiles(user.uid);
   };
 
@@ -103,6 +109,7 @@ function Settings() {
               profiles={profiles}
               onCreate={handleOnCreate}
               onSave={handleOnSave}
+              onSaveEdit={handleOnSaveEdit}
               onDelete={handleOnDelete}
             />
           </div>

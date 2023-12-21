@@ -13,6 +13,8 @@
     "@fortawesome/fontawesome": "^1.1.8",
     "@fortawesome/fontawesome-free": "^6.4.2",
     "antd": "^5.11.4",
+    "bcryptjs": "^2.4.3",
+    "crypto-js": "^4.2.0",
     "firebase": "^10.6.0",
     "notyf": "^3.10.0",
     "react": "^18.2.0",

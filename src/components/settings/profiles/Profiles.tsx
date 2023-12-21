@@ -2,13 +2,17 @@ import React from "react";
 import Profile from "./Profile";
 import CreateProfile from "./CreateProfile";
 
-function Profiles({ onCreate, onSave, onDelete, profiles }: any) {
+function Profiles({ onCreate, onSave, onSaveEdit, onDelete, profiles }: any) {
   const handleOnCreate = async () => {
     await onCreate();
   };
 
   const handleSave = async (newProfile) => {
     await onSave(newProfile);
+  };
+
+  const handleSaveEdit = async (newProfile) => {
+    await onSaveEdit(newProfile);
   };
 
   const handleDelete = async (item, profileId, billId) => {
@@ -26,6 +30,7 @@ function Profiles({ onCreate, onSave, onDelete, profiles }: any) {
             <Profile
               profile={profile}
               onSave={handleSave}
+              onSaveEdit={handleSaveEdit}
               key={profile.id}
               onDelete={handleDelete}
             />

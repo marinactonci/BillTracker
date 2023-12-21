@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Modal, AutoComplete } from "antd";
+import { Modal, AutoComplete, Input } from "antd";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
 import countries from "../../../utils/countries.json";
@@ -7,7 +7,7 @@ import AddBill from "./AddBill";
 import Bill from "./Bill";
 import ConfirmModal from "../ConfirmModal";
 
-function Profile({ onSave, onDelete, profile }) {
+function Profile({ onSave, onSaveEdit, onDelete, profile }) {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [street, setStreet] = useState("");
@@ -73,6 +73,24 @@ function Profile({ onSave, onDelete, profile }) {
         country: profile.address.country,
       },
       bills: [...profile.bills, bill],
+    };
+    onSave(newProfile);
+  };
+
+  const handleSaveEdit = (bill) => {
+    const newProfile = {
+      id: profile.id,
+      name: profile.name,
+      address: {
+        street: profile.address.street,
+        city: profile.address.city,
+        country: profile.address.country,
+      },
+      bills: profile.bills.map((billItem) => {
+        if (billItem.id === bill.id) {
+          return bill;
+        } else return billItem;
+      }),
     };
     onSave(newProfile);
   };
@@ -145,10 +163,9 @@ function Profile({ onSave, onDelete, profile }) {
             >
               <label className="flex flex-col w-full">
                 <span className="text-gray-700">Name</span>
-                <input
+                <Input
                   type="text"
-                  className="input input-bordered text-sm placeholder:font-light placeholder:text-sm placeholder:text-gray-400"
-                  placeholder="Enter profile name"
+                  placeholder="Entert profile name"
                   defaultValue={name}
                   onChange={(e) => {
                     setName(e.target.value);
@@ -158,9 +175,8 @@ function Profile({ onSave, onDelete, profile }) {
               <label className="text-gray-900 mt-3 text-lg">Address</label>
               <label className="flex flex-col w-full">
                 <span className="text-gray-700">Street</span>
-                <input
+                <Input
                   type="text"
-                  className="input input-bordered text-sm placeholder:font-light placeholder:text-sm placeholder:text-gray-400"
                   placeholder="Eg. 123 Main St."
                   defaultValue={street}
                   onChange={(e) => {
@@ -170,9 +186,8 @@ function Profile({ onSave, onDelete, profile }) {
               </label>
               <label className="flex flex-col w-full">
                 <span className="text-gray-700">City</span>
-                <input
+                <Input
                   type="text"
-                  className="input input-bordered text-sm placeholder:font-light placeholder:text-sm placeholder:text-gray-400"
                   placeholder="Eg. New York"
                   defaultValue={city}
                   onChange={(e) => {
@@ -183,7 +198,7 @@ function Profile({ onSave, onDelete, profile }) {
               <label className="flex flex-col w-full">
                 <span className="text-gray-700">Country</span>
                 <AutoComplete
-                  className="input input-bordered w-full m-0 p-0 focus:border-gray-500 !placeholder:font-bold"
+                  className="input input-bordered w-full m-0 p-0 focus:border-gray-500 !placeholder:font-bold hover:border-gray-500 transition-colors"
                   bordered={false}
                   allowClear
                   defaultValue={country}
@@ -234,7 +249,12 @@ function Profile({ onSave, onDelete, profile }) {
               <>
                 <div className="flex flex-col gap-3 mt-3">
                   {profile.bills.map((bill) => (
-                    <Bill bill={bill} onDelete={handleDelete} key={bill.id} />
+                    <Bill
+                      bill={bill}
+                      onDelete={handleDelete}
+                      key={bill.id}
+                      onSaveEdit={handleSaveEdit}
+                    />
                   ))}
                 </div>
               </>

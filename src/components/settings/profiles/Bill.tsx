@@ -1,12 +1,24 @@
 import React, { useEffect, useState } from "react";
 import ConfirmModal from "../ConfirmModal";
 import { Modal } from "antd";
+import { DatePicker, InputNumber, Input } from "antd";
+import dayjs from "dayjs";
+import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
+import { secretKey } from "../../../services/firebaseConfig";
+import CryptoJS from "crypto-js";
 
-function Bill({ onDelete, bill }) {
+function Bill({ onDelete, onSaveEdit, bill }) {
   const [name, setName] = useState("");
   const [link, setLink] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordVisible, setPasswordVisible] = useState(false);
+
+  const [dueDate, setDueDate] = useState("");
+  const [amount, setAmount] = useState(0.0);
+  const [isPaid, setIsPaid] = useState(false);
+  const [month, setMonth] = useState("");
+
   const [openEdit, setOpenEdit] = useState(false);
   const [openAdd, setOpenAdd] = useState(false);
 
@@ -14,19 +26,49 @@ function Bill({ onDelete, bill }) {
     reset();
   }, []);
 
+  const onAmountChange = (value) => {
+    setAmount(value);
+  };
+
   const handleDelete = async (id, item) => {
     onDelete(id, item);
   };
 
+  const encrypt = (plainText) => {
+    return plainText.length > 0
+      ? CryptoJS.AES.encrypt(plainText, secretKey).toString()
+      : "";
+  };
+
+  function decrypt(cipherText: string) {
+    if (cipherText.length === 0) return "";
+    const bytes = CryptoJS.AES.decrypt(cipherText, secretKey);
+    return bytes.toString(CryptoJS.enc.Utf8);
+  }
+
   const reset = () => {
     setName(bill.name);
     setLink(bill.eBill.link);
-    setUsername(bill.eBill.username);
-    setPassword(bill.eBill.password);
+    setUsername(decrypt(bill.eBill.username));
+    setPassword(decrypt(bill.eBill.password));
   };
 
   const handleCancelEdit = () => {
     reset();
+    setOpenEdit(false);
+  };
+
+  const handleSaveEdit = () => {
+    const newBill = {
+      id: bill.id,
+      name: name,
+      eBill: {
+        link: link,
+        username: encrypt(username),
+        password: encrypt(password),
+      },
+    };
+    onSaveEdit(newBill);
     setOpenEdit(false);
   };
 
@@ -100,45 +142,48 @@ function Bill({ onDelete, bill }) {
           <div className="flex flex-col gap-3">
             <div className="flex flex-col gap-1">
               <label htmlFor="name">Name</label>
-              <input
-                className="border-2 rounded-lg p-2"
+              <Input
                 type="text"
-                name="name"
-                id="name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                defaultValue={name}
+                onChange={(e) => {
+                  setName(e.target.value);
+                }}
               />
             </div>
             <div className="flex flex-col gap-1">
               <label htmlFor="link">Link</label>
-              <input
-                className="border-2 rounded-lg p-2"
+              <Input
                 type="text"
-                name="link"
-                id="link"
-                value={link}
-                onChange={(e) => setLink(e.target.value)}
+                placeholder="https://www.example.com"
+                defaultValue={link}
+                onChange={(e) => {
+                  setLink(e.target.value);
+                }}
               />
             </div>
             <div className="flex flex-col gap-1">
               <label htmlFor="username">Username</label>
-              <input
-                className="border-2 rounded-lg p-2"
+              <Input
                 type="text"
-                name="username"
-                id="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Username or email for login"
+                defaultValue={username}
+                onChange={(e) => {
+                  setUsername(e.target.value);
+                }}
               />
             </div>
             <div className="flex flex-col gap-1">
               <label htmlFor="password">Password</label>
-              <input
-                className="border-2 rounded-lg p-2"
-                type="text"
-                name="password"
-                id="password"
-                value={password}
+              <Input.Password
+                placeholder="Password for login"
+                defaultValue={password}
+                visibilityToggle={{
+                  visible: passwordVisible,
+                  onVisibleChange: setPasswordVisible,
+                }}
+                iconRender={(visible) =>
+                  visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                }
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
@@ -151,7 +196,10 @@ function Bill({ onDelete, bill }) {
               >
                 Cancel
               </button>
-              <button className="p-2 bg-black min-w-[70px] border border-transparent rounded-md font-semibold text-sm text-white uppercase tracking-widest hover:bg-gray-900 active:bg-gray-700 focus:outline-none focus:border-gray-700 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
+              <button
+                className="p-2 bg-black min-w-[70px] border border-transparent rounded-md font-semibold text-sm text-white uppercase tracking-widest hover:bg-gray-900 active:bg-gray-700 focus:outline-none focus:border-gray-700 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150"
+                onClick={() => handleSaveEdit()}
+              >
                 Save
               </button>
             </div>
@@ -167,6 +215,49 @@ function Bill({ onDelete, bill }) {
         onOk={() => setOpenAdd(false)}
         onCancel={() => handleCancelAdd()}
       >
+        <form
+          onSubmit={(e) => e.preventDefault()}
+          className="flex flex-col gap-3"
+        >
+          <label className="flex flex-col w-full">
+            <span className="text-gray-700">Month</span>
+            <DatePicker
+              format={"MM.YYYY."}
+              picker="month"
+              defaultValue={dayjs().subtract(1, "month")}
+              onChange={(value) => {
+                if (!value) return;
+                console.log(value);
+                setMonth(value.toString());
+              }}
+            />
+          </label>
+          <label className="flex flex-col w-full">
+            <span className="text-gray-700">Amount</span>
+            <InputNumber
+              className="w-full"
+              min={0}
+              defaultValue={15}
+              formatter={(value) =>
+                `${value} €`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+              }
+              onChange={onAmountChange}
+            />
+          </label>
+          <label className="flex flex-col w-full">
+            <span className="text-gray-700">Due date</span>
+            <DatePicker
+              format={"DD.MM.YYYY."}
+              showToday
+              defaultValue={dayjs()}
+              onChange={(value) => {
+                if (!value) return;
+                console.log(value.toString());
+                setDueDate(value.toString());
+              }}
+            />
+          </label>
+        </form>
         <div className="flex items-center justify-end mt-8">
           <div className="flex gap-3">
             <button

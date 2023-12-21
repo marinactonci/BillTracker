@@ -25,7 +25,7 @@ function ConfirmModal({ onDelete, isLoading = false, name, item }) {
           className="whitespace-nowrap"
         >
           <a className="whitespace-nowrap flex items-center gap-2">
-            <i className="fa-solid fa-gear"></i>
+            <i className="fa-solid fa-trash"></i>
             <div>Delete this bill</div>
           </a>
         </li>

@@ -6,10 +6,13 @@ import {
   getCurrentUser,
   githubLogin,
 } from "../services/firebaseAuth";
+import { Input } from "antd";
+import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [remember, setRemember] = useState(false);
 
@@ -97,11 +100,10 @@ function Login() {
               >
                 Email Address
               </label>
-              <input
-                className="w-full px-3 py-2 mt-1 text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-200 focus:border-indigo-500"
+              <Input
+                type="email"
                 id="email"
                 required
-                type="email"
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
@@ -112,11 +114,14 @@ function Login() {
               >
                 Password
               </label>
-              <input
-                className="w-full px-3 py-2 mt-1 text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-200 focus:border-indigo-500"
-                id="password"
-                required
-                type="password"
+              <Input.Password
+                visibilityToggle={{
+                  visible: passwordVisible,
+                  onVisibleChange: setPasswordVisible,
+                }}
+                iconRender={(visible) =>
+                  visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                }
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>

@@ -104,7 +104,11 @@ export async function addBill(userId: string, profileId: string, bill: object) {
   }
 }
 
-export async function deleteBill(userId, profileId, billId) {
+export async function deleteBill(
+  userId: string,
+  profileId: string,
+  billId: string
+) {
   const docRef = doc(db, "bills", userId);
   const docSnap = await getDoc(docRef);
 
@@ -119,13 +123,38 @@ export async function deleteBill(userId, profileId, billId) {
       const billIndex = currentBills.findIndex((b: any) => b.id === billId);
 
       if (billIndex !== -1) {
-        // Remove the bill from the array
         currentProfiles[profileIndex].bills.splice(billIndex, 1);
 
-        // Update the document with the new profiles array
         await updateDoc(docRef, { profiles: currentProfiles });
       } else {
         console.log(`Bill with id ${billId} not found.`);
+      }
+    } else {
+      console.log(`Profile with id ${profileId} not found.`);
+    }
+  } else {
+    console.log(`User with id ${userId} not found.`);
+  }
+}
+
+export async function updateBill(userId: string, profileId: string, bill: any) {
+  const docRef = doc(db, "bills", userId);
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    const currentProfiles = docSnap.data().profiles;
+    const profile = currentProfiles.find((p: any) => p.id === profileId);
+
+    if (profile) {
+      const currentBills = profile.bills;
+      const billIndex = currentBills.findIndex((b: any) => b.id === bill.id);
+
+      if (billIndex !== -1) {
+        currentProfiles[profileId].bills[billIndex] = bill;
+
+        await updateDoc(docRef, { profiles: currentProfiles });
+      } else {
+        console.log(`Bill with id ${bill.id} not found.`);
       }
     } else {
       console.log(`Profile with id ${profileId} not found.`);

@@ -10,3 +10,5 @@ const firebaseConfig = {
 };
 
 export const app = initializeApp(firebaseConfig);
+
+export const secretKey = import.meta.env.VITE_SECRET_KEY;
