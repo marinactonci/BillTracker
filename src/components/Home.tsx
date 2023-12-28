@@ -1,19 +1,33 @@
-import React, { useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useRef, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../services/firebaseAuth";
 
 function Home() {
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   const handleClick = () => {
     ref.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  useEffect(() => {
+    const listener = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+      }
+    });
+    return () => listener();
+  }, []);
+
   return (
     <>
       <Hero handleClick={handleClick} />
       <WhyChoose ref={ref} />
       <GettingStarted />
-      <Join />
+      {isLoggedIn ? <Start /> : <Join />}
     </>
   );
 }
@@ -189,8 +203,6 @@ function GettingStarted() {
 }
 
 function Join() {
-  const navigator = useNavigate();
-
   return (
     <>
       <section className=" bg-gray-100">
@@ -201,20 +213,18 @@ function Join() {
             experience the convenience of organized bill management.
           </p>
           <div className="flex gap-4 justify-center">
-            <button
+            <Link
+              to={"/register"}
               className="p-4 bg-black border border-transparent rounded-md font-semibold text-sm text-white uppercase tracking-widest hover:bg-gray-900 active:bg-gray-700 focus:outline-none focus:border-gray-700 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150"
-              onClick={() => {
-                navigator("/register");
-              }}
             >
               Sign Up Now
-            </button>
-            <button
+            </Link>
+            <Link
+              to={""}
               className="p-4 border uppercase bg-white border-black rounded-md font-semibold text-sm hover:bg-gray-50 transition-colors"
-              onClick={() => {}}
             >
               Learn More
-            </button>
+            </Link>
           </div>
           <div className="flex items-center justify-center text-xl">
             <span>Have questions? </span>
@@ -224,6 +234,58 @@ function Join() {
             >
               Contact Us
             </a>
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}
+
+function Start() {
+  return (
+    <>
+      <section className=" bg-gray-100">
+        <div className="container mx-auto text-center py-20 flex flex-col gap-4">
+          <h2 className="text-4xl font-bold">
+            Start Managing Your Bills Effortlessly
+          </h2>
+          <p className="text-xl">
+            Ready to stay on top of your expenses? With Bill Tracker, you're in
+            control. Here's what you can do:
+          </p>
+
+          <div className="flex justify-center">
+            <div className="grid grid-cols-custom gap-6 place-items-center">
+              <div className="p-4 border-2 rounded-lg w-full h-full cursor-pointer hover:scale-105 transition-transform">
+                <h2 className="text-xl font-bold">Create Your First Profile</h2>
+                <p>
+                  Begin by setting up profiles for different living places. It's
+                  the first step to organized bill management!
+                </p>
+              </div>
+              <div className="p-4 border-2 rounded-lg w-full h-full cursor-pointer hover:scale-105 transition-transform">
+                <h2 className="text-xl font-bold">Add Bills to Profiles</h2>
+                <p>
+                  Track your monthly expenses by adding bills to each profile.
+                  It's quick and easy!
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex gap-4 justify-center">
+            <Link
+              to={"/settings"}
+              className="p-4 bg-black border border-transparent rounded-md font-semibold text-sm text-white uppercase tracking-widest hover:bg-gray-900 active:bg-gray-700 focus:outline-none focus:border-gray-700 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150"
+            >
+              Add bill
+            </Link>
+            <Link
+              to={""}
+              className="p-4 border uppercase bg-white border-black rounded-md font-semibold text-sm hover:bg-gray-50 transition-colors"
+            >
+              Learn More
+            </Link>
           </div>
         </div>
       </section>
