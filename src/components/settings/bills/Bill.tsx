@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import ConfirmModal from "../ConfirmModal";
 import { Modal } from "antd";
-import { DatePicker, InputNumber, Input } from "antd";
+import { DatePicker, InputNumber, Input, Button } from "antd";
 import dayjs from "dayjs";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { secretKey } from "../../../services/firebaseConfig";
 import CryptoJS from "crypto-js";
+import AddMonth from "./AddMonth";
+import { Notyf } from "notyf";
+import "notyf/notyf.min.css";
 
 function Bill({ onDelete, onSaveEdit, bill }) {
   const [name, setName] = useState("");
@@ -21,6 +24,18 @@ function Bill({ onDelete, onSaveEdit, bill }) {
 
   const [openEdit, setOpenEdit] = useState(false);
   const [openAdd, setOpenAdd] = useState(false);
+
+  const [copyUsernameIcon, setCopyUsernameIcon] = useState("fa-solid fa-copy");
+  const [copyPasswordIcon, setCopyPasswordIcon] = useState("fa-solid fa-copy");
+
+  const notyf = new Notyf({
+    duration: 4000,
+    position: {
+      x: "right",
+      y: "top",
+    },
+    dismissible: true,
+  });
 
   useEffect(() => {
     reset();
@@ -117,9 +132,10 @@ function Bill({ onDelete, onSaveEdit, bill }) {
               >
                 <a className="whitespace-nowrap flex items-center gap-2">
                   <i className="fa-solid fa-gear"></i>
-                  <div>Manage months</div>
+                  <div>Edit monthly instances</div>
                 </a>
               </li>
+              <AddMonth bill={bill} />
               <ConfirmModal
                 onDelete={() => handleDelete(bill.id, "bill")}
                 name={bill.name}
@@ -152,40 +168,80 @@ function Bill({ onDelete, onSaveEdit, bill }) {
             </div>
             <div className="flex flex-col gap-1">
               <label htmlFor="link">Link</label>
-              <Input
-                type="text"
-                placeholder="https://www.example.com"
-                defaultValue={link}
-                onChange={(e) => {
-                  setLink(e.target.value);
-                }}
-              />
+              <div className="flex gap-3 items-center">
+                <Input
+                  type="text"
+                  placeholder="https://www.example.com"
+                  defaultValue={link}
+                  onChange={(e) => {
+                    setLink(e.target.value);
+                  }}
+                />
+                <a href={bill.eBill.link} target="_blank">
+                  <Button>
+                    <i className="fa-solid fa-external-link"></i>
+                  </Button>
+                </a>
+              </div>
             </div>
             <div className="flex flex-col gap-1">
               <label htmlFor="username">Username</label>
-              <Input
-                type="text"
-                placeholder="Username or email for login"
-                defaultValue={username}
-                onChange={(e) => {
-                  setUsername(e.target.value);
-                }}
-              />
+              <div className="flex gap-3 items-center">
+                <Input
+                  placeholder="Username or email for login"
+                  defaultValue={username}
+                  onChange={(e) => {
+                    setUsername(e.target.value);
+                  }}
+                />
+                <Button
+                  onClick={(e) => {
+                    navigator.clipboard
+                      .writeText(decrypt(bill.eBill.username))
+                      .then(() => {
+                        setCopyUsernameIcon("fa-solid fa-check");
+                        setTimeout(() => {
+                          setCopyUsernameIcon("fa-solid fa-copy");
+                        }, 2000);
+                      })
+                      .catch((err) => notyf.error("Error copying username"));
+                  }}
+                >
+                  <i className={copyUsernameIcon}></i>
+                </Button>
+              </div>
             </div>
             <div className="flex flex-col gap-1">
               <label htmlFor="password">Password</label>
-              <Input.Password
-                placeholder="Password for login"
-                defaultValue={password}
-                visibilityToggle={{
-                  visible: passwordVisible,
-                  onVisibleChange: setPasswordVisible,
-                }}
-                iconRender={(visible) =>
-                  visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-                }
-                onChange={(e) => setPassword(e.target.value)}
-              />
+              <div className="flex gap-3 items-center">
+                <Input.Password
+                  placeholder="Password for login"
+                  defaultValue={password}
+                  visibilityToggle={{
+                    visible: passwordVisible,
+                    onVisibleChange: setPasswordVisible,
+                  }}
+                  iconRender={(visible) =>
+                    visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                  }
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <Button
+                  onClick={(e) => {
+                    navigator.clipboard
+                      .writeText(decrypt(bill.eBill.password))
+                      .then(() => {
+                        setCopyPasswordIcon("fa-solid fa-check");
+                        setTimeout(() => {
+                          setCopyPasswordIcon("fa-solid fa-copy");
+                        }, 2000);
+                      })
+                      .catch((err) => notyf.error("Error copying password"));
+                  }}
+                >
+                  <i className={copyPasswordIcon}></i>
+                </Button>
+              </div>
             </div>
           </div>
           <div className="flex items-center justify-end mt-8">
@@ -207,7 +263,7 @@ function Bill({ onDelete, onSaveEdit, bill }) {
         </form>
       </Modal>
       <Modal
-        title={"Manage months for " + bill.name}
+        title={"Edit monthly instances for " + bill.name}
         centered
         open={openAdd}
         destroyOnClose

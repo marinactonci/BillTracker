@@ -3,8 +3,8 @@ import { Modal, AutoComplete, Input } from "antd";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
 import countries from "../../../utils/countries.json";
-import AddBill from "./AddBill";
-import Bill from "./Bill";
+import AddBill from "../bills/AddBill";
+import Bill from "../bills/Bill";
 import ConfirmModal from "../ConfirmModal";
 
 function Profile({ onSave, onSaveEdit, onDelete, profile }) {
@@ -198,8 +198,6 @@ function Profile({ onSave, onSaveEdit, onDelete, profile }) {
               <label className="flex flex-col w-full">
                 <span className="text-gray-700">Country</span>
                 <AutoComplete
-                  className="input input-bordered w-full m-0 p-0 focus:border-gray-500 !placeholder:font-bold hover:border-gray-500 transition-colors"
-                  bordered={false}
                   allowClear
                   defaultValue={country}
                   options={countries.map((country) => {
