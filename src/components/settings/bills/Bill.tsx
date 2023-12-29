@@ -91,6 +91,16 @@ function Bill({ onDelete, onSaveEdit, bill }) {
     setOpenAdd(false);
   };
 
+  const handleAddMonth = (newMonth) => {
+    const newBill = {
+      id: bill.id,
+      name: bill.name,
+      eBill: bill.eBill,
+      items: [...bill.items, newMonth],
+    };
+    onSaveEdit(newBill);
+  };
+
   return (
     <>
       <div
@@ -135,7 +145,7 @@ function Bill({ onDelete, onSaveEdit, bill }) {
                   <div>Edit monthly instances</div>
                 </a>
               </li>
-              <AddMonth bill={bill} />
+              <AddMonth bill={bill} onAddMonth={handleAddMonth} />
               <ConfirmModal
                 onDelete={() => handleDelete(bill.id, "bill")}
                 name={bill.name}

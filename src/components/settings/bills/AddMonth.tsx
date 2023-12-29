@@ -1,14 +1,28 @@
 import React, { useState } from "react";
 import { Modal, InputNumber, DatePicker } from "antd";
 import dayjs from "dayjs";
+import { Notyf } from "notyf";
+import "notyf/notyf.min.css";
 
-function AddMonth({ bill }) {
+function AddMonth({ onAddMonth, bill }) {
   const [open, setOpen] = useState(false);
 
-  const [dueDate, setDueDate] = useState("");
-  const [amount, setAmount] = useState(0.0);
-  const [month, setMonth] = useState("");
+  const [month, setMonth] = useState(
+    findFirstAvailableMonth().format("MM.YYYY")
+  );
+  const [dueDate, setDueDate] = useState(
+    findFirstAvailableDate().format("MM.DD.YYYY.")
+  );
+  const [amount, setAmount] = useState(15.0);
   const [isPaid, setIsPaid] = useState(true);
+
+  const notyf = new Notyf({
+    duration: 4000,
+    position: {
+      x: "right",
+      y: "top",
+    },
+  });
 
   const onAmountChange = (value) => {
     setAmount(value);
@@ -20,10 +34,57 @@ function AddMonth({ bill }) {
   };
 
   const reset = () => {
-    setDueDate("");
-    setAmount(0.0);
-    setMonth("");
+    setMonth(findFirstAvailableMonth().format("MM.YYYY"));
+    setDueDate(findFirstAvailableDate().format("MM.DD.YYYY."));
+    setAmount(15.0);
     setIsPaid(true);
+  };
+
+  function isMonthDisabled(date) {
+    return (
+      bill.items &&
+      bill.items.some((item) => item.month === date.format("MM.YYYY"))
+    );
+  }
+
+  function findFirstAvailableMonth() {
+    let month = dayjs().subtract(1, "month");
+    while (isMonthDisabled(month)) {
+      month = month.subtract(1, "month");
+    }
+
+    return month;
+  }
+
+  function findFirstAvailableDate() {
+    let date = dayjs();
+    while (getNextMonth(date)) {
+      date = date.subtract(1, "day");
+    }
+
+    return date;
+  }
+
+  function getNextMonth(date) {
+    const [monthItem, yearItem] = month.split(".");
+    const selectedMonth = dayjs(`${yearItem}-${monthItem}-01`);
+    const nextMonth = selectedMonth.add(1, "month");
+
+    return !date.isSame(nextMonth, "month");
+  }
+
+  const handleAddMonth = () => {
+    const newMonth = {
+      month,
+      dueDate,
+      amount,
+      isPaid,
+    };
+
+    onAddMonth(newMonth);
+    reset();
+    notyf.success("Monthly instance added.");
+    setOpen(false);
   };
 
   return (
@@ -52,11 +113,11 @@ function AddMonth({ bill }) {
             <DatePicker
               format={"MM.YYYY."}
               picker="month"
-              defaultValue={dayjs().subtract(1, "month")}
+              disabledDate={isMonthDisabled}
+              defaultValue={dayjs(month, "MM.YYYY")}
               onChange={(value) => {
                 if (!value) return;
-                console.log(value);
-                setMonth(value.toString());
+                setMonth(value.format("MM.YYYY"));
               }}
             />
           </label>
@@ -65,7 +126,7 @@ function AddMonth({ bill }) {
             <InputNumber
               className="w-full"
               min={0}
-              defaultValue={15}
+              defaultValue={amount}
               formatter={(value) =>
                 `${value} €`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
               }
@@ -77,11 +138,11 @@ function AddMonth({ bill }) {
             <DatePicker
               format={"DD.MM.YYYY."}
               showToday
-              defaultValue={dayjs()}
+              defaultValue={dayjs(dueDate)}
+              disabledDate={getNextMonth}
               onChange={(value) => {
                 if (!value) return;
-                console.log(value.toString());
-                setDueDate(value.toString());
+                setDueDate(value.format("MM.DD.YYYY"));
               }}
             />
           </label>
@@ -105,8 +166,11 @@ function AddMonth({ bill }) {
             >
               Cancel
             </button>
-            <button className="p-2 bg-black min-w-[70px] border border-transparent rounded-md font-semibold text-sm text-white uppercase tracking-widest hover:bg-gray-900 active:bg-gray-700 focus:outline-none focus:border-gray-700 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
-              Save
+            <button
+              className="p-2 bg-black min-w-[70px] border border-transparent rounded-md font-semibold text-sm text-white uppercase tracking-widest hover:bg-gray-900 active:bg-gray-700 focus:outline-none focus:border-gray-700 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150"
+              onClick={() => handleAddMonth()}
+            >
+              Add
             </button>
           </div>
         </div>
