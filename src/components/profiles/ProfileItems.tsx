@@ -2,7 +2,13 @@ import React from "react";
 import Profile from "./Profile";
 import CreateProfile from "./CreateProfile";
 
-function Profiles({ onCreate, onSave, onSaveEdit, onDelete, profiles }: any) {
+function ProfileItems({
+  onCreate,
+  onSave,
+  onSaveEdit,
+  onDelete,
+  profiles,
+}: any) {
   const handleOnCreate = async () => {
     await onCreate();
   };
@@ -21,25 +27,23 @@ function Profiles({ onCreate, onSave, onSaveEdit, onDelete, profiles }: any) {
 
   return (
     <>
-      <h1 className="text-2xl font-medium mb-6">
-        Create a new profile or edit the existing ones
-      </h1>
       <div className="grid grid-cols-5 gap-4">
-        {profiles.map((profile: any) => {
-          return (
-            <Profile
-              profile={profile}
-              onSave={handleSave}
-              onSaveEdit={handleSaveEdit}
-              key={profile.id}
-              onDelete={handleDelete}
-            />
-          );
-        })}
+        {profiles &&
+          profiles.map((profile: any) => {
+            return (
+              <Profile
+                profile={profile}
+                onSave={handleSave}
+                onSaveEdit={handleSaveEdit}
+                key={profile.id}
+                onDelete={handleDelete}
+              />
+            );
+          })}
         <CreateProfile onCreateProfile={handleOnCreate} />
       </div>
     </>
   );
 }
 
-export default Profiles;
+export default ProfileItems;

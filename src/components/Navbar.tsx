@@ -65,6 +65,12 @@ function Navbar() {
             Dashboard
           </Link>
           <Link
+            to="/profiles"
+            className={activeLink === "profiles" ? "font-bold" : ""}
+          >
+            Profiles
+          </Link>
+          <Link
             to="/settings"
             className={activeLink === "settings" ? "font-bold" : ""}
           >

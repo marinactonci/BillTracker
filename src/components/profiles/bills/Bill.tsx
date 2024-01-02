@@ -1,5 +1,5 @@
 import React from "react";
-import ConfirmModal from "../ConfirmModal";
+import ConfirmModal from "../../ConfirmModal";
 import AddMonth from "./AddMonth";
 import EditBill from "./EditBill";
 import EditMonths from "./EditMonths";

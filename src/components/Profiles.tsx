@@ -1,30 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+import ProfileItems from "./profiles/ProfileItems";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../services/firebaseAuth";
 import {
   getProfiles,
   updateProfile,
-  deleteProfile,
-  deleteBill,
   updateBill,
-} from "../../services/firebaseFirestore";
+  deleteBill,
+  deleteProfile,
+} from "../services/firebaseFirestore";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../../services/firebaseAuth";
-import { onAuthStateChanged } from "firebase/auth";
-import UserSettings from "./UserSettings";
-import Profiles from "./profiles/Profiles";
 
-function Settings() {
-  const [profiles, setProfiles] = useState([] as any);
+function Profiles() {
   const [user, setUser] = useState({} as any);
+  const [profiles, setProfiles] = useState([] as any);
   const [isLoggedIn, setIsLoggedIn] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
 
   const navigator = useNavigate();
 
   useEffect(() => {
     const listener = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        setIsLoggedIn(true);
         setUser(user);
+        setIsLoggedIn(true);
         await fetchProfiles(user.uid);
       } else {
         setIsLoggedIn(false);
@@ -32,6 +30,18 @@ function Settings() {
     });
     return () => listener();
   }, []);
+
+  const fetchProfiles = async (uid) => {
+    try {
+      const response = await getProfiles(uid);
+      if (response.length) {
+        response.sort((a, b) => a.id - b.id);
+        setProfiles(response);
+      }
+    } catch (error) {
+      console.error("Failed to fetch profiles:", error);
+    }
+  };
 
   const handleOnCreate = async () => {
     await fetchProfiles(user.uid);
@@ -57,18 +67,6 @@ function Settings() {
     await fetchProfiles(user.uid);
   };
 
-  const fetchProfiles = async (uid) => {
-    try {
-      const response = await getProfiles(uid);
-      if (response.length) {
-        response.sort((a, b) => a.id - b.id);
-        setProfiles(response);
-      }
-    } catch (error) {
-      console.error("Failed to fetch profiles:", error);
-    }
-  };
-
   if (!isLoggedIn) {
     return (
       <>
@@ -92,44 +90,19 @@ function Settings() {
   return (
     <>
       <div className="container mx-auto min-h-[92vh] py-20">
-        <div role="tablist" className="tabs tabs-lifted">
-          <input
-            type="radio"
-            name="my_tabs_2"
-            role="tab"
-            className="tab whitespace-nowrap"
-            aria-label="Manage Profiles"
-            defaultChecked
-          />
-          <div
-            role="tabpanel"
-            className="tab-content bg-base-100 border-base-300 rounded-box p-6"
-          >
-            <Profiles
-              profiles={profiles}
-              onCreate={handleOnCreate}
-              onSave={handleOnSave}
-              onSaveEdit={handleOnSaveEdit}
-              onDelete={handleOnDelete}
-            />
-          </div>
-          <input
-            type="radio"
-            name="my_tabs_2"
-            role="tab"
-            className="tab whitespace-nowrap"
-            aria-label="User Settings"
-          />
-          <div
-            role="tabpanel"
-            className="tab-content bg-base-100 border-base-300 rounded-box p-6"
-          >
-            <UserSettings user={user} />
-          </div>
-        </div>
+        <h1 className="text-2xl font-medium mb-6">
+          Create a new profile or edit the existing ones
+        </h1>
+        <ProfileItems
+          profiles={profiles}
+          onCreate={handleOnCreate}
+          onSave={handleOnSave}
+          onSaveEdit={handleOnSaveEdit}
+          onDelete={handleOnDelete}
+        />
       </div>
     </>
   );
 }
 
-export default Settings;
+export default Profiles;
