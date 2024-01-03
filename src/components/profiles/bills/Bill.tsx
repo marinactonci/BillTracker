@@ -23,6 +23,18 @@ function Bill({ onDelete, onSaveEdit, bill }) {
     onSaveEdit(newBill);
   };
 
+  const handleEditMonth = (editedMonth) => {
+    const newBill = {
+      id: bill.id,
+      name: bill.name,
+      eBill: bill.eBill,
+      items: bill.items.map((item) =>
+        item.month === editedMonth.month ? editedMonth : item
+      ),
+    };
+    onSaveEdit(newBill);
+  };
+
   return (
     <>
       <div
@@ -50,7 +62,7 @@ function Bill({ onDelete, onSaveEdit, bill }) {
               className="dropdown-content w-auto menu p-2 shadow bg-base-100 rounded-box relative z-10"
             >
               <EditBill bill={bill} onSave={handleSaveEdit} />
-              <EditMonths bill={bill} onSave={handleSaveEdit} />
+              <EditMonths bill={bill} onSave={handleEditMonth} />
               <AddMonth bill={bill} onAddMonth={handleAddMonth} />
               <ConfirmModal
                 onDelete={() => handleDelete(bill.id, "bill")}
