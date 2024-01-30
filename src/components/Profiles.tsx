@@ -70,7 +70,7 @@ function Profiles() {
   if (!isLoggedIn) {
     return (
       <>
-        <div className="min-h-[92vh] grid place-items-center">
+        <div className="min-h-[84vh] grid place-items-center">
           <div className="flex flex-col items-center justify-center gap-3">
             <p className="text-xl">
               You have to be signed in to view this page
@@ -89,7 +89,7 @@ function Profiles() {
 
   return (
     <>
-      <div className="container mx-auto min-h-[92vh] py-20">
+      <div className="container mx-auto min-h-[84vh] py-20">
         <h1 className="text-2xl font-medium mb-6">
           Create a new profile or edit the existing ones
         </h1>

@@ -10,11 +10,17 @@ import {
   GoogleAuthProvider,
   OAuthProvider,
   signInWithPopup,
-  FacebookAuthProvider,
+  updateEmail,
+  updatePassword,
+  EmailAuthProvider,
+  verifyBeforeUpdateEmail,
+  reauthenticateWithCredential,
+  sendEmailVerification,
 } from "firebase/auth";
 import { app } from "./firebaseConfig";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
+import { FirebaseError } from "firebase/app";
 
 const notyf = new Notyf({
   duration: 4000,
@@ -104,4 +110,78 @@ export async function logout() {
 
 export function getCurrentUser() {
   return auth.currentUser;
+}
+
+export async function changeDisplayName(user: any, displayName: string) {
+  try {
+    await updateProfile(user, { displayName });
+    notyf.success("Display name changed successfully!");
+    return { success: true, displayName: displayName };
+  } catch (error) {
+    console.log(error);
+    notyf.error("Something went wrong!");
+    return { success: false };
+  }
+}
+
+export async function verifyEmail(user: any) {
+  try {
+    await sendEmailVerification(user);
+    notyf.success("Email verification sent!");
+  } catch (error) {
+    notyf.error("Something went wrong!");
+  }
+}
+
+export async function changePassword(
+  user: any,
+  oldpassword: string,
+  newpassword: string
+) {
+  try {
+    const credential = EmailAuthProvider.credential(user.email, oldpassword);
+    await reauthenticateWithCredential(user, credential);
+    updatePassword(user, newpassword);
+    notyf.success("Password changed successfully!");
+  } catch (error) {
+    console.log(error);
+    notyf.error("Wrong password!");
+  }
+}
+
+export async function enable2FA(user: any) {
+  try {
+    await verifyBeforeUpdateEmail(user, user.email);
+    await enable2FA(user);
+    notyf.success("2FA enabled successfully!");
+  } catch (error) {
+    console.log(error);
+    notyf.error("Something went wrong!");
+  }
+}
+
+// export function sendPasswordResetEmail(email: string) {
+//   try {
+//     sendPasswordResetEmail(email);
+//   } catch (error) {
+//     notyf.error(error.message);
+//   }
+// }
+
+export function logOutEverywhere(user: any) {
+  try {
+    user.multiFactor.getSession().then((session: any) => {
+      session.signOut();
+    });
+  } catch (error) {
+    notyf.error(error.message);
+  }
+}
+
+export function deleteAccount(user: any) {
+  try {
+    user.delete();
+  } catch (error) {
+    notyf.error(error.message);
+  }
 }

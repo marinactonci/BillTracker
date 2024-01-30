@@ -21,7 +21,7 @@ function Dashboard() {
   if (!isLoggedIn) {
     return (
       <>
-        <div className="min-h-[92vh] grid place-items-center">
+        <div className="min-h-[84vh] grid place-items-center">
           <div className="flex flex-col items-center justify-center gap-3">
             <p className="text-xl">
               You have to be signed in to view this page
@@ -40,7 +40,7 @@ function Dashboard() {
 
   return (
     <>
-      <div className="container mx-auto flex flex-col gap-10 min-h-[92vh]">
+      <div className="container mx-auto flex flex-col gap-10 min-h-[84vh]">
         <div className="grid gap-4 grid-cols-3 mt-16">
           <div className="border-2 rounded-lg p-6">
             <div className="flex flex-row items-center justify-between pb-2 space-y-0">

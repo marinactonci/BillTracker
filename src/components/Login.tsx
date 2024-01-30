@@ -58,7 +58,7 @@ function Login() {
 
   return (
     <>
-      <div className="min-h-[92vh] grid place-items-center">
+      <div className="min-h-[84vh] grid place-items-center">
         <div className="w-full max-w-md p-8 space-y-4 bg-white shadow-md rounded-xl">
           <h2 className="text-2xl font-semibold text-center text-gray-700">
             Log in to your account
