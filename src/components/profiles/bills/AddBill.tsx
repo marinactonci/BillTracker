@@ -6,7 +6,12 @@ import "notyf/notyf.min.css";
 import CryptoJS from "crypto-js";
 import { secretKey } from "../../../services/firebaseConfig";
 
-function AddBill({ profile, onSave }) {
+interface AddBillProps {
+  profile: any;
+  onSave: (newBill: any) => void;
+}
+
+function AddBill({ profile, onSave }: AddBillProps) {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [name, setName] = useState("");

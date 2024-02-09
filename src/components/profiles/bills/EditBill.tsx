@@ -4,7 +4,12 @@ import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { secretKey } from "../../../services/firebaseConfig";
 import CryptoJS from "crypto-js";
 
-function EditBill({ onSave, bill }) {
+interface EditBillProps {
+  onSave: (newBill: any) => void;
+  bill: any;
+}
+
+function EditBill({ onSave, bill }: EditBillProps) {
   const [name, setName] = useState("");
   const [link, setLink] = useState("");
   const [username, setUsername] = useState("");

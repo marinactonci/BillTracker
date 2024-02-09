@@ -64,6 +64,7 @@ function Profile({ onSave, onSaveEdit, onDelete, profile }) {
   };
 
   const handleAddBill = (bill) => {
+    console.log(bill);
     const newProfile = {
       id: profile.id,
       name: profile.name,

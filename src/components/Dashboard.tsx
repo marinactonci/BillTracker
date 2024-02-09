@@ -3,6 +3,8 @@ import { auth } from "../services/firebaseAuth";
 import { useNavigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 
+interface DashboardProps {}
+
 function Dashboard() {
   const [isLoggedIn, setIsLoggedIn] = useState({});
   const navigator = useNavigate();

@@ -1,7 +1,19 @@
 import React, { useState } from "react";
 import { Modal } from "antd";
 
-function ConfirmModal({ onDelete, isLoading = false, name, item }) {
+interface ConfirmModalProps {
+  onDelete: () => void;
+  isLoading?: boolean;
+  name: string;
+  item: string;
+}
+
+function ConfirmModal({
+  onDelete,
+  isLoading = false,
+  name,
+  item,
+}: ConfirmModalProps) {
   const [openConfirm, setOpenConfirm] = useState(false);
 
   return (

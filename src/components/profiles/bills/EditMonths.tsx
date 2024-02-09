@@ -2,7 +2,12 @@ import React, { useState } from "react";
 import { Modal, DatePicker, InputNumber } from "antd";
 import dayjs from "dayjs";
 
-function EditMonths({ onSave, bill }) {
+interface EditMonthsProps {
+  onSave: (newMonth: any) => void;
+  bill: any;
+}
+
+function EditMonths({ onSave, bill }: EditMonthsProps) {
   const [month, setMonth] = useState("");
   const [amount, setAmount] = useState(0);
   const [dueDate, setDueDate] = useState("");

@@ -6,7 +6,11 @@ import { getCurrentUser } from "../../services/firebaseAuth";
 import { getProfiles, addProfile } from "../../services/firebaseFirestore";
 import countries from "../../utils/countries.json";
 
-function CreateProfile({ onCreateProfile }) {
+interface CreateProfileProps {
+  onCreateProfile: () => void;
+}
+
+function CreateProfile({ onCreateProfile }: CreateProfileProps) {
   const [name, setName] = useState("");
   const [street, setStreet] = useState("");
   const [city, setCity] = useState("");

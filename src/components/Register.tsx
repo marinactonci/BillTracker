@@ -39,6 +39,7 @@ function Register() {
 
     if (password !== confirmPassword) {
       notyf.error("Passwords do not match");
+      setLoading(false);
       return;
     }
 
@@ -46,6 +47,7 @@ function Register() {
 
     const user = await getCurrentUser();
     if (!user) {
+      setLoading(false);
       return;
     }
 

@@ -6,8 +6,9 @@ import {
   getCurrentUser,
   githubLogin,
 } from "../services/firebaseAuth";
-import { Input } from "antd";
+import { Input, Checkbox } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
+import ForgotPassword from "./ForgotPassword";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -23,10 +24,13 @@ function Login() {
 
     e.preventDefault();
 
+    console.log(remember);
+
     await login(email, password, remember);
 
     const user = await getCurrentUser();
     if (!user) {
+      setLoading(false);
       return;
     }
 
@@ -127,26 +131,16 @@ function Login() {
             </div>
             <div className="flex items-center justify-between">
               <div>
-                <input
-                  className="text-indigo-600 border-transparent rounded focus:ring-indigo-200 focus:border-indigo-500"
-                  id="remember"
-                  type="checkbox"
-                  onChange={(e) => setRemember(e.target.checked)}
-                />
-                <label
-                  className="ml-2 text-sm text-gray-600"
-                  htmlFor="remember"
+                <Checkbox
+                  onChange={(e) => {
+                    setRemember(e.target.checked);
+                  }}
                 >
-                  Remember Me
-                </label>
+                  Remember me
+                </Checkbox>
               </div>
               <div>
-                <a
-                  className="text-sm font-medium text-gray-600 hover:underline"
-                  href="#"
-                >
-                  Forgot your password?
-                </a>
+                <ForgotPassword />
               </div>
             </div>
             <button

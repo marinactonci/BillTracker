@@ -4,7 +4,12 @@ import dayjs from "dayjs";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
 
-function AddMonth({ onAddMonth, bill }) {
+interface AddMonthProps {
+  onAddMonth: (newMonth: any) => void;
+  bill: any;
+}
+
+function AddMonth({ onAddMonth, bill }: AddMonthProps) {
   const [open, setOpen] = useState(false);
 
   const [month, setMonth] = useState(

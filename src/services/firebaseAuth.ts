@@ -10,12 +10,12 @@ import {
   GoogleAuthProvider,
   OAuthProvider,
   signInWithPopup,
-  updateEmail,
   updatePassword,
   EmailAuthProvider,
   verifyBeforeUpdateEmail,
   reauthenticateWithCredential,
   sendEmailVerification,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import { app } from "./firebaseConfig";
 import { Notyf } from "notyf";
@@ -160,13 +160,14 @@ export async function enable2FA(user: any) {
   }
 }
 
-// export function sendPasswordResetEmail(email: string) {
-//   try {
-//     sendPasswordResetEmail(email);
-//   } catch (error) {
-//     notyf.error(error.message);
-//   }
-// }
+export async function forgotPassword(email: string) {
+  try {
+    await sendPasswordResetEmail(auth, email);
+  } catch (error) {
+    if (error.code === "auth/invalid-email") notyf.error("Invalid email!");
+    else notyf.error("Something went wrong!");
+  }
+}
 
 export function logOutEverywhere(user: any) {
   try {

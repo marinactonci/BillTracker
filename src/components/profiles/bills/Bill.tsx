@@ -4,7 +4,13 @@ import AddMonth from "./AddMonth";
 import EditBill from "./EditBill";
 import EditMonths from "./EditMonths";
 
-function Bill({ onDelete, onSaveEdit, bill }) {
+interface BillProps {
+  onDelete: (id: number, item: string) => void;
+  onSaveEdit: (newBill: any) => void;
+  bill: any;
+}
+
+function Bill({ onDelete, onSaveEdit, bill }: BillProps) {
   const handleDelete = async (id, item) => {
     onDelete(id, item);
   };

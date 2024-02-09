@@ -2,13 +2,21 @@ import React from "react";
 import Profile from "./Profile";
 import CreateProfile from "./CreateProfile";
 
+interface ProfileItemsProps {
+  onCreate: () => void;
+  onSave: (newProfile: any) => void;
+  onSaveEdit: (newProfile: any) => void;
+  onDelete: (item: string, profileId: number, billId: number) => void;
+  profiles: any;
+}
+
 function ProfileItems({
   onCreate,
   onSave,
   onSaveEdit,
   onDelete,
   profiles,
-}: any) {
+}: ProfileItemsProps) {
   const handleOnCreate = async () => {
     await onCreate();
   };

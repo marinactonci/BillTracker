@@ -6,7 +6,6 @@ import { onAuthStateChanged } from "firebase/auth";
 function Navbar() {
   const [activeLink, setActiveLink] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState({} as any);
 
   const navigate = useNavigate();
 
@@ -25,10 +24,8 @@ function Navbar() {
     const listener = onAuthStateChanged(auth, (user) => {
       if (user) {
         setIsLoggedIn(true);
-        setUser(user);
       } else {
         setIsLoggedIn(false);
-        setUser({});
       }
     });
 
@@ -113,7 +110,7 @@ function Navbar() {
               >
                 <li>
                   <Link className="whitespace-nowrap" to="/settings">
-                    {user && user.displayName}
+                    Settings
                   </Link>
                 </li>
                 <li onClick={handleSignout}>
