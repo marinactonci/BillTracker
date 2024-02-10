@@ -7,6 +7,7 @@ import Register from "./Register.tsx";
 import Home from "./Home.tsx";
 import Footer from "./Footer.tsx";
 import Profiles from "./Profiles.tsx";
+import NotFound from "./NotFound.tsx";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/settings" Component={Settings} />
         <Route path="/login" Component={Login} />
         <Route path="/register" Component={Register} />
+        <Route path="*" Component={NotFound} />
       </Routes>
       <Footer/>
     </Router>
