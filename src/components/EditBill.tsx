@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Input, Button } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
-import { secretKey } from "../../../services/firebaseConfig";
+import { secretKey } from "../services/firebaseConfig";
 import CryptoJS from "crypto-js";
 
 interface EditBillProps {

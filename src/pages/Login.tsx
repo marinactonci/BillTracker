@@ -8,7 +8,7 @@ import {
 } from "../services/firebaseAuth";
 import { Input, Checkbox } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
-import ForgotPassword from "./ForgotPassword";
+import ForgotPassword from "../components/ForgotPassword";
 
 function Login() {
   const [email, setEmail] = useState("");

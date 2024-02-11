@@ -1,6 +1,6 @@
 import React from "react";
-import Profile from "./Profile";
 import CreateProfile from "./CreateProfile";
+import Profile from "./Profile";
 
 interface ProfileItemsProps {
   onCreate: () => void;

@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Modal, AutoComplete, Input } from "antd";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
-import countries from "../../utils/countries.json";
-import AddBill from "../profiles/bills/AddBill";
-import Bill from "../profiles/bills/Bill";
-import ConfirmModal from "../ConfirmModal";
+import countries from "../utils/countries.json";
+import AddBill from "./AddBill";
+import Bill from "./Bill";
+import ConfirmModal from "./ConfirmModal";
 
 function Profile({ onSave, onSaveEdit, onDelete, profile }) {
   const [open, setOpen] = useState(false);

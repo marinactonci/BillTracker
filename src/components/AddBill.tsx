@@ -4,7 +4,7 @@ import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
 import CryptoJS from "crypto-js";
-import { secretKey } from "../../../services/firebaseConfig";
+import { secretKey } from "../services/firebaseConfig";
 
 interface AddBillProps {
   profile: any;

@@ -14,10 +14,6 @@ function EditMonths({ onSave, bill }: EditMonthsProps) {
   const [isPaid, setIsPaid] = useState(false);
   const [isDisabled, setIsDisabled] = useState(true);
 
-  // TODO:
-  // First have only month picker enabled with disabled months that aren't added to items
-  // After month is selected, fetch the item for that month and fill the form with it's data
-
   const [open, setOpen] = useState(false);
 
   const handleCancel = () => {

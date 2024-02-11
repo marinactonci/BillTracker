@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { Modal, AutoComplete, Input } from "antd";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
-import { getCurrentUser } from "../../services/firebaseAuth";
-import { getProfiles, addProfile } from "../../services/firebaseFirestore";
-import countries from "../../utils/countries.json";
+import { getCurrentUser } from "../services/firebaseAuth";
+import { getProfiles, addProfile } from "../services/firebaseFirestore";
+import countries from "../utils/countries.json";
 
 interface CreateProfileProps {
   onCreateProfile: () => void;

@@ -1,13 +1,13 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Dashboard from "./Dashboard.tsx";
-import Settings from "./Settings.tsx";
-import Navbar from "./Navbar.tsx";
-import Login from "./Login.tsx";
-import Register from "./Register.tsx";
-import Home from "./Home.tsx";
-import Footer from "./Footer.tsx";
-import Profiles from "./Profiles.tsx";
-import NotFound from "./NotFound.tsx";
+import Dashboard from "./components/Dashboard.tsx";
+import Settings from "./pages/Settings.tsx";
+import Navbar from "./components/Navbar.tsx";
+import Login from "./pages/Login.tsx";
+import Register from "./pages/Register.tsx";
+import Home from "./pages/Home.tsx";
+import Footer from "./components/Footer.tsx";
+import Profiles from "./pages/Profiles.tsx";
+import NotFound from "./pages/NotFound.tsx";
 
 function App() {
   return (

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import ProfileItems from "./profiles/ProfileItems";
+import ProfileItems from "../components/ProfileItems";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../services/firebaseAuth";
 import {
