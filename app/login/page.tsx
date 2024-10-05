@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Input } from "antd";
-import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
+import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 import { signIn } from "@/utils/authUtils";
 import { useRouter } from "next/navigation";
 
@@ -94,7 +94,7 @@ function Login() {
                   onVisibleChange: setPasswordVisible,
                 }}
                 iconRender={(visible) =>
-                  visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                  visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
                 }
                 onChange={(e) => setPassword(e.target.value)}
               />

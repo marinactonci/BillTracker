@@ -1,54 +1,70 @@
 import React, { useState, useEffect } from "react";
-import { Modal, AutoComplete, Input } from "antd";
-import { countries } from "../utils/countries";
+import { Modal, Input, Button, Checkbox } from "antd";
 import {
+  CopyOutlined,
   DeleteOutlined,
   EditOutlined,
-  HomeOutlined,
-  PushpinOutlined,
+  ExportOutlined,
+  EyeInvisibleOutlined,
+  EyeOutlined,
 } from "@ant-design/icons";
-import { Button } from "antd";
-import { updateProfile, deleteProfile } from "@/utils/supabaseUtils";
+import { updateBill, deleteBill } from "@/utils/supabaseUtils";
 import { notification } from "antd";
-import { ProfileType } from "@/types/profile";
+import { encrypt, decrypt } from "@/utils/encryption";
+import { BillType } from "@/types/bill";
 
-interface ProfileProps {
-  profile: ProfileType;
+interface BillProps {
+  profileId: number;
+  bill: BillType;
   onChange: () => void;
 }
 
-function Profile({ profile, onChange }: ProfileProps) {
+function Bill({ profileId, bill, onChange }: BillProps) {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
-  const [street, setStreet] = useState("");
-  const [city, setCity] = useState("");
-  const [country, setCountry] = useState("");
+  const [isRecurring, setIsRecurring] = useState(true);
+  const [link, setLink] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordDisplayVisible, setPasswordDisplayVisible] = useState(false);
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const [api, contextHolder] = notification.useNotification();
 
   useEffect(() => {
-    setName(profile.name);
-    setStreet(profile.street);
-    setCity(profile.city);
-    setCountry(profile.country);
-  }, [profile]);
+    setName(bill.name);
+    setIsRecurring(bill.is_recurring);
+    setLink(bill.link);
+    setUsername(decrypt(bill.username));
+    setPassword(decrypt(bill.password));
+  }, [bill]);
 
   const handleSave = async () => {
-    if (!name || !street || !city || !country) {
-      setError("No fields can be empty.");
+    setIsLoading(true);
+    if (!name) {
+      setError("Name is required.");
       return;
     }
 
     try {
-      await updateProfile(profile.id, name, street, city, country);
+      const encryptedUsername = encrypt(username);
+      const encryptedPassword = encrypt(password);
+
+      await updateBill(bill.id, {
+        name,
+        is_recurring: isRecurring,
+        link,
+        username: encryptedUsername,
+        password: encryptedPassword,
+      });
       setOpen(false);
+      onChange();
       api.success({
         message: "Profile updated",
         description: "Profile has been updated successfully.",
       });
-      onChange();
     } catch (error) {
       api.error({
         message: "Error updating profile",
@@ -56,11 +72,13 @@ function Profile({ profile, onChange }: ProfileProps) {
       });
       console.error("Error updating profile:", error);
     }
+    setIsLoading(false);
   };
 
   const handleDelete = async () => {
+    setIsLoading(true);
     try {
-      await deleteProfile(profile.id);
+      await deleteBill(bill.id);
       onChange();
       api.success({
         message: "Profile deleted",
@@ -73,10 +91,7 @@ function Profile({ profile, onChange }: ProfileProps) {
       });
       console.error("Error deleting profile:", error);
     }
-  };
-
-  const handleCancel = () => {
-    setOpen(false);
+    setIsLoading(false);
   };
 
   return (
@@ -84,20 +99,56 @@ function Profile({ profile, onChange }: ProfileProps) {
       {contextHolder}
       <div className="flex flex-col p-6 gap-3 border rounded-lg">
         <div className="flex flex-col gap-6 justify-between">
-          <div className="flex items-center gap-2">
-            <HomeOutlined className="text-2xl" />
-            <h1 className="text-2xl font-bold">{profile.name}</h1>
-          </div>
-          <div className="flex gap-2 items-center text-lg">
-            <PushpinOutlined />
-            <p className=" text-zinc-500">
-              {profile.street}, {profile.city},{" "}
-              {countries.map((countryItem) => {
-                if (countryItem.code === profile.country) {
-                  return countryItem.name;
-                }
-              })}
-            </p>
+          <h1 className="text-2xl font-bold">{bill.name}</h1>
+          <div className="flex flex-col gap-2">
+            <div className="text-lg text-zinc-500">
+              <div className="flex items-center gap-6">
+                <p className="font-semibold">
+                  Link: <span className="font-normal">{bill.link}</span>
+                </p>
+                <Button onClick={() => window.open(bill.link, "_blank")}>
+                  <ExportOutlined />
+                </Button>
+              </div>
+            </div>
+            <div className="text-lg text-zinc-500">
+              <div className="flex items-center gap-6">
+                <p className="font-semibold">
+                  Username:{" "}
+                  <span className="font-normal">{decrypt(bill.username)}</span>
+                </p>
+                <Button
+                    onClick={() =>
+                      navigator.clipboard.writeText(decrypt(bill.username))
+                    }
+                  >
+                    <CopyOutlined />
+                  </Button>
+              </div>
+            </div>
+            <div className="text-lg text-zinc-500">
+              <div className="flex items-center gap-6">
+                <p className="font-semibold">
+                  Password:{" "}
+                  <span className="font-normal">{ passwordDisplayVisible ? decrypt(bill.password) : (
+                    // Replace password with asterisks
+                    Array(decrypt(bill.password).length).fill("*").join("")
+                  )}</span>
+                </p>
+                <div className="flex items-center gap-2">
+                  <Button onClick={() => setPasswordDisplayVisible(!passwordDisplayVisible)}>
+                    { passwordDisplayVisible ? <EyeInvisibleOutlined /> : <EyeOutlined /> }
+                  </Button>
+                  <Button
+                    onClick={() =>
+                      navigator.clipboard.writeText(decrypt(bill.password))
+                    }
+                  >
+                    <CopyOutlined />
+                  </Button>
+                </div>
+              </div>
+            </div>
           </div>
           <div className="flex justify-end items-center gap-2">
             <Button
@@ -120,7 +171,7 @@ function Profile({ profile, onChange }: ProfileProps) {
         </div>
       </div>
       <Modal
-        title={"Edit " + profile.name}
+        title={"Edit " + bill.name}
         centered
         open={open}
         destroyOnClose
@@ -129,7 +180,7 @@ function Profile({ profile, onChange }: ProfileProps) {
         cancelText="Cancel"
         footer={null}
         onOk={() => setOpen(false)}
-        onCancel={() => handleCancel()}
+        onCancel={() => setOpen(false)}
       >
         <form
           className="flex flex-col gap-3"
@@ -140,21 +191,27 @@ function Profile({ profile, onChange }: ProfileProps) {
             <Input
               type="text"
               placeholder="Entert profile name"
-              defaultValue={profile.name}
+              defaultValue={bill.name}
               onChange={(e) => {
                 setName(e.target.value);
               }}
             />
           </label>
-          <label className="text-gray-900 mt-3 text-lg">Address</label>
+          <Checkbox
+            checked={isRecurring}
+            onChange={(e) => setIsRecurring(e.target.checked)}
+          >
+            Is recurring
+          </Checkbox>
+          <label className="text-gray-900 mt-3 text-lg">E-bill</label>
           <label className="flex flex-col w-full">
             <span className="text-gray-700">Street</span>
             <Input
               type="text"
               placeholder="Eg. 123 Main St."
-              defaultValue={profile.street}
+              defaultValue={bill.link}
               onChange={(e) => {
-                setStreet(e.target.value);
+                setLink(e.target.value);
               }}
             />
           </label>
@@ -163,40 +220,25 @@ function Profile({ profile, onChange }: ProfileProps) {
             <Input
               type="text"
               placeholder="Eg. New York"
-              defaultValue={profile.city}
+              defaultValue={decrypt(bill.username)}
               onChange={(e) => {
-                setCity(e.target.value);
+                setUsername(e.target.value);
               }}
             />
           </label>
           <label className="flex flex-col w-full">
             <span className="text-gray-700">Country</span>
-            <AutoComplete
-              allowClear
-              defaultValue={profile.country}
-              options={countries.map((country) => {
-                return {
-                  value: country.name,
-                  name: country.name,
-                  label: country.name,
-                };
-              })}
-              onChange={(value) => {
-                countries.forEach((countryItem) => {
-                  if (countryItem.name === value) {
-                    setCountry(countryItem.name);
-                  }
-                });
+            <Input.Password
+              visibilityToggle={{
+                visible: passwordVisible,
+                onVisibleChange: setPasswordVisible,
               }}
-              filterOption={(inputValue, option) => {
-                if (option?.value === undefined) return false;
-                return (
-                  option?.name
-                    .toUpperCase()
-                    .indexOf(inputValue.toUpperCase()) !== -1
-                );
-              }}
-              placeholder="Eg. United States"
+              iconRender={(visible) =>
+                visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
+              }
+              defaultValue={decrypt(bill.password)}
+              placeholder="Password for e-bill"
+              onChange={(e) => setPassword(e.target.value)}
             />
           </label>
           {error && (
@@ -230,4 +272,4 @@ function Profile({ profile, onChange }: ProfileProps) {
   );
 }
 
-export default Profile;
+export default Bill;

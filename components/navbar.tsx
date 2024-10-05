@@ -22,6 +22,7 @@ function Navbar() {
     { name: "Dashboard", to: "/dashboard" },
     { name: "Profiles", to: "/profiles" },
     { name: "Bills", to: "/bills" },
+    { name: "Months", to: "/months" },
     { name: "Settings", to: "/settings" },
   ];
 

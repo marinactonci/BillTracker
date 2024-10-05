@@ -8,3 +8,5 @@ if (!supabaseUrl || !supabaseAnonKey) {
 }
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+export const secretKey = process.env.NEXT_PUBLIC_SECRET_KEY as string;

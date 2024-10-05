@@ -70,7 +70,13 @@ function Profiles() {
         <div className="grid grid-cols-3 gap-4">
           {profiles &&
             profiles.map((profile: any) => {
-              return <Profile profile={profile} key={profile.id} onChange={fetchProfiles} />;
+              return (
+                <Profile
+                  profile={profile}
+                  key={profile.id}
+                  onChange={fetchProfiles}
+                />
+              );
             })}
           <CreateProfile onChange={fetchProfiles} />
         </div>

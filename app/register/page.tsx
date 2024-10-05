@@ -3,9 +3,8 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Input } from "antd";
-import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
+import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 import { signUp } from "../../utils/authUtils";
-import { useRouter } from "next/navigation";
 import { notification } from "antd";
 
 function Register() {
@@ -111,7 +110,7 @@ function Register() {
                   onVisibleChange: setPasswordVisible,
                 }}
                 iconRender={(visible) =>
-                  visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                  visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
                 }
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -129,7 +128,7 @@ function Register() {
                   onVisibleChange: setPasswordConfirmVisible,
                 }}
                 iconRender={(visible) =>
-                  visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                  visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
                 }
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />

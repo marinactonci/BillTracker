@@ -1,23 +1,15 @@
 import React, { useState } from "react";
-import { Modal, AutoComplete, Input } from "antd";
-import countries from "../utils/countries.json";
-import { PlusOutlined } from "@ant-design/icons";
+import { Modal, AutoComplete, Input, Button } from "antd";
+import { countries } from "@/utils/countries";
+import { PlusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { createProfile } from "@/utils/supabaseUtils";
 import { notification } from "antd";
-
-interface Profile {
-  id: number;
-  name: string;
-  street: string;
-  city: string;
-  country: string;
-}
 
 interface CreateProfileProps {
   onChange: () => void;
 }
 
-function CreateProfile({ onChange}: CreateProfileProps) {
+function CreateProfile({ onChange }: CreateProfileProps) {
   const [name, setName] = useState("");
   const [street, setStreet] = useState("");
   const [city, setCity] = useState("");
@@ -57,16 +49,16 @@ function CreateProfile({ onChange}: CreateProfileProps) {
   return (
     <>
       {contextHolder}
-      <div
-        className="border rounded-lg p-6 hover:border-black hover:cursor-pointer transition-colors grid place-items-center"
-        onClick={() => {
-          setOpen(true);
-        }}
-      >
-        <div className="w-12 h-12 bg-gray-900 rounded-full grid place-items-center">
-          <PlusOutlined className="text-white" />
-        </div>
+      <div className="flex items-stretch h-full min-h-36">
+        <Button
+          className="flex-1 flex items-center justify-center"
+          onClick={() => setOpen(true)}
+          style={{ height: "100%", width: "100%" }}
+        >
+          <PlusCircleOutlined style={{ fontSize: "2rem" }} />
+        </Button>
       </div>
+
       <Modal
         title="Create a new profile"
         centered

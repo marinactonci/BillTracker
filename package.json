@@ -15,11 +15,13 @@
     "@supabase/ssr": "^0.5.1",
     "@supabase/supabase-js": "^2.45.4",
     "antd": "^5.21.2",
+    "crypto-js": "^4.2.0",
     "next": "14.2.14",
     "react": "^18",
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@types/crypto-js": "^4.2.2",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
