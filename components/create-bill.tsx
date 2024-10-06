@@ -145,6 +145,7 @@ function CreateBill({ profileId, onChange }: AddBillProps) {
               onChange={(e) => setPassword(e.target.value)}
             />
           </label>
+          {error && <p className="text-red-500">{error}</p>}
         </form>
         <div className="flex items-center justify-end mt-6">
           <div className="flex gap-3">

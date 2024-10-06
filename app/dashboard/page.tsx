@@ -3,11 +3,10 @@
 import React, { useState, useEffect } from "react";
 import Calendar from "@/components/calendar";
 import { getBillInstances } from "@/utils/supabaseUtils";
-import { BillInstance } from "@/types/bill-instance";
+import { BillInstanceType } from "@/types/bill-instance";
 
 function Dashboard() {
-  const [billInstances, setBillInstances] = useState<BillInstance[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [billInstances, setBillInstances] = useState<BillInstanceType[]>([]);
 
   useEffect(() => {
     fetchBillInstances();
@@ -19,8 +18,6 @@ function Dashboard() {
       setBillInstances(instances);
     } catch (error) {
       console.error("Error fetching bill instances:", error);
-    } finally {
-      setIsLoading(false);
     }
   }
 

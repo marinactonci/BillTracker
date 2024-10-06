@@ -59,10 +59,12 @@ function Navbar() {
   return (
     <nav className="flex items-center justify-between px-6 border-b h-[8vh]">
       <Link href="/" className="flex gap-3 items-center">
-        <img
+        <Image
           src="/logo.svg"
           alt=""
           className="w-8 h-8 hover:scale-110 transform transition duration-300 ease-in-out"
+          width={32}
+          height={32}
         />
         <div className="text-2xl transition-colors">Bill Tracker</div>
       </Link>

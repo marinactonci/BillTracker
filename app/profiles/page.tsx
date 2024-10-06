@@ -18,7 +18,6 @@ interface ProfileType {
 function Profiles() {
   const [profiles, setProfiles] = useState<ProfileType[]>([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -26,7 +25,6 @@ function Profiles() {
         data: { session },
       } = await supabase.auth.getSession();
       setIsLoggedIn(!!session);
-      setIsLoading(false);
     };
 
     checkUser();

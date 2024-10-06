@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Modal, AutoComplete, Input, Button } from "antd";
 import { countries } from "@/utils/countries";
-import { PlusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import { PlusCircleOutlined } from "@ant-design/icons";
 import { createProfile } from "@/utils/supabaseUtils";
 import { notification } from "antd";
 

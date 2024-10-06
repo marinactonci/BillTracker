@@ -36,6 +36,7 @@ function Profile({ profile, onChange }: ProfileProps) {
   }, [profile]);
 
   const handleSave = async () => {
+    setIsLoading(true);
     if (!name || !street || !city || !country) {
       setError("No fields can be empty.");
       return;
@@ -56,9 +57,11 @@ function Profile({ profile, onChange }: ProfileProps) {
       });
       console.error("Error updating profile:", error);
     }
+    setIsLoading(false);
   };
 
   const handleDelete = async () => {
+    setIsLoading(true);
     try {
       await deleteProfile(profile.id);
       onChange();
@@ -73,6 +76,7 @@ function Profile({ profile, onChange }: ProfileProps) {
       });
       console.error("Error deleting profile:", error);
     }
+    setIsLoading(false);
   };
 
   const handleCancel = () => {

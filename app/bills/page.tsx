@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { notification } from "antd";
 import { supabase } from "@/lib/supabaseClient";
 import { getBills, getProfiles } from "@/utils/supabaseUtils";
 import Link from "next/link";
@@ -11,18 +10,16 @@ import { ProfileType } from "@/types/profile";
 import { BillType } from "@/types/bill";
 
 function Bills() {
-  const [error, setError] = useState<string | null>(null);
   const [profiles, setProfiles] = useState<ProfileType[]>([]);
   const [bills, setBills] = useState<BillType[]>([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const [api, contextHolder] = notification.useNotification();
 
   useEffect(() => {
     const initialize = async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
         setIsLoggedIn(!!session);
 
         if (session) {
@@ -38,9 +35,6 @@ function Bills() {
         }
       } catch (error) {
         console.error("Error initializing:", error);
-        setError("An error occurred while loading data.");
-      } finally {
-        setIsLoading(false);
       }
     };
 
@@ -57,7 +51,6 @@ function Bills() {
       setBills(allBills);
     } catch (error) {
       console.error("Error fetching bills:", error);
-      setError("An error occurred while fetching bills.");
     }
   };
 
@@ -83,7 +76,6 @@ function Bills() {
 
   return (
     <>
-      {contextHolder}
       <div className="container mx-auto min-h-[84vh] py-20">
         <h1 className="text-3xl font-medium mb-6">
           Add a new bill or edit the existing ones
@@ -99,12 +91,7 @@ function Bills() {
                   bills.map((bill: any) => {
                     if (bill.profile_id === profile.id) {
                       return (
-                        <Bill
-                          profileId={profile.id}
-                          bill={bill}
-                          key={bill.id}
-                          onChange={fetchBills}
-                        />
+                        <Bill bill={bill} key={bill.id} onChange={fetchBills} />
                       );
                     }
                   })}

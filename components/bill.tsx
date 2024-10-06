@@ -14,12 +14,11 @@ import { encrypt, decrypt } from "@/utils/encryption";
 import { BillType } from "@/types/bill";
 
 interface BillProps {
-  profileId: number;
   bill: BillType;
   onChange: () => void;
 }
 
-function Bill({ profileId, bill, onChange }: BillProps) {
+function Bill({ bill, onChange }: BillProps) {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [isRecurring, setIsRecurring] = useState(true);

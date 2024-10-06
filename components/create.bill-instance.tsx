@@ -36,8 +36,8 @@ function CreateBillInstance({ bills, onChange }: CreateProfileProps) {
       });
       setOpen(false);
       onChange();
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error) {
+      setError((error as Error).message);
     } finally {
       setIsLoading(false);
     }
