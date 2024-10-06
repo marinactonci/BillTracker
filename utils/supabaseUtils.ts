@@ -132,3 +132,42 @@ export async function getBillInstances() {
   if (error) throw error
   return data
 }
+
+export async function createBillInstance(bill_id: number, month:Date, due_date: Date, amount: number, is_paid: boolean) {
+  try {
+    const { data, error } = await supabase
+      .from('bill_instances')
+      .insert({
+        bill_id,
+        month,
+        due_date,
+        amount,
+        is_paid
+      })
+      .single();
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error("Error in createBillInstance:", error);
+    throw error;
+  }
+}
+
+export async function updateBillInstance(id: number, updates: { month:Date, due_date: Date, amount: number, is_paid: boolean }) {
+  const { data, error } = await supabase
+    .from('bill_instances')
+    .update(updates)
+    .eq('id', id)
+    .single()
+  if (error) throw error
+  return data
+}
+
+export async function deleteBillInstance(id: number) {
+  const { data, error } = await supabase
+    .from('bill_instances')
+    .delete()
+    .eq('id', id)
+  if (error) throw error
+  return data
+}

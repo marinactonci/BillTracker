@@ -3,47 +3,52 @@
 import React, { useState, useEffect } from "react";
 import { CaretLeftFilled, CaretRightFilled } from "@ant-design/icons";
 import { Button } from "antd";
-import { BillInstance } from "@/types/bill-instance";
+import { BillInstanceType } from "@/types/bill-instance";
 import { getBillById, getProfileById } from "@/utils/supabaseUtils";
 import { BillType } from "@/types/bill";
 import { ProfileType } from "@/types/profile";
+import CreateBillInstance from "./create.bill-instance";
+import BillInstance from "./bill-instance";
+import { EventType } from "@/types/event";
 
 interface CalendarProps {
-  billInstances: BillInstance[];
+  billInstances: BillInstanceType[];
+  onChange: () => void;
 }
 
-interface EnhancedEvent {
-  date: Date;
-  billName: string;
-  profileName: string;
-  amount: number;
-  isPaid: boolean;
-}
-
-const Calendar = ({ billInstances }: CalendarProps) => {
+const Calendar = ({ billInstances, onChange }: CalendarProps) => {
   const [currentDate, setCurrentDate] = useState(new Date(2024, 9, 1)); // October 2024
-  const [events, setEvents] = useState<EnhancedEvent[]>([]);
+  const [events, setEvents] = useState<EventType[]>([]);
+  const [bills, setBills] = useState<{ id: number; name: string }[]>([]);
 
   useEffect(() => {
-    const fetchEventDetails = async () => {
-      const enhancedEvents = await Promise.all(
-        billInstances.map(async (instance) => {
-          const bill: BillType = await getBillById(instance.bill_id);
-          const profile: ProfileType = await getProfileById(bill.profile_id);
-          return {
-            date: new Date(instance.due_date),
-            billName: bill.name,
-            profileName: profile.name,
-            amount: instance.amount,
-            isPaid: instance.is_paid,
-          };
-        })
-      );
-      setEvents(enhancedEvents);
-    };
-
     fetchEventDetails();
   }, [billInstances]);
+
+  const fetchEventDetails = async () => {
+    setBills([]);
+    let newBills: { id: number; name: string }[] = [];
+    const enhancedEvents = await Promise.all(
+      billInstances.map(async (instance) => {
+        const bill: BillType = await getBillById(instance.bill_id);
+        if (!newBills.some((b) => b.id === bill.id)) {
+          newBills.push({ id: bill.id, name: bill.name });
+        }
+        const profile: ProfileType = await getProfileById(bill.profile_id);
+        return {
+          id: instance.id,
+          month: new Date(instance.month),
+          dueDate: new Date(instance.due_date),
+          billName: bill.name,
+          profileName: profile.name,
+          amount: instance.amount,
+          isPaid: instance.is_paid,
+        };
+      })
+    );
+    setBills(newBills);
+    setEvents(enhancedEvents);
+  };
 
   const daysInMonth = (date: Date) => {
     return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
@@ -129,9 +134,9 @@ const Calendar = ({ billInstances }: CalendarProps) => {
       );
       const dayEvents = events.filter(
         (event) =>
-          event.date.getDate() === day &&
-          event.date.getMonth() === currentDate.getMonth() &&
-          event.date.getFullYear() === currentDate.getFullYear()
+          event.dueDate.getDate() === day &&
+          event.dueDate.getMonth() === currentDate.getMonth() &&
+          event.dueDate.getFullYear() === currentDate.getFullYear()
       );
 
       cells.push(
@@ -149,23 +154,9 @@ const Calendar = ({ billInstances }: CalendarProps) => {
             >
               {day}
             </div>
-            <div className="grid grid-cols-1 gap-2">
+            <div className="grid grid-cols-1 gap-2 mt-1">
               {dayEvents.map((event, index) => (
-                <div
-                  key={index}
-                  className={`text-xs ${
-                    event.isPaid ? "bg-green-100" : "bg-red-100"
-                  } p-1 rounded`}
-                >
-                  <div className="font-medium">{event.billName}</div>
-                  <div className="text-gray-600">{event.profileName}</div>
-                  <div className="text-gray-500">${event.amount.toFixed(2)}</div>
-                  <div
-                    className={event.isPaid ? "text-green-600" : "text-red-600"}
-                  >
-                    {event.isPaid ? "Paid" : "Unpaid"}
-                  </div>
-                </div>
+                <BillInstance event={event} onChange={onChange} key={index}/>
               ))}
             </div>
           </div>
@@ -224,9 +215,7 @@ const Calendar = ({ billInstances }: CalendarProps) => {
             >
               <CaretRightFilled />
             </button>
-            <Button type="primary" className="bg-blue-500">
-              Add instance
-            </Button>
+            <CreateBillInstance bills={bills} onChange={onChange} />
           </div>
         </div>
         <table className="w-full border-collapse table-fixed">

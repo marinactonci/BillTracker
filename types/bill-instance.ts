@@ -1,4 +1,4 @@
-export interface BillInstance {
+export interface BillInstanceType {
   id: number;
   bill_id: number;
   name: string;

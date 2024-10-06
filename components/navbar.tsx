@@ -12,6 +12,7 @@ import {
   TranslationOutlined,
   UserOutlined,
 } from "@ant-design/icons";
+import Image from "next/image";
 
 function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -23,7 +24,6 @@ function Navbar() {
     { name: "Dashboard", to: "/dashboard" },
     { name: "Profiles", to: "/profiles" },
     { name: "Bills", to: "/bills" },
-    { name: "Months", to: "/months" },
     { name: "Settings", to: "/settings" },
   ];
 
@@ -80,20 +80,26 @@ function Navbar() {
         ))}
         <div className="dropdown dropdown-end">
           <label tabIndex={0} className="w-auto cursor-pointer">
-            <div className="flex items-center gap-2 w-max">
+            <div className="flex items-center gap-2 hover:text-blue-300 transition-colors">
               <TranslationOutlined style={{ fontSize: "24px" }} />
               <CaretDownOutlined />
             </div>
           </label>
           <ul
             tabIndex={0}
-            className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box"
+            className="dropdown-content z-[1] menu p-2 w-[125px] shadow bg-base-100 rounded-box"
           >
             <li>
-              <a>Croatian</a>
+              <a className="flex items-center gap-2">
+                <Image src="/flags/hr.png" alt="Croatian flag icon" width={15} height={15}/>
+                <span>Croatian</span>
+              </a>
             </li>
             <li>
-              <a>English</a>
+            <a className="flex items-center gap-2">
+                <Image src="/flags/en.png" alt="English flag icon" width={15} height={15}/>
+                <span>English</span>
+              </a>
             </li>
           </ul>
         </div>
