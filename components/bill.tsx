@@ -101,54 +101,74 @@ function Bill({ profileId, bill, onChange }: BillProps) {
         <div className="flex flex-col gap-6 justify-between">
           <h1 className="text-2xl font-bold">{bill.name}</h1>
           <div className="flex flex-col gap-2">
-            <div className="text-lg text-zinc-500">
-              <div className="flex items-center gap-6">
-                <p className="font-semibold">
-                  Link: <span className="font-normal">{bill.link}</span>
-                </p>
-                <Button onClick={() => window.open(bill.link, "_blank")}>
-                  <ExportOutlined />
-                </Button>
+            {bill.link && (
+              <div className="text-lg text-zinc-500">
+                <div className="flex items-center gap-6">
+                  <p className="font-semibold">
+                    Link: <span className="font-normal">{bill.link}</span>
+                  </p>
+                  <Button onClick={() => window.open(bill.link, "_blank")}>
+                    <ExportOutlined />
+                  </Button>
+                </div>
               </div>
-            </div>
-            <div className="text-lg text-zinc-500">
-              <div className="flex items-center gap-6">
-                <p className="font-semibold">
-                  Username:{" "}
-                  <span className="font-normal">{decrypt(bill.username)}</span>
-                </p>
-                <Button
+            )}
+            {decrypt(bill.username) && (
+              <div className="text-lg text-zinc-500">
+                <div className="flex items-center gap-6">
+                  <p className="font-semibold">
+                    Username:{" "}
+                    <span className="font-normal">
+                      {decrypt(bill.username)}
+                    </span>
+                  </p>
+                  <Button
                     onClick={() =>
                       navigator.clipboard.writeText(decrypt(bill.username))
                     }
                   >
                     <CopyOutlined />
                   </Button>
-              </div>
-            </div>
-            <div className="text-lg text-zinc-500">
-              <div className="flex items-center gap-6">
-                <p className="font-semibold">
-                  Password:{" "}
-                  <span className="font-normal">{ passwordDisplayVisible ? decrypt(bill.password) : (
-                    // Replace password with asterisks
-                    Array(decrypt(bill.password).length).fill("*").join("")
-                  )}</span>
-                </p>
-                <div className="flex items-center gap-2">
-                  <Button onClick={() => setPasswordDisplayVisible(!passwordDisplayVisible)}>
-                    { passwordDisplayVisible ? <EyeInvisibleOutlined /> : <EyeOutlined /> }
-                  </Button>
-                  <Button
-                    onClick={() =>
-                      navigator.clipboard.writeText(decrypt(bill.password))
-                    }
-                  >
-                    <CopyOutlined />
-                  </Button>
                 </div>
               </div>
-            </div>
+            )}
+            {decrypt(bill.password) && (
+              <div className="text-lg text-zinc-500">
+                <div className="flex items-center gap-6">
+                  <p className="font-semibold">
+                    Password:{" "}
+                    <span className="font-normal">
+                      {passwordDisplayVisible
+                        ? decrypt(bill.password)
+                        : // Replace password with asterisks
+                          Array(decrypt(bill.password).length)
+                            .fill("*")
+                            .join("")}
+                    </span>
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      onClick={() =>
+                        setPasswordDisplayVisible(!passwordDisplayVisible)
+                      }
+                    >
+                      {passwordDisplayVisible ? (
+                        <EyeInvisibleOutlined />
+                      ) : (
+                        <EyeOutlined />
+                      )}
+                    </Button>
+                    <Button
+                      onClick={() =>
+                        navigator.clipboard.writeText(decrypt(bill.password))
+                      }
+                    >
+                      <CopyOutlined />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
           <div className="flex justify-end items-center gap-2">
             <Button

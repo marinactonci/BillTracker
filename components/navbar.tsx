@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import { signOut } from "@/utils/authUtils";
 import {
@@ -16,6 +16,7 @@ import {
 function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter();
+  const pathname = usePathname();
 
   const links = [
     { name: "Home", to: "/" },
@@ -43,7 +44,7 @@ function Navbar() {
     });
 
     return () => subscription.unsubscribe();
-  }, [supabase.auth]);
+  }, []);
 
   const handleSignout = async () => {
     try {
@@ -70,7 +71,9 @@ function Navbar() {
           <Link
             key={link.name}
             href={link.to}
-            className="text-gray-800 transition-colors hover:text-black"
+            className={`transition-colors hover:text-blue-300 ${
+              pathname === link.to ? "text-blue-600 font-bold" : "text-gray-800"
+            }`}
           >
             {link.name}
           </Link>

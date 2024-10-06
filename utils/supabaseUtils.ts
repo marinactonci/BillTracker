@@ -8,6 +8,16 @@ export async function getProfiles() {
   return data
 }
 
+export async function getProfileById(id: number) {
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', id)
+    .single()
+  if (error) throw error
+  return data
+}
+
 export async function createProfile(name: string, street: string, city: string, country: string) {
   try {
     const { data: { user } } = await supabase.auth.getUser();
@@ -50,23 +60,33 @@ export async function deleteProfile(id: number) {
   if (error) throw error
 }
 
-export async function getBills(profileId: number) {
+export async function getBills(id: number) {
   const { data, error } = await supabase
     .from('bills')
     .select('*')
-    .eq('profile_id', profileId)
+    .eq('profile_id', id)
   if (error) throw error
   return data
 }
 
-export async function createBill(profileId: number, name: string, isRecurring: boolean, link: string, username: string, password: string) {
+export async function getBillById(id: number) {
+  const { data, error } = await supabase
+    .from('bills')
+    .select('*')
+    .eq('id', id)
+    .single()
+  if (error) throw error
+  return data
+}
+
+export async function createBill(id: number, name: string, isRecurring: boolean, link: string, username: string, password: string) {
   try {
-    if (!profileId) throw new Error("Profile ID is required");
+    if (!id) throw new Error("Profile ID is required");
 
     const { data, error } = await supabase
       .from('bills')
       .insert({
-        profile_id: profileId,
+        profile_id: id,
         name: name,
         is_recurring: isRecurring,
         recurring_day: 1,
@@ -98,6 +118,17 @@ export async function deleteBill(id: number) {
     .from('bills')
     .delete()
     .eq('id', id)
+  if (error) throw error
+  return data
+}
+
+export async function getBillInstances() {
+  const { data, error } = await supabase
+    .from('bill_instances')
+    .select(`
+      *,
+      bill:bill_id (name)
+    `)
   if (error) throw error
   return data
 }
