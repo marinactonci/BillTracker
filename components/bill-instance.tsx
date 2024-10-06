@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Button, DatePicker, InputNumber, Switch, message } from "antd";
 import dayjs from "dayjs";
-import { updateBillInstance } from "@/utils/supabaseUtils";
+import { updateBillInstance, deleteBillInstance } from "@/utils/supabaseUtils";
 
 interface BillInstanceProps {
   event: any;
@@ -11,18 +11,15 @@ interface BillInstanceProps {
 function BillInstance({ event, onChange }: BillInstanceProps) {
   const [open, setOpen] = useState(false);
   const [month, setMonth] = useState(dayjs(event.month));
-  const [dueDate, setDueDate] = useState(dayjs(event.due_date));
+  const [dueDate, setDueDate] = useState(dayjs(event.dueDate));
   const [amount, setAmount] = useState(event.amount);
-  const [isPaid, setIsPaid] = useState(event.is_paid);
+  const [isPaid, setIsPaid] = useState(event.isPaid);
 
   useEffect(() => {
-    console.log("month", dayjs(event.month).format("MM.YYYY"));
-    console.log("dueDate", event.due_date);
-    console.log("dueDate", dayjs(event.due_date).format("DD.MM.YYYY"));
     setMonth(dayjs(event.month));
-    setDueDate(dayjs(event.due_date));
+    setDueDate(dayjs(event.dueDate));
     setAmount(event.amount);
-    setIsPaid(event.is_paid);
+    setIsPaid(event.isPaid);
   }, [event]);
 
   const handleUpdate = async () => {
@@ -47,19 +44,36 @@ function BillInstance({ event, onChange }: BillInstanceProps) {
     }
   };
 
+  const handleDelete = async () => {
+    if (!event.id) {
+      message.error("Invalid bill instance ID");
+      return;
+    }
+
+    try {
+      await deleteBillInstance(event.id);
+      setOpen(false);
+      onChange();
+      message.success("Bill instance deleted successfully");
+    } catch (error: any) {
+      console.error("Error deleting bill instance:", error);
+      message.error("Failed to delete bill instance");
+    }
+  }
+
   return (
     <>
       <div
         onClick={() => setOpen(true)}
         className={`text-xs hover:cursor-pointer ${
-          event.is_paid ? "bg-green-100" : "bg-red-100"
+          event.isPaid ? "bg-green-100" : "bg-red-100"
         } p-1 rounded`}
       >
         <div className="font-medium">{event.billName}</div>
         <div className="text-gray-600">{event.profileName}</div>
         <div className="text-gray-500">${event.amount.toFixed(2)}</div>
-        <div className={event.is_paid ? "text-green-600" : "text-red-600"}>
-          {event.is_paid ? "Paid" : "Unpaid"}
+        <div className={event.isPaid ? "text-green-600" : "text-red-600"}>
+          {event.isPaid ? "Paid" : "Unpaid"}
         </div>
       </div>
       <Modal
@@ -106,7 +120,7 @@ function BillInstance({ event, onChange }: BillInstanceProps) {
               format={"DD.MM.YYYY"}
               value={dueDate}
               onChange={(value) => {
-                if (value) setDueDate(value);
+                if (value) setDueDate(value.hour(12).minute(0).second(0));
               }}
             />
           </label>
@@ -125,6 +139,13 @@ function BillInstance({ event, onChange }: BillInstanceProps) {
             <Button onClick={() => setOpen(false)}>Cancel</Button>
             <Button type="primary" onClick={handleUpdate}>
               Update
+            </Button>
+            <Button
+              color="danger"
+              variant="solid"
+              onClick={() => handleDelete()}
+            >
+              <span>Delete</span>
             </Button>
           </div>
         </div>
