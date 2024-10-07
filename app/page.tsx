@@ -1,10 +1,31 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import Link from "next/link";
+import { supabase } from "@/lib/supabaseClient";
 
 function Home() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      setIsLoggedIn(!!session);
+    };
+
+    checkUser();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsLoggedIn(!!session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const handleClick = () => {
     ref.current?.scrollIntoView({ behavior: "smooth" });
@@ -15,10 +36,7 @@ function Home() {
       <Hero handleClick={handleClick} />
       <WhyChoose ref={ref} />
       <GettingStarted />
-      {
-        //isLoggedIn ? <Start /> : <Join />
-      }
-      <Join />
+      {isLoggedIn ? <Start /> : <Join />}
     </div>
   );
 }
@@ -104,6 +122,8 @@ const WhyChoose = React.forwardRef((props, ref) => {
   );
 });
 
+WhyChoose.displayName = "WhyChoose";
+
 function GettingStarted() {
   return (
     <>
@@ -120,10 +140,10 @@ function GettingStarted() {
               <div className="text-lg font-black">Sign Up</div>
               Create your account effortlessly in just a few minutes. We&apos;ve
               streamlined the sign-up process to prioritize your privacy and
-              security. Your information is important, and we&apos;ve implemented
-              robust measures to ensure that your data remains confidential. By
-              signing up, you unlock a personalized space where you can manage
-              your bills seamlessly.
+              security. Your information is important, and we&apos;ve
+              implemented robust measures to ensure that your data remains
+              confidential. By signing up, you unlock a personalized space where
+              you can manage your bills seamlessly.
             </div>
             <hr />
           </li>
@@ -141,9 +161,9 @@ function GettingStarted() {
               intuitive form allows you to add essential details such as the
               name of the bill, the amount due, and the due date. This step is
               quick and straightforward, designed to save you time and eliminate
-              the hassle of bill tracking. Whether it&apos;s a recurring expense or a
-              one-time payment, you can effortlessly organize all your bills in
-              one place.
+              the hassle of bill tracking. Whether it&apos;s a recurring expense
+              or a one-time payment, you can effortlessly organize all your
+              bills in one place.
             </div>
             <hr />
           </li>
@@ -162,8 +182,8 @@ function GettingStarted() {
               dashboard provides a visual representation of all your bills,
               making it easy to identify upcoming payments, track your expenses,
               and monitor your financial health. Effortlessly edit existing
-              bills, mark them as paid when you&apos;ve settled the amount, or add
-              new bills as needed. Our goal is to empower you to manage your
+              bills, mark them as paid when you&apos;ve settled the amount, or
+              add new bills as needed. Our goal is to empower you to manage your
               finances with ease.
             </div>
             <hr />
@@ -241,8 +261,8 @@ function Start() {
             Start Managing Your Bills Effortlessly
           </h2>
           <p className="text-xl">
-            Ready to stay on top of your expenses? With Bill Tracker, you&apos;re in
-            control. Here&apos;s what you can do:
+            Ready to stay on top of your expenses? With Bill Tracker,
+            you&apos;re in control. Here&apos;s what you can do:
           </p>
 
           <div className="flex justify-center">
@@ -250,8 +270,8 @@ function Start() {
               <div className="p-4 border-2 rounded-lg w-full h-full cursor-pointer hover:scale-105 transition-transform">
                 <h2 className="text-xl font-bold">Create Your First Profile</h2>
                 <p>
-                  Begin by setting up profiles for different living places. It&apos;s
-                  the first step to organized bill management!
+                  Begin by setting up profiles for different living places.
+                  It&apos;s the first step to organized bill management!
                 </p>
               </div>
               <div className="p-4 border-2 rounded-lg w-full h-full cursor-pointer hover:scale-105 transition-transform">
@@ -264,7 +284,7 @@ function Start() {
             </div>
           </div>
 
-          <div className="flex gap-4 justify-center">
+          {/* <div className="flex gap-4 justify-center">
             <Link
               href={"/settings"}
               className="p-4 bg-black border border-transparent rounded-md font-semibold text-sm text-white uppercase tracking-widest hover:bg-gray-900 active:bg-gray-700 focus:outline-none focus:border-gray-700 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150"
@@ -277,7 +297,7 @@ function Start() {
             >
               Learn More
             </Link>
-          </div>
+          </div> */}
         </div>
       </section>
     </>
