@@ -67,7 +67,7 @@ function Profiles() {
         </h1>
         <div className="grid grid-cols-3 gap-4">
           {profiles &&
-            profiles.map((profile: any) => {
+            profiles.map((profile: ProfileType) => {
               return (
                 <Profile
                   profile={profile}

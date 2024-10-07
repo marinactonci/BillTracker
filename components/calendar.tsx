@@ -27,7 +27,7 @@ const Calendar = ({ billInstances, onChange }: CalendarProps) => {
 
   const fetchEventDetails = async () => {
     setBills([]);
-    let newBills: { id: number; name: string }[] = [];
+    const newBills: { id: number; name: string }[] = [];
     const enhancedEvents = await Promise.all(
       billInstances.map(async (instance) => {
         const bill: BillType = await getBillById(instance.bill_id);

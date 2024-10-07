@@ -39,8 +39,12 @@ function Register() {
         description:
           "A confirmation email has been sent to your email address. Please verify your email to login.",
       });
-    } catch (error: any) {
-      setError(error.error_description || error.message);
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("An unknown error occurred");
+      }
     }
     setLoading(false);
   };

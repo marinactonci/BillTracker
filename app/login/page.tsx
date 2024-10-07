@@ -22,8 +22,12 @@ function Login() {
     try {
       await signIn(email, password);
       router.push("/dashboard");
-    } catch (error: any) {
-      setError(error.error_description || error.message);
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("An unknown error occurred");
+      }
     }
     setLoading(false);
   };

@@ -4,7 +4,15 @@ import dayjs from "dayjs";
 import { updateBillInstance, deleteBillInstance } from "@/utils/supabaseUtils";
 
 interface BillInstanceProps {
-  event: any;
+  event: {
+    id: number;
+    billName: string;
+    profileName: string;
+    month: Date;
+    dueDate: Date;
+    amount: number;
+    isPaid: boolean;
+  };
   onChange: () => void;
 }
 
@@ -38,7 +46,7 @@ function BillInstance({ event, onChange }: BillInstanceProps) {
       setOpen(false);
       onChange();
       message.success("Bill instance updated successfully");
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error updating bill instance:", error);
       message.error("Failed to update bill instance");
     }
@@ -55,7 +63,7 @@ function BillInstance({ event, onChange }: BillInstanceProps) {
       setOpen(false);
       onChange();
       message.success("Bill instance deleted successfully");
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error deleting bill instance:", error);
       message.error("Failed to delete bill instance");
     }

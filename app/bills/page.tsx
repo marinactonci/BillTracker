@@ -88,7 +88,7 @@ function Bills() {
               </h2>
               <div className="grid grid-cols-3 gap-4">
                 {bills &&
-                  bills.map((bill: any) => {
+                  bills.map((bill: BillType) => {
                     if (bill.profile_id === profile.id) {
                       return (
                         <Bill bill={bill} key={bill.id} onChange={fetchBills} />
