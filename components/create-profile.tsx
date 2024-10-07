@@ -140,8 +140,7 @@ function CreateProfile({ onChange }: CreateProfileProps) {
           )}
         </form>
         <div className="modal-action">
-          <button
-            className="p-2 border bg-white border-black rounded-md font-semibold text-sm hover:bg-gray-50 transition-colors uppercase"
+          <Button
             onClick={() => {
               setOpen(false);
               setError(null);
@@ -149,17 +148,13 @@ function CreateProfile({ onChange }: CreateProfileProps) {
             disabled={isLoading}
           >
             Cancel
-          </button>
-          <button
-            className="p-2 bg-black min-w-[70px] border border-transparent rounded-md font-semibold text-sm text-white uppercase tracking-widest hover:bg-gray-900 active:bg-gray-700 focus:outline-none focus:border-gray-700 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150"
-            onClick={handleCreate}
-            disabled={isLoading}
-          >
+          </Button>
+          <Button onClick={handleCreate} disabled={isLoading} type="primary">
             {isLoading && (
               <span className="loading loading-spinner loading-md"></span>
             )}
             {!isLoading && "Create"}
-          </button>
+          </Button>
         </div>
       </Modal>
     </>

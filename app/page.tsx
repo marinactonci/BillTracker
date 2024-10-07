@@ -4,7 +4,6 @@ import React, { useRef } from "react";
 import Link from "next/link";
 
 function Home() {
-  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   const handleClick = () => {
@@ -16,7 +15,10 @@ function Home() {
       <Hero handleClick={handleClick} />
       <WhyChoose ref={ref} />
       <GettingStarted />
-      {isLoggedIn ? <Start /> : <Join />}
+      {
+        //isLoggedIn ? <Start /> : <Join />
+      }
+      <Join />
     </div>
   );
 }
@@ -58,7 +60,7 @@ const WhyChoose = React.forwardRef((props, ref) => {
             Managing your bills has never been easier. With{" "}
             <span className="font-bold">Bill Tracker</span>, you can
             effortlessly track, organize, and stay on top of your financial
-            commitments. Here's why you'll love it:
+            commitments. Here&apos;s why you&apos;ll love it:
           </p>
 
           <div className="flex justify-center">
@@ -116,9 +118,9 @@ function GettingStarted() {
             </div>
             <div className="timeline-start md:text-end mb-10">
               <div className="text-lg font-black">Sign Up</div>
-              Create your account effortlessly in just a few minutes. We've
+              Create your account effortlessly in just a few minutes. We&apos;ve
               streamlined the sign-up process to prioritize your privacy and
-              security. Your information is important, and we've implemented
+              security. Your information is important, and we&apos;ve implemented
               robust measures to ensure that your data remains confidential. By
               signing up, you unlock a personalized space where you can manage
               your bills seamlessly.
@@ -139,7 +141,7 @@ function GettingStarted() {
               intuitive form allows you to add essential details such as the
               name of the bill, the amount due, and the due date. This step is
               quick and straightforward, designed to save you time and eliminate
-              the hassle of bill tracking. Whether it's a recurring expense or a
+              the hassle of bill tracking. Whether it&apos;s a recurring expense or a
               one-time payment, you can effortlessly organize all your bills in
               one place.
             </div>
@@ -154,13 +156,13 @@ function GettingStarted() {
             </div>
             <div className="timeline-start md:text-end mb-10">
               <div className="text-lg font-black">Stay Organized</div>
-              Once you've added your bills, dive into our feature-rich
+              Once you&apos;ve added your bills, dive into our feature-rich
               dashboard. Gain a comprehensive overview of your financial
               landscape, allowing you to stay organized and in control. The
               dashboard provides a visual representation of all your bills,
               making it easy to identify upcoming payments, track your expenses,
               and monitor your financial health. Effortlessly edit existing
-              bills, mark them as paid when you've settled the amount, or add
+              bills, mark them as paid when you&apos;ve settled the amount, or add
               new bills as needed. Our goal is to empower you to manage your
               finances with ease.
             </div>
@@ -239,8 +241,8 @@ function Start() {
             Start Managing Your Bills Effortlessly
           </h2>
           <p className="text-xl">
-            Ready to stay on top of your expenses? With Bill Tracker, you're in
-            control. Here's what you can do:
+            Ready to stay on top of your expenses? With Bill Tracker, you&apos;re in
+            control. Here&apos;s what you can do:
           </p>
 
           <div className="flex justify-center">
@@ -248,7 +250,7 @@ function Start() {
               <div className="p-4 border-2 rounded-lg w-full h-full cursor-pointer hover:scale-105 transition-transform">
                 <h2 className="text-xl font-bold">Create Your First Profile</h2>
                 <p>
-                  Begin by setting up profiles for different living places. It's
+                  Begin by setting up profiles for different living places. It&apos;s
                   the first step to organized bill management!
                 </p>
               </div>
@@ -256,7 +258,7 @@ function Start() {
                 <h2 className="text-xl font-bold">Add Bills to Profiles</h2>
                 <p>
                   Track your monthly expenses by adding bills to each profile.
-                  It's quick and easy!
+                  It&apos;s quick and easy!
                 </p>
               </div>
             </div>

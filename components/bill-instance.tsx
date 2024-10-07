@@ -22,6 +22,8 @@ function BillInstance({ event, onChange }: BillInstanceProps) {
   const [dueDate, setDueDate] = useState(dayjs(event.dueDate));
   const [amount, setAmount] = useState(event.amount);
   const [isPaid, setIsPaid] = useState(event.isPaid);
+  const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
+  const [isLoadingDelete, setIsLoadingDelete] = useState(false);
 
   useEffect(() => {
     setMonth(dayjs(event.month));
@@ -31,6 +33,7 @@ function BillInstance({ event, onChange }: BillInstanceProps) {
   }, [event]);
 
   const handleUpdate = async () => {
+    setIsLoadingUpdate(true);
     if (!event.id) {
       message.error("Invalid bill instance ID");
       return;
@@ -49,10 +52,13 @@ function BillInstance({ event, onChange }: BillInstanceProps) {
     } catch (error) {
       console.error("Error updating bill instance:", error);
       message.error("Failed to update bill instance");
+    } finally {
+      setIsLoadingUpdate(false);
     }
   };
 
   const handleDelete = async () => {
+    setIsLoadingDelete(true);
     if (!event.id) {
       message.error("Invalid bill instance ID");
       return;
@@ -66,8 +72,10 @@ function BillInstance({ event, onChange }: BillInstanceProps) {
     } catch (error) {
       console.error("Error deleting bill instance:", error);
       message.error("Failed to delete bill instance");
+    } finally {
+      setIsLoadingDelete(false);
     }
-  }
+  };
 
   return (
     <>
@@ -146,14 +154,20 @@ function BillInstance({ event, onChange }: BillInstanceProps) {
           <div className="flex gap-3">
             <Button onClick={() => setOpen(false)}>Cancel</Button>
             <Button type="primary" onClick={handleUpdate}>
-              Update
+              {isLoadingUpdate && (
+                <span className="loading loading-spinner loading-md"></span>
+              )}
+              {!isLoadingUpdate && "Update"}
             </Button>
             <Button
               color="danger"
               variant="solid"
               onClick={() => handleDelete()}
             >
-              <span>Delete</span>
+              {isLoadingDelete && (
+                <span className="loading loading-spinner loading-md"></span>
+              )}
+              {!isLoadingDelete && "Delete"}
             </Button>
           </div>
         </div>

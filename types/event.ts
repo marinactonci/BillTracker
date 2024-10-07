@@ -1,4 +1,5 @@
 export interface EventType {
+  id: number;
   month: Date;
   dueDate: Date;
   billName: string;

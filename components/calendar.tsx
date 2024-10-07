@@ -104,10 +104,8 @@ const Calendar = ({ billInstances, onChange }: CalendarProps) => {
       "December",
     ];
 
-    // Adjust for Monday start
     const adjustedStartDay = startDay === 0 ? 6 : startDay - 1;
 
-    // Previous month's days
     const prevMonthDays = daysInMonth(
       new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1)
     );
@@ -125,7 +123,6 @@ const Calendar = ({ billInstances, onChange }: CalendarProps) => {
       );
     }
 
-    // Current month's days
     for (let day = 1; day <= totalDays; day++) {
       const date = new Date(
         currentDate.getFullYear(),
@@ -173,7 +170,6 @@ const Calendar = ({ billInstances, onChange }: CalendarProps) => {
       }
     }
 
-    // Next month's days
     const remainingCells = 7 - cells.length;
     for (let i = 1; i <= remainingCells; i++) {
       cells.push(

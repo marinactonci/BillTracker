@@ -29,7 +29,13 @@ function CreateBillInstance({ bills, onChange }: CreateProfileProps) {
   const handleCreate = async () => {
     setIsLoading(true);
     try {
-      await createBillInstance(billId, month.toDate(), dueDate.toDate(), amount, isPaid);
+      await createBillInstance(
+        billId,
+        month.toDate(),
+        dueDate.toDate(),
+        amount,
+        isPaid
+      );
       api.success({
         message: "Bill instance created",
         description: "The bill instance has been created successfully",
@@ -125,12 +131,18 @@ function CreateBillInstance({ bills, onChange }: CreateProfileProps) {
               Status: {isPaid ? "Paid" : "Unpaid"}
             </span>
           </div>
+          {error && (
+            <p className="text-red-500 text-sm font-semibold">{error}</p>
+          )}
         </form>
         <div className="flex items-center justify-end mt-8">
           <div className="flex gap-3">
             <Button onClick={() => setOpen(false)}>Cancel</Button>
             <Button type="primary" onClick={() => handleCreate()}>
-              Add
+              {isLoading && (
+                <span className="loading loading-spinner loading-md"></span>
+              )}
+              {!isLoading && "Add"}
             </Button>
           </div>
         </div>
