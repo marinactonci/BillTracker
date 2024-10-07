@@ -1,17 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { Suspense } from 'react';
 
-export default function ConfirmSignup() {
-  const [message, setMessage] = useState("Redirecting to confirm your signup...");
-  const searchParams = useSearchParams();
+function ConfirmSignupContent() {
+  const [message, setMessage] = useState("Confirming your signup...");
 
   useEffect(() => {
     const handleConfirmation = () => {
-      const fullSearchParams = searchParams.toString();
-      const confirmationUrlMatch = fullSearchParams.match(/confirmation_url=([^&]+)/);
-      const confirmation_url = confirmationUrlMatch ? decodeURIComponent(confirmationUrlMatch[1]) : null;
+      const searchParams = new URLSearchParams(window.location.search);
+      const confirmation_url = searchParams.get("confirmation_url");
 
       if (confirmation_url) {
         window.location.href = confirmation_url;
@@ -21,7 +19,7 @@ export default function ConfirmSignup() {
     };
 
     handleConfirmation();
-  }, [searchParams]);
+  }, []);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -30,5 +28,13 @@ export default function ConfirmSignup() {
         <p>{message}</p>
       </div>
     </div>
+  );
+}
+
+export default function ConfirmSignup() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ConfirmSignupContent />
+    </Suspense>
   );
 }

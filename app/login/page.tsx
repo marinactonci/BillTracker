@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Input } from "antd";
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 import { signIn } from "@/utils/authUtils";
 import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabaseClient";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -15,6 +16,23 @@ function Login() {
   const [error, setError] = useState("");
 
   const router = useRouter();
+
+  useEffect(() => {
+    const initialize = async () => {
+      try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+        if (session) {
+          router.push("/dashboard");
+        }
+      } catch (error) {
+        console.error("Error initializing:", error);
+      }
+    };
+
+    initialize();
+  }, []);
 
   const handleLogin = async () => {
     setLoading(true);

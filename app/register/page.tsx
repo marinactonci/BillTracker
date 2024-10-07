@@ -1,11 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Input } from "antd";
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 import { signUp } from "../../utils/authUtils";
 import { notification } from "antd";
+import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabaseClient";
 
 function Register() {
   const [email, setEmail] = useState("");
@@ -17,8 +19,26 @@ function Register() {
   const [error, setError] = useState("");
 
   const [api, contextHolder] = notification.useNotification();
+  const router = useRouter();
 
   const isDisabled = loading || !email || !password || !confirmPassword;
+
+  useEffect(() => {
+    const initialize = async () => {
+      try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+        if (session) {
+          router.push("/dashboard");
+        }
+      } catch (error) {
+        console.error("Error initializing:", error);
+      }
+    };
+
+    initialize();
+  }, []);
 
   const handleRegister = async () => {
     setLoading(true);
@@ -31,9 +51,7 @@ function Register() {
     }
 
     try {
-      const { user } = await signUp(email, password);
-      console.log("Signed up: ", user);
-      //router.push("/login");
+      await signUp(email, password);
       api.success({
         message: "Registration successful",
         description:
