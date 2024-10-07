@@ -1,6 +1,6 @@
 import { supabase } from '../lib/supabaseClient'
 
-export async function signUp(email: string, password: string) {
+export async function signUpWithPassword(email: string, password: string) {
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
@@ -9,11 +9,17 @@ export async function signUp(email: string, password: string) {
   return data
 }
 
-export async function signIn(email: string, password: string) {
+export async function signInWithPassword(email: string, password: string) {
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
   })
+  if (error) throw error
+  return data
+}
+
+export async function signInWithGithub() {
+  const { data, error } = await supabase.auth.signInWithOAuth({ provider: 'github'})
   if (error) throw error
   return data
 }

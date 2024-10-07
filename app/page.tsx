@@ -47,9 +47,9 @@ export default Home;
 function Hero({ handleClick }: { handleClick: () => void }) {
   return (
     <>
-      <main className="flex justify-between items-center h-[92vh] container mx-auto">
-        <div className="flex flex-col gap-3">
-          <h1 className="text-6xl font-bold">Welcome to Bill Tracker</h1>
+      <main className="flex justify-between items-center h-[92vh] container mx-auto relative overflow-hidden">
+        <div className="flex flex-col gap-3 z-10">
+          <h1 className="text-6xl font-bold">Welcome to <br /> Bill Tracker</h1>
           <h2 className="text-2xl">Never Miss a Bill Payment Again</h2>
           <div>
             <Button type="primary" size="large" onClick={handleClick}>
@@ -57,7 +57,7 @@ function Hero({ handleClick }: { handleClick: () => void }) {
             </Button>
           </div>
         </div>
-        <img src="/landing.png" alt="" className="rounded-full" />
+        <img src="/landing2.jpg" alt="Landing page illustration" width={1024} height={1024} className="rounded-full z-0" />
       </main>
     </>
   );
@@ -125,7 +125,8 @@ WhyChoose.displayName = "WhyChoose";
 function GettingStarted() {
   return (
     <>
-      <section className="container mx-auto py-20">
+      <section className="container mx-auto py-20 relative overflow-hidden">
+        <img src="/landing3.jpg" alt="Landing page doodle illustration" className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-10" />
         <h2 className="text-4xl font-bold mb-12">Getting Started is Simple</h2>
         <ul className="timeline timeline-snap-icon max-md:timeline-compact timeline-vertical">
           <li>
@@ -206,7 +207,6 @@ function GettingStarted() {
           </li>
         </ul>
       </section>
-      ;
     </>
   );
 }

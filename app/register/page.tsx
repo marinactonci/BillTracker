@@ -2,9 +2,13 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { Input } from "antd";
-import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
-import { signUp } from "../../utils/authUtils";
+import { Button, Input } from "antd";
+import {
+  EyeInvisibleOutlined,
+  EyeOutlined,
+  GithubFilled,
+} from "@ant-design/icons";
+import { signUpWithPassword, signInWithGithub } from "../../utils/authUtils";
 import { notification } from "antd";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
@@ -16,6 +20,7 @@ function Register() {
   const [passwordConfirmVisible, setPasswordConfirmVisible] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [githubLoading, setGithubLoading] = useState(false);
   const [error, setError] = useState("");
 
   const [api, contextHolder] = notification.useNotification();
@@ -30,7 +35,7 @@ function Register() {
           data: { session },
         } = await supabase.auth.getSession();
         if (session) {
-          router.push("/dashboard");
+          router.push("/calendar");
         }
       } catch (error) {
         console.error("Error initializing:", error);
@@ -51,7 +56,7 @@ function Register() {
     }
 
     try {
-      await signUp(email, password);
+      await signUpWithPassword(email, password);
       api.success({
         message: "Registration successful",
         description:
@@ -67,29 +72,54 @@ function Register() {
     setLoading(false);
   };
 
+  const handleGithubLogin = async () => {
+    setGithubLoading(true);
+    setError("");
+    try {
+      await signInWithGithub();
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("An unknown error occurred");
+      }
+    }
+    setGithubLoading(false);
+  };
+
+  const handleGoogleLogin = async () => {
+    // Implement Google login
+  };
+
   return (
     <>
       {contextHolder}
-      <div className="min-h-[84vh] grid place-items-center">
+      <div className="min-h-[84vh] grid place-items-center bg-gray-100">
         <div className="w-full max-w-md p-8 space-y-4 bg-white shadow-lg rounded-xl">
           <h2 className="text-2xl font-semibold text-center text-gray-700">
             Register a new account
           </h2>
           <div className="grid grid-cols-2 gap-4 my-4">
-            {/* <button
+            <button
               className="flex items-center justify-center space-x-2 h-12 border border-black rounded-md hover:bg-gray-50 transition-colors"
               onClick={handleGoogleLogin}
             >
               <img src="/google.svg" alt="" />
               <span>Google</span>
-            </button> */}
-            {/* <button
+            </button>
+            <button
               className="flex items-center justify-center space-x-2 h-12 bg-black text-white rounded-md hover:bg-slate-900 transition-colors"
               onClick={handleGithubLogin}
             >
-              <i className="fa-brands fa-github"></i>
-              <span>Github</span>
-            </button> */}
+              {githubLoading ? (
+                <span className="loading loading-spinner loading-md"></span>
+              ) : (
+                <>
+                  <GithubFilled />
+                  <span>Github</span>
+                </>
+              )}
+            </button>
           </div>
           <div className="relative my-2">
             <div
@@ -158,21 +188,22 @@ function Register() {
             {error && (
               <div className="text-red-500 text-sm text-center">{error}</div>
             )}
-            <button
-              className="w-full p-2 mt-1 bg-black border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-900 active:bg-gray-700 focus:outline-none focus:border-gray-700 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150"
-              type="submit"
+            <Button
+              type="primary"
+              variant="solid"
+              className="w-full"
               onClick={handleRegister}
               disabled={isDisabled}
             >
               Sign Up
-            </button>
+            </Button>
           </form>
           <div className="flex items-center justify-center">
             <span className="text-sm text-gray-600">
               Already have an account?{" "}
             </span>
             <Link
-              className="ml-1 text-sm font-medium text-gray-600 hover:underline"
+              className="ml-1 text-sm font-medium text-blue-600 hover:text-blue-300 transition-colors hover:underline"
               href="/login"
             >
               Log In

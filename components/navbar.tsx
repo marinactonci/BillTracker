@@ -22,7 +22,7 @@ function Navbar() {
 
   const links = [
     { name: "Home", to: "/" },
-    { name: "Dashboard", to: "/dashboard" },
+    { name: "Calendar", to: "/calendar" },
     { name: "Profiles", to: "/profiles" },
     { name: "Bills", to: "/bills" },
     { name: "Settings", to: "/settings" },
@@ -129,7 +129,7 @@ function Navbar() {
             </label>
             <ul
               tabIndex={0}
-              className="dropdown-content w-auto menu p-2 shadow bg-base-100 rounded-box"
+              className="dropdown-content w-auto z-[1] menu p-2 shadow bg-base-100 rounded-box"
             >
               <li>
                 <div className="flex items-center gap-2">
