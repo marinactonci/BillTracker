@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { CaretLeftFilled, CaretRightFilled } from "@ant-design/icons";
 import { Button } from "antd";
 import { BillInstanceType } from "@/types/bill-instance";
-import { getBillById, getProfileById } from "@/utils/supabaseUtils";
+import { getBillById, getProfileById, getProfiles, getBills } from "@/utils/supabaseUtils";
 import { BillType } from "@/types/bill";
 import { ProfileType } from "@/types/profile";
 import CreateBillInstance from "./create.bill-instance";
@@ -23,17 +23,13 @@ const Calendar = ({ billInstances, onChange }: CalendarProps) => {
 
   useEffect(() => {
     fetchEventDetails();
+    fetchBills();
   }, [billInstances]);
 
   const fetchEventDetails = async () => {
-    setBills([]);
-    const newBills: { id: number; name: string }[] = [];
     const enhancedEvents = await Promise.all(
       billInstances.map(async (instance) => {
         const bill: BillType = await getBillById(instance.bill_id);
-        if (!newBills.some((b) => b.id === bill.id)) {
-          newBills.push({ id: bill.id, name: bill.name });
-        }
         const profile: ProfileType = await getProfileById(bill.profile_id);
         return {
           id: instance.id,
@@ -46,8 +42,23 @@ const Calendar = ({ billInstances, onChange }: CalendarProps) => {
         };
       })
     );
-    setBills(newBills);
     setEvents(enhancedEvents);
+  };
+
+  const fetchBills = async () => {
+    try {
+      const profiles: ProfileType[] = await getProfiles();
+
+      let allBills: BillType[] = [];
+      for (const profile of profiles) {
+        const profileBills = await getBills(profile.id);
+        allBills = [...allBills, ...profileBills];
+      }
+
+      setBills(allBills.map((bill) => ({ id: bill.id, name: bill.name })));
+    } catch (error) {
+      console.error("Error fetching bills", error);
+    }
   };
 
   const daysInMonth = (date: Date) => {
@@ -153,7 +164,7 @@ const Calendar = ({ billInstances, onChange }: CalendarProps) => {
             </div>
             <div className="grid grid-cols-1 gap-2 mt-1">
               {dayEvents.map((event, index) => (
-                <BillInstance event={event} onChange={onChange} key={index}/>
+                <BillInstance event={event} onChange={onChange} key={index} />
               ))}
             </div>
           </div>

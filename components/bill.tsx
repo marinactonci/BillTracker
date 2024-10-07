@@ -106,7 +106,7 @@ function Bill({ bill, onChange }: BillProps) {
                   <p className="font-semibold">
                     Link: <span className="font-normal">{bill.link}</span>
                   </p>
-                  <Button onClick={() => window.open(bill.link, "_blank")}>
+                  <Button href={bill.link} target="_blank">
                     <ExportOutlined />
                   </Button>
                 </div>
@@ -224,21 +224,22 @@ function Bill({ bill, onChange }: BillProps) {
           </Checkbox>
           <label className="text-gray-900 mt-3 text-lg">E-bill</label>
           <label className="flex flex-col w-full">
-            <span className="text-gray-700">Street</span>
+            <span className="text-gray-700">Link</span>
             <Input
               type="text"
-              placeholder="Eg. 123 Main St."
+              placeholder="https://www.example.com"
               defaultValue={bill.link}
               onChange={(e) => {
                 setLink(e.target.value);
               }}
             />
           </label>
+          <label className="text-gray-900 text-md">Credentials</label>
           <label className="flex flex-col w-full">
-            <span className="text-gray-700">City</span>
+            <span className="text-gray-700">Username</span>
             <Input
               type="text"
-              placeholder="Eg. New York"
+              placeholder="Username for e-bill"
               defaultValue={decrypt(bill.username)}
               onChange={(e) => {
                 setUsername(e.target.value);
@@ -246,7 +247,7 @@ function Bill({ bill, onChange }: BillProps) {
             />
           </label>
           <label className="flex flex-col w-full">
-            <span className="text-gray-700">Country</span>
+            <span className="text-gray-700">Password</span>
             <Input.Password
               visibilityToggle={{
                 visible: passwordVisible,

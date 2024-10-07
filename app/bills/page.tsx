@@ -3,11 +3,11 @@
 import React, { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { getBills, getProfiles } from "@/utils/supabaseUtils";
-import Link from "next/link";
 import Bill from "@/components/bill";
 import CreateBill from "@/components/create-bill";
 import { ProfileType } from "@/types/profile";
 import { BillType } from "@/types/bill";
+import { Button } from "antd";
 
 function Bills() {
   const [profiles, setProfiles] = useState<ProfileType[]>([]);
@@ -62,12 +62,26 @@ function Bills() {
             <p className="text-xl">
               You have to be signed in to view this page
             </p>
-            <Link
-              href="/login"
-              className="p-2 bg-black border border-transparent rounded-md font-semibold text-sm text-white uppercase tracking-widest hover:bg-gray-900 active:bg-gray-700 focus:outline-none focus:border-gray-700 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150"
-            >
+            <Button type="primary" size="large" href="/login">
               Log In
-            </Link>
+            </Button>
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  if (!profiles.length) {
+    return (
+      <>
+        <div className="min-h-[84vh] grid place-items-center">
+          <div className="flex flex-col items-center justify-center gap-3">
+            <p className="text-xl">
+              You don't have any profiles yet. Please create a profile first.
+            </p>
+            <Button type="primary" size="large" href="/profiles">
+              Create Profile
+            </Button>
           </div>
         </div>
       </>

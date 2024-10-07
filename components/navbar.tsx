@@ -13,6 +13,7 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import Image from "next/image";
+import { Button } from "antd";
 
 function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -66,7 +67,7 @@ function Navbar() {
           width={32}
           height={32}
         />
-        <div className="text-2xl transition-colors">Bill Tracker</div>
+        <div className="text-2xl hover:text-blue-300 transition-colors">Bill Tracker</div>
       </Link>
       <div className="flex gap-8 items-center">
         {links.map((link) => (
@@ -93,13 +94,23 @@ function Navbar() {
           >
             <li>
               <a className="flex items-center gap-2">
-                <Image src="/flags/hr.png" alt="Croatian flag icon" width={15} height={15}/>
+                <Image
+                  src="/flags/hr.png"
+                  alt="Croatian flag icon"
+                  width={15}
+                  height={15}
+                />
                 <span>Croatian</span>
               </a>
             </li>
             <li>
-            <a className="flex items-center gap-2">
-                <Image src="/flags/en.png" alt="English flag icon" width={15} height={15}/>
+              <a className="flex items-center gap-2">
+                <Image
+                  src="/flags/en.png"
+                  alt="English flag icon"
+                  width={15}
+                  height={15}
+                />
                 <span>English</span>
               </a>
             </li>
@@ -109,7 +120,7 @@ function Navbar() {
         {isLoggedIn ? (
           <div className="dropdown dropdown-end">
             <label tabIndex={0} className="w-auto cursor-pointer">
-              <div className="grid place-items-center w-12 h-12 rounded-full bg-black group hover:bg-gray-900 transition-colors">
+              <div className="grid place-items-center w-12 h-12 rounded-full bg-blue-600 group hover:bg-blue-300 transition-colors">
                 <UserOutlined
                   className="group-hover:scale-125 transition-transform"
                   style={{ fontSize: "24px", color: "white" }}
@@ -135,12 +146,7 @@ function Navbar() {
             </ul>
           </div>
         ) : (
-          <Link
-            className="w-full p-2 bg-black border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-900 active:bg-gray-700 focus:outline-none focus:border-gray-700 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150"
-            href="/login"
-          >
-            Log In
-          </Link>
+          <Button type="primary" size="large" href="/login">Log In</Button>
         )}
       </div>
     </nav>

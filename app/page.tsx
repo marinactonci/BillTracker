@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
-import Link from "next/link";
 import { supabase } from "@/lib/supabaseClient";
+import { Button } from "antd";
+import Link from "next/link";
 
 function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -51,12 +52,9 @@ function Hero({ handleClick }: { handleClick: () => void }) {
           <h1 className="text-6xl font-bold">Welcome to Bill Tracker</h1>
           <h2 className="text-2xl">Never Miss a Bill Payment Again</h2>
           <div>
-            <button
-              className="p-4 bg-black border border-transparent rounded-md font-semibold text-sm text-white uppercase tracking-widest hover:bg-gray-900 active:bg-gray-700 focus:outline-none focus:border-gray-700 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150"
-              onClick={handleClick}
-            >
+            <Button type="primary" size="large" onClick={handleClick}>
               Get started
-            </button>
+            </Button>
           </div>
         </div>
         <img src="/landing.png" alt="" className="rounded-full" />
@@ -83,21 +81,21 @@ const WhyChoose = React.forwardRef((props, ref) => {
 
           <div className="flex justify-center">
             <div className="grid grid-cols-2 gap-6 place-items-center">
-              <div className="p-4 border-2 rounded-lg w-full h-full cursor-pointer hover:scale-105 transition-transform">
+              <div className="p-4 border-2 rounded-lg w-full h-full hover:scale-105 transition-transform">
                 <h2 className="text-xl font-bold">Simple and intuitive</h2>
                 <p>
                   Add, edit, and mark bills as paid with just a few clicks. Our
                   user-friendly interface ensures a hassle-free experience.
                 </p>
               </div>
-              <div className="p-4 border-2 rounded-lg w-full h-full cursor-pointer hover:scale-105 transition-transform">
+              <div className="p-4 border-2 rounded-lg w-full h-full hover:scale-105 transition-transform">
                 <h2 className="text-xl font-bold">Real-Time Updates</h2>
                 <p>
                   Stay in the loop with real-time updates on upcoming bills and
                   payment status changes.
                 </p>
               </div>
-              <div className="p-4 border-2 rounded-lg w-full h-full cursor-pointer hover:scale-105 transition-transform">
+              <div className="p-4 border-2 rounded-lg w-full h-full hover:scale-105 transition-transform">
                 <h2 className="text-xl font-bold">
                   Powerful Filtering and Sorting
                 </h2>
@@ -107,7 +105,7 @@ const WhyChoose = React.forwardRef((props, ref) => {
                   criteria.
                 </p>
               </div>
-              <div className="p-4 border-2 rounded-lg w-full h-full cursor-pointer hover:scale-105 transition-transform">
+              <div className="p-4 border-2 rounded-lg w-full h-full hover:scale-105 transition-transform">
                 <h2 className="text-xl font-bold">Secure and Private</h2>
                 <p>
                   Your data is important. Rest assured, our robust security
@@ -132,7 +130,7 @@ function GettingStarted() {
         <ul className="timeline timeline-snap-icon max-md:timeline-compact timeline-vertical">
           <li>
             <div className="timeline-middle">
-              <div className="bg-black text-white w-8 h-8 rounded-lg grid place-items-center">
+              <div className="bg-blue-600 text-white w-8 h-8 rounded-lg grid place-items-center">
                 1
               </div>
             </div>
@@ -150,7 +148,7 @@ function GettingStarted() {
           <li>
             <hr />
             <div className="timeline-middle">
-              <div className="bg-black text-white w-8 h-8 rounded-lg grid place-items-center">
+              <div className="bg-blue-600 text-white w-8 h-8 rounded-lg grid place-items-center">
                 2
               </div>
             </div>
@@ -170,7 +168,7 @@ function GettingStarted() {
           <li>
             <hr />
             <div className="timeline-middle">
-              <div className="bg-black text-white w-8 h-8 rounded-lg grid place-items-center">
+              <div className="bg-blue-600 text-white w-8 h-8 rounded-lg grid place-items-center">
                 3
               </div>
             </div>
@@ -191,7 +189,7 @@ function GettingStarted() {
           <li>
             <hr />
             <div className="timeline-middle">
-              <div className="bg-black text-white w-8 h-8 rounded-lg grid place-items-center">
+              <div className="bg-blue-600 text-white w-8 h-8 rounded-lg grid place-items-center">
                 4
               </div>
             </div>
@@ -224,27 +222,21 @@ function Join() {
             experience the convenience of organized bill management.
           </p>
           <div className="flex gap-4 justify-center">
-            <Link
-              href={"/register"}
-              className="p-4 bg-black border border-transparent rounded-md font-semibold text-sm text-white uppercase tracking-widest hover:bg-gray-900 active:bg-gray-700 focus:outline-none focus:border-gray-700 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150"
-            >
+            <Button type="primary" size="large" href={"/register"}>
               Sign Up Now
-            </Link>
-            <Link
-              href={""}
-              className="p-4 border uppercase bg-white border-black rounded-md font-semibold text-sm hover:bg-gray-50 transition-colors"
-            >
+            </Button>
+            <Button type="default" size="large" href={"/login"}>
               Learn More
-            </Link>
+            </Button>
           </div>
           <div className="flex items-center justify-center text-xl">
             <span>Have questions? </span>
-            <a
-              className="ml-1 text-gray-600 hover:underline"
+            <Link
+              className="ml-1 text-blue-600 hover:text-blue-300 transition-colors hover:underline"
               href="mailto:billtracker@gmail.com"
             >
               Contact Us
-            </a>
+            </Link>
           </div>
         </div>
       </section>
@@ -267,14 +259,14 @@ function Start() {
 
           <div className="flex justify-center">
             <div className="grid grid-cols-custom gap-6 place-items-center">
-              <div className="p-4 border-2 rounded-lg w-full h-full cursor-pointer hover:scale-105 transition-transform">
+              <div className="p-4 border-2 rounded-lg w-full h-full hover:scale-105 transition-transform">
                 <h2 className="text-xl font-bold">Create Your First Profile</h2>
                 <p>
                   Begin by setting up profiles for different living places.
                   It&apos;s the first step to organized bill management!
                 </p>
               </div>
-              <div className="p-4 border-2 rounded-lg w-full h-full cursor-pointer hover:scale-105 transition-transform">
+              <div className="p-4 border-2 rounded-lg w-full h-full hover:scale-105 transition-transform">
                 <h2 className="text-xl font-bold">Add Bills to Profiles</h2>
                 <p>
                   Track your monthly expenses by adding bills to each profile.
@@ -283,21 +275,6 @@ function Start() {
               </div>
             </div>
           </div>
-
-          {/* <div className="flex gap-4 justify-center">
-            <Link
-              href={"/settings"}
-              className="p-4 bg-black border border-transparent rounded-md font-semibold text-sm text-white uppercase tracking-widest hover:bg-gray-900 active:bg-gray-700 focus:outline-none focus:border-gray-700 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150"
-            >
-              Add bill
-            </Link>
-            <Link
-              href={""}
-              className="p-4 border uppercase bg-white border-black rounded-md font-semibold text-sm hover:bg-gray-50 transition-colors"
-            >
-              Learn More
-            </Link>
-          </div> */}
         </div>
       </section>
     </>

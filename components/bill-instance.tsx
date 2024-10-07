@@ -87,7 +87,7 @@ function BillInstance({ event, onChange }: BillInstanceProps) {
       >
         <div className="font-medium">{event.billName}</div>
         <div className="text-gray-600">{event.profileName}</div>
-        <div className="text-gray-500">${event.amount.toFixed(2)}</div>
+        <div className="text-gray-500">{event.amount.toFixed(2)} €</div>
         <div className={event.isPaid ? "text-green-600" : "text-red-600"}>
           {event.isPaid ? "Paid" : "Unpaid"}
         </div>
@@ -153,12 +153,6 @@ function BillInstance({ event, onChange }: BillInstanceProps) {
         <div className="flex items-center justify-end mt-8">
           <div className="flex gap-3">
             <Button onClick={() => setOpen(false)}>Cancel</Button>
-            <Button type="primary" onClick={handleUpdate}>
-              {isLoadingUpdate && (
-                <span className="loading loading-spinner loading-md"></span>
-              )}
-              {!isLoadingUpdate && "Update"}
-            </Button>
             <Button
               color="danger"
               variant="solid"
@@ -168,6 +162,12 @@ function BillInstance({ event, onChange }: BillInstanceProps) {
                 <span className="loading loading-spinner loading-md"></span>
               )}
               {!isLoadingDelete && "Delete"}
+            </Button>
+            <Button type="primary" onClick={handleUpdate}>
+              {isLoadingUpdate && (
+                <span className="loading loading-spinner loading-md"></span>
+              )}
+              {!isLoadingUpdate && "Update"}
             </Button>
           </div>
         </div>
