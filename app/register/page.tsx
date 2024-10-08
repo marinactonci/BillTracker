@@ -8,7 +8,11 @@ import {
   EyeOutlined,
   GithubFilled,
 } from "@ant-design/icons";
-import { signUpWithPassword, signInWithGithub } from "../../utils/authUtils";
+import {
+  signUpWithPassword,
+  signInWithGithub,
+  signInWithGoogle,
+} from "../../utils/authUtils";
 import { notification } from "antd";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
@@ -21,6 +25,7 @@ function Register() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [githubLoading, setGithubLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState("");
 
   const [api, contextHolder] = notification.useNotification();
@@ -88,7 +93,18 @@ function Register() {
   };
 
   const handleGoogleLogin = async () => {
-    // Implement Google login
+    setGoogleLoading(true);
+    setError("");
+    try {
+      await signInWithGoogle();
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("An unknown error occurred");
+      }
+    }
+    setGoogleLoading(false);
   };
 
   return (
@@ -104,8 +120,14 @@ function Register() {
               className="flex items-center justify-center space-x-2 h-12 border border-black rounded-md hover:bg-gray-50 transition-colors"
               onClick={handleGoogleLogin}
             >
-              <img src="/google.svg" alt="" />
-              <span>Google</span>
+              {githubLoading ? (
+                <span className="loading loading-spinner loading-md"></span>
+              ) : (
+                <>
+                  <img src="/google.svg" alt="" />
+                  <span>Github</span>
+                </>
+              )}
             </button>
             <button
               className="flex items-center justify-center space-x-2 h-12 bg-black text-white rounded-md hover:bg-slate-900 transition-colors"

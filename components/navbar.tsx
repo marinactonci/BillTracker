@@ -67,7 +67,9 @@ function Navbar() {
           width={32}
           height={32}
         />
-        <div className="text-2xl hover:text-blue-300 transition-colors">Bill Tracker</div>
+        <div className="text-2xl hover:text-blue-300 transition-colors">
+          Bill Tracker
+        </div>
       </Link>
       <div className="flex gap-8 items-center">
         {links.map((link) => (
@@ -146,7 +148,9 @@ function Navbar() {
             </ul>
           </div>
         ) : (
-          <Button type="primary" size="large" href="/login">Log In</Button>
+          <Button type="primary" size="large" href="/login">
+            Log In
+          </Button>
         )}
       </div>
     </nav>
