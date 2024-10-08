@@ -120,7 +120,7 @@ function Register() {
               className="flex items-center justify-center space-x-2 h-12 border border-black rounded-md hover:bg-gray-50 transition-colors"
               onClick={handleGoogleLogin}
             >
-              {githubLoading ? (
+              {googleLoading ? (
                 <span className="loading loading-spinner loading-md"></span>
               ) : (
                 <>
