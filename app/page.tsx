@@ -174,7 +174,7 @@ function GettingStarted() {
                   {index + 1}
                 </div>
               </div>
-              <div className={`${index % 2 === 0 ? 'timeline-start md:text-end': 'timeline-end'} mb-10`}>
+              <div className={`${index % 2 === 0 ? 'timeline-start md:text-end': 'timeline-end'} md:mb-10`}>
                 <div className="text-lg font-black">{step.title}</div>
                 {step.description}
               </div>
