@@ -102,7 +102,7 @@ function Bill({ bill, onChange }: BillProps) {
           <div className="flex flex-col gap-2">
             {bill.link && (
               <div className="text-lg text-zinc-500">
-                <div className="flex items-center gap-6">
+                <div className="flex items-center justify-between flex-wrap">
                   <p className="font-semibold">
                     Link: <span className="font-normal">{bill.link}</span>
                   </p>
@@ -114,7 +114,7 @@ function Bill({ bill, onChange }: BillProps) {
             )}
             {decrypt(bill.username) && (
               <div className="text-lg text-zinc-500">
-                <div className="flex items-center gap-6">
+                <div className="flex items-center justify-between flex-wrap">
                   <p className="font-semibold">
                     Username:{" "}
                     <span className="font-normal">
@@ -133,7 +133,7 @@ function Bill({ bill, onChange }: BillProps) {
             )}
             {decrypt(bill.password) && (
               <div className="text-lg text-zinc-500">
-                <div className="flex items-center gap-6">
+                <div className="flex items-center justify-between flex-wrap">
                   <p className="font-semibold">
                     Password:{" "}
                     <span className="font-normal">

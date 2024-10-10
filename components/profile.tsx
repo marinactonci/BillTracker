@@ -97,7 +97,7 @@ function Profile({ profile, onChange }: ProfileProps) {
             <p className=" text-zinc-500">
               {profile.street}, {profile.city},{" "}
               {countries.map((countryItem) => {
-                if (countryItem.code === profile.country) {
+                if (countryItem.name === profile.country) {
                   return countryItem.name;
                 }
               })}
@@ -144,7 +144,7 @@ function Profile({ profile, onChange }: ProfileProps) {
             <Input
               type="text"
               placeholder="Entert profile name"
-              defaultValue={profile.name}
+              defaultValue={name}
               onChange={(e) => {
                 setName(e.target.value);
               }}
@@ -167,7 +167,7 @@ function Profile({ profile, onChange }: ProfileProps) {
             <Input
               type="text"
               placeholder="Eg. New York"
-              defaultValue={profile.city}
+              defaultValue={city}
               onChange={(e) => {
                 setCity(e.target.value);
               }}
@@ -177,7 +177,10 @@ function Profile({ profile, onChange }: ProfileProps) {
             <span className="text-gray-700">Country</span>
             <AutoComplete
               allowClear
-              defaultValue={profile.country}
+              defaultValue={
+                countries.find((countryItem) => countryItem.name === country)
+                  ?.name
+              }
               options={countries.map((country) => {
                 return {
                   value: country.name,

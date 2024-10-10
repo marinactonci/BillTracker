@@ -136,7 +136,7 @@ function Navbar() {
             </Button>
           )}
         </div>
-        <div className="flex sm:hidden items-center gap-8">
+        <div className="flex sm:hidden items-center gap-4">
           <LanguageSelect />
           <Button onClick={() => setOpen(true)}>
             <MenuOutlined />

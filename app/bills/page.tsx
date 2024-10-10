@@ -57,9 +57,9 @@ function Bills() {
   if (!isLoggedIn) {
     return (
       <>
-        <div className="min-h-[84vh] grid place-items-center">
+        <div className="px-4 sm:px-0 min-h-[84vh] grid place-items-center">
           <div className="flex flex-col items-center justify-center gap-3">
-            <p className="text-xl">
+            <p className="text-xl text-center">
               You have to be signed in to view this page
             </p>
             <Button type="primary" size="large" href="/login">
@@ -74,9 +74,9 @@ function Bills() {
   if (!profiles.length) {
     return (
       <>
-        <div className="min-h-[84vh] grid place-items-center">
+        <div className="px-4 sm:px-0 min-h-[84vh] grid place-items-center">
           <div className="flex flex-col items-center justify-center gap-3">
-            <p className="text-xl">
+            <p className="text-xl text-center">
               You don&apos;t have any profiles yet. Please create a profile first.
             </p>
             <Button type="primary" size="large" href="/profiles">
@@ -90,7 +90,7 @@ function Bills() {
 
   return (
     <>
-      <div className="container mx-auto min-h-[84vh] py-20">
+      <div className="px-4 sm:px-0 container mx-auto min-h-[84vh] py-20">
         <h1 className="text-3xl font-medium mb-6">
           Add a new bill or edit the existing ones
         </h1>
@@ -100,7 +100,7 @@ function Bills() {
               <h2 className="text-2xl font-semibold mb-4">
                 Bills for {profile.name}
               </h2>
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 {bills &&
                   bills.map((bill: BillType) => {
                     if (bill.profile_id === profile.id) {
