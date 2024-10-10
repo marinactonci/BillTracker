@@ -8,7 +8,6 @@ import { signOut, getCurrentUser } from "@/utils/authUtils";
 import {
   CaretDownOutlined,
   PoweroffOutlined,
-  SettingOutlined,
   TranslationOutlined,
   UserOutlined,
 } from "@ant-design/icons";
