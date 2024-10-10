@@ -6,18 +6,19 @@ import { useRouter, usePathname } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import { signOut, getCurrentUser } from "@/utils/authUtils";
 import {
-  CaretDownOutlined,
+  MenuOutlined,
   PoweroffOutlined,
-  TranslationOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import Image from "next/image";
-import { Button } from "antd";
+import { Button, Drawer } from "antd";
 import { UserType } from "@/types/user";
+import LanguageSelect from "./language-select";
 
 function Navbar() {
   const [user, setUser] = useState<UserType | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [open, setOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
 
@@ -69,104 +70,142 @@ function Navbar() {
   };
 
   return (
-    <nav className="flex items-center justify-between px-6 border-b h-[8vh]">
-      <Link href="/" className="flex gap-3 items-center">
-        <Image
-          src="/logo.svg"
-          alt=""
-          className="w-8 h-8 hover:scale-110 transform transition duration-300 ease-in-out"
-          width={32}
-          height={32}
-        />
-        <div className="text-2xl hover:text-blue-300 transition-colors">
-          Bill Tracker
-        </div>
-      </Link>
-      <div className="flex gap-8 items-center">
-        {links.map((link) => (
-          <Link
-            key={link.name}
-            href={link.to}
-            className={`transition-colors hover:text-blue-300 ${
-              pathname === link.to ? "text-blue-600 font-bold" : "text-gray-800"
-            }`}
-          >
-            {link.name}
-          </Link>
-        ))}
-        <div className="dropdown dropdown-end">
-          <label tabIndex={0} className="w-auto cursor-pointer">
-            <div className="flex items-center gap-2 hover:text-blue-300 transition-colors">
-              <TranslationOutlined style={{ fontSize: "24px" }} />
-              <CaretDownOutlined />
-            </div>
-          </label>
-          <ul
-            tabIndex={0}
-            className="dropdown-content z-[1] menu p-2 w-[125px] shadow bg-base-100 rounded-box"
-          >
-            <li>
-              <a className="flex items-center gap-2">
-                <Image
-                  src="/flags/hr.png"
-                  alt="Croatian flag icon"
-                  width={15}
-                  height={15}
-                />
-                <span>Croatian</span>
-              </a>
-            </li>
-            <li>
-              <a className="flex items-center gap-2">
-                <Image
-                  src="/flags/en.png"
-                  alt="English flag icon"
-                  width={15}
-                  height={15}
-                />
-                <span>English</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        {isLoggedIn ? (
-          <div className="dropdown dropdown-end">
-            <label tabIndex={0} className="w-auto cursor-pointer">
-              <div className="grid place-items-center w-12 h-12 rounded-full bg-blue-600 group hover:bg-blue-300 transition-colors">
-                <UserOutlined
-                  className="group-hover:scale-125 transition-transform"
-                  style={{ fontSize: "24px", color: "white" }}
-                />
-              </div>
-            </label>
-            <ul
-              tabIndex={0}
-              className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box"
-            >
-              <li>
-                <div className="flex items-center gap-2">
-                  <UserOutlined />
-                  <Link href="#" className="whitespace-nowrap">
-                    {user?.full_name ? user.full_name : user?.email}
-                  </Link>
-                </div>
-              </li>
-              <li onClick={handleSignout}>
-                <div className="flex items-center gap-2">
-                  <PoweroffOutlined />
-                  <a className="whitespace-nowrap">Sign Out</a>
-                </div>
-              </li>
-            </ul>
+    <>
+      <nav className="flex items-center justify-between px-6 border-b h-[8vh]">
+        <Link href="/" className="flex gap-3 items-center">
+          <Image
+            src="/logo.svg"
+            alt=""
+            className="w-8 h-8 hover:scale-110 transform transition duration-300 ease-in-out"
+            width={32}
+            height={32}
+          />
+          <div className="hidden sm:block text-2xl hover:text-blue-300 transition-colors">
+            Bill Tracker
           </div>
-        ) : (
-          <Button type="primary" size="large" href="/login">
-            Log In
+        </Link>
+        <div className="hidden sm:flex gap-8 items-center">
+          {links.map((link) => (
+            <Link
+              key={link.name}
+              href={link.to}
+              className={`transition-colors hover:text-blue-300 ${
+                pathname === link.to
+                  ? "text-blue-600 font-bold"
+                  : "text-gray-800"
+              }`}
+            >
+              {link.name}
+            </Link>
+          ))}
+          <LanguageSelect />
+
+          {isLoggedIn ? (
+            <div className="dropdown dropdown-end">
+              <label tabIndex={0} className="w-auto cursor-pointer">
+                <div className="grid place-items-center w-12 h-12 rounded-full bg-blue-600 group hover:bg-blue-300 transition-colors">
+                  <UserOutlined
+                    className="group-hover:scale-125 transition-transform"
+                    style={{ fontSize: "24px", color: "white" }}
+                  />
+                </div>
+              </label>
+              <ul
+                tabIndex={0}
+                className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box"
+              >
+                <li>
+                  <div className="flex items-center gap-2">
+                    <UserOutlined />
+                    <Link href="#" className="whitespace-nowrap">
+                      {user?.full_name ? user.full_name : user?.email}
+                    </Link>
+                  </div>
+                </li>
+                <li onClick={handleSignout}>
+                  <div className="flex items-center gap-2">
+                    <PoweroffOutlined />
+                    <a className="whitespace-nowrap">Sign Out</a>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          ) : (
+            <Button type="primary" size="large" href="/login">
+              Log In
+            </Button>
+          )}
+        </div>
+        <div className="flex sm:hidden items-center gap-8">
+          <LanguageSelect />
+          <Button onClick={() => setOpen(true)}>
+            <MenuOutlined />
           </Button>
-        )}
-      </div>
-    </nav>
+        </div>
+      </nav>
+
+      <Drawer
+        title="Navigation Menu"
+        onClose={() => setOpen(false)}
+        open={open}
+      >
+        <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-8 items-center text-xl">
+            {links.map((link) => (
+              <Link
+                key={link.name}
+                href={link.to}
+                onClick={() => setOpen(false)}
+                className={`transition-colors hover:text-blue-300 ${
+                  pathname === link.to
+                    ? "text-blue-600 font-bold"
+                    : "text-gray-800"
+                }`}
+              >
+                {link.name}
+              </Link>
+            ))}
+          </div>
+          {isLoggedIn ? (
+            <div className="dropdown dropdown-end">
+              <label tabIndex={0} className="w-auto cursor-pointer">
+                <div className="grid place-items-center w-12 h-12 rounded-full bg-blue-600 group hover:bg-blue-300 transition-colors">
+                  <UserOutlined
+                    className="group-hover:scale-125 transition-transform"
+                    style={{ fontSize: "24px", color: "white" }}
+                  />
+                </div>
+              </label>
+              <ul
+                tabIndex={0}
+                className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box"
+              >
+                <li>
+                  <div className="flex items-center gap-2">
+                    <UserOutlined />
+                    <Link href="#" className="whitespace-nowrap">
+                      {user?.full_name ? user.full_name : user?.email}
+                    </Link>
+                  </div>
+                </li>
+                <li onClick={handleSignout}>
+                  <div className="flex items-center gap-2">
+                    <PoweroffOutlined />
+                    <a className="whitespace-nowrap">Sign Out</a>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          ) : (
+            <div className="flex justify-center">
+              <Button type="primary" size="large" href="/login">
+                Log In
+              </Button>
+            </div>
+          )}
+        </div>
+      </Drawer>
+    </>
   );
 }
 
