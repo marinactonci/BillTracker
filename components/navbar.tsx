@@ -167,34 +167,10 @@ function Navbar() {
             ))}
           </div>
           {isLoggedIn ? (
-            <div className="dropdown dropdown-end">
-              <label tabIndex={0} className="w-auto cursor-pointer">
-                <div className="grid place-items-center w-12 h-12 rounded-full bg-blue-600 group hover:bg-blue-300 transition-colors">
-                  <UserOutlined
-                    className="group-hover:scale-125 transition-transform"
-                    style={{ fontSize: "24px", color: "white" }}
-                  />
-                </div>
-              </label>
-              <ul
-                tabIndex={0}
-                className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box"
-              >
-                <li>
-                  <div className="flex items-center gap-2">
-                    <UserOutlined />
-                    <Link href="#" className="whitespace-nowrap">
-                      {user?.full_name ? user.full_name : user?.email}
-                    </Link>
-                  </div>
-                </li>
-                <li onClick={handleSignout}>
-                  <div className="flex items-center gap-2">
-                    <PoweroffOutlined />
-                    <a className="whitespace-nowrap">Sign Out</a>
-                  </div>
-                </li>
-              </ul>
+            <div className="flex justify-center">
+              <Button type="primary" size="large" onClick={handleSignout}>
+                Sign Out
+              </Button>
             </div>
           ) : (
             <div className="flex justify-center">

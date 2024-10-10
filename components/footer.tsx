@@ -3,8 +3,8 @@ import { GithubFilled, LinkedinFilled } from "@ant-design/icons";
 function Footer() {
   return (
     <>
-      <footer className="footer items-center p-4 bg-black text-neutral-content h-[8vh]">
-        <aside className="items-center grid-flow-col">
+      <footer className="flex flex-col gap-4 sm:flex-row justify-between items-center p-4 bg-black text-neutral-content min-h-[8vh]">
+        <aside className="flex items-center gap-4">
           <svg
             width="36"
             height="36"
@@ -18,7 +18,7 @@ function Footer() {
           </svg>
           <p>Copyright © {new Date().getFullYear()} - All right reserved</p>
         </aside>
-        <div className="grid-flow-col gap-4 md:place-self-center md:justify-self-end">
+        <div className="flex items-center gap-4">
           <a
             className="text-4xl"
             href="https://github.com/marinactonci"
