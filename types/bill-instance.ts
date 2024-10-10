@@ -6,4 +6,5 @@ export interface BillInstanceType {
   due_date: Date;
   amount: number;
   is_paid: boolean;
+  description: string;
 }

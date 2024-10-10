@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Button, DatePicker, InputNumber, Switch, message } from "antd";
+import { Modal, Button, DatePicker, Input, InputNumber, Switch, message } from "antd";
 import dayjs from "dayjs";
 import { updateBillInstance, deleteBillInstance } from "@/utils/supabaseUtils";
 
@@ -12,6 +12,7 @@ interface BillInstanceProps {
     dueDate: Date;
     amount: number;
     isPaid: boolean;
+    description: string;
   };
   onChange: () => void;
 }
@@ -21,14 +22,18 @@ function BillInstance({ event, onChange }: BillInstanceProps) {
   const [month, setMonth] = useState(dayjs(event.month));
   const [dueDate, setDueDate] = useState(dayjs(event.dueDate));
   const [amount, setAmount] = useState(event.amount);
+  const [description, setDescription] = useState(event.description);
   const [isPaid, setIsPaid] = useState(event.isPaid);
   const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
   const [isLoadingDelete, setIsLoadingDelete] = useState(false);
+
+  const { TextArea } = Input;
 
   useEffect(() => {
     setMonth(dayjs(event.month));
     setDueDate(dayjs(event.dueDate));
     setAmount(event.amount);
+    setDescription(event.description);
     setIsPaid(event.isPaid);
   }, [event]);
 
@@ -45,6 +50,7 @@ function BillInstance({ event, onChange }: BillInstanceProps) {
         due_date: dueDate.toDate(),
         amount,
         is_paid: isPaid,
+        description
       });
       setOpen(false);
       onChange();
@@ -139,6 +145,10 @@ function BillInstance({ event, onChange }: BillInstanceProps) {
                 if (value) setDueDate(value.hour(12).minute(0).second(0));
               }}
             />
+          </label>
+          <label className="flex flex-col w-full">
+            <span className="text-gray-700">Description</span>
+            <TextArea rows={4} value={description} onChange={(e) => setDescription(e.target.value)} />
           </label>
           <div className="flex items-center gap-3">
             <Switch

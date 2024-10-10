@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
-import { signOut } from "@/utils/authUtils";
+import { signOut, getCurrentUser } from "@/utils/authUtils";
 import {
   CaretDownOutlined,
   PoweroffOutlined,
@@ -14,8 +14,10 @@ import {
 } from "@ant-design/icons";
 import Image from "next/image";
 import { Button } from "antd";
+import { UserType } from "@/types/user";
 
 function Navbar() {
+  const [user, setUser] = useState<UserType | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
@@ -25,7 +27,6 @@ function Navbar() {
     { name: "Calendar", to: "/calendar" },
     { name: "Profiles", to: "/profiles" },
     { name: "Bills", to: "/bills" },
-    { name: "Settings", to: "/settings" },
   ];
 
   useEffect(() => {
@@ -34,6 +35,17 @@ function Navbar() {
         data: { session },
       } = await supabase.auth.getSession();
       setIsLoggedIn(!!session);
+      const user = await getCurrentUser();
+      if (user) {
+        setUser({
+          id: user.id,
+          email: user.email ? user.email : "",
+          full_name: user.user_metadata?.full_name || "",
+          created_at: new Date(user.created_at),
+        });
+      } else {
+        setUser(null);
+      }
     };
 
     checkUser();
@@ -131,12 +143,14 @@ function Navbar() {
             </label>
             <ul
               tabIndex={0}
-              className="dropdown-content w-auto z-[1] menu p-2 shadow bg-base-100 rounded-box"
+              className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box"
             >
               <li>
                 <div className="flex items-center gap-2">
-                  <SettingOutlined />
-                  <Link href="/settings">Settings</Link>
+                  <UserOutlined />
+                  <Link href="#" className="whitespace-nowrap">
+                    {user?.full_name ? user.full_name : user?.email}
+                  </Link>
                 </div>
               </li>
               <li onClick={handleSignout}>

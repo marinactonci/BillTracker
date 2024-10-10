@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { Modal, Button, DatePicker, InputNumber, Switch, Select } from "antd";
+import {
+  Modal,
+  Button,
+  DatePicker,
+  Input,
+  InputNumber,
+  Switch,
+  Select,
+} from "antd";
 import { notification } from "antd";
 import { createBillInstance } from "@/utils/supabaseUtils";
 import dayjs from "dayjs";
@@ -19,11 +27,13 @@ function CreateBillInstance({ bills, onChange }: CreateProfileProps) {
   const [month, setMonth] = useState(dayjs(dayjs().subtract(1, "month")));
   const [dueDate, setDueDate] = useState(dayjs());
   const [amount, setAmount] = useState(0);
+  const [description, setDescription] = useState("");
   const [isPaid, setIsPaid] = useState(false);
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const { TextArea } = Input;
   const [api, contextHolder] = notification.useNotification();
 
   const handleCreate = async () => {
@@ -34,7 +44,8 @@ function CreateBillInstance({ bills, onChange }: CreateProfileProps) {
         month.toDate(),
         dueDate.toDate(),
         amount,
-        isPaid
+        isPaid,
+        description
       );
       api.success({
         message: "Bill instance created",
@@ -109,6 +120,13 @@ function CreateBillInstance({ bills, onChange }: CreateProfileProps) {
                 if (!value) return;
                 setDueDate(value.hour(12).minute(0).second(0));
               }}
+            />
+          </label>
+          <label className="flex flex-col w-full">
+            <span className="text-gray-700">Description</span>
+            <TextArea
+              rows={4}
+              onChange={(e) => setDescription(e.target.value)}
             />
           </label>
           <label className="flex flex-col w-full">

@@ -39,6 +39,7 @@ const Calendar = ({ billInstances, onChange }: CalendarProps) => {
           profileName: profile.name,
           amount: instance.amount,
           isPaid: instance.is_paid,
+          description: instance.description,
         };
       })
     );

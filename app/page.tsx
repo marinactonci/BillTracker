@@ -4,6 +4,7 @@ import React, { useRef, useState, useEffect } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { Button } from "antd";
 import Link from "next/link";
+import Image from "next/image";
 
 function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -57,7 +58,7 @@ function Hero({ handleClick }: { handleClick: () => void }) {
             </Button>
           </div>
         </div>
-        <img src="/landing2.jpg" alt="Landing page illustration" width={1024} height={1024} className="rounded-full z-0" />
+        <Image src="/landing5.jpg" alt="Landing page illustration" width={1024} height={1024} className="rounded-full z-0" />
       </main>
     </>
   );

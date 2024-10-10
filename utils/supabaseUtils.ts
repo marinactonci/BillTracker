@@ -133,7 +133,7 @@ export async function getBillInstances() {
   return data
 }
 
-export async function createBillInstance(bill_id: number, month:Date, due_date: Date, amount: number, is_paid: boolean) {
+export async function createBillInstance(bill_id: number, month:Date, due_date: Date, amount: number, is_paid: boolean, description: string) {
   try {
     const { data, error } = await supabase
       .from('bill_instances')
@@ -153,7 +153,7 @@ export async function createBillInstance(bill_id: number, month:Date, due_date: 
   }
 }
 
-export async function updateBillInstance(id: number, updates: { month:Date, due_date: Date, amount: number, is_paid: boolean }) {
+export async function updateBillInstance(id: number, updates: { month:Date, due_date: Date, amount: number, is_paid: boolean, description: string }) {
   const { data, error } = await supabase
     .from('bill_instances')
     .update(updates)

@@ -125,7 +125,7 @@ function Register() {
               ) : (
                 <>
                   <img src="/google.svg" alt="" />
-                  <span>Github</span>
+                  <span>Google</span>
                 </>
               )}
             </button>

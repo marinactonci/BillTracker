@@ -6,4 +6,5 @@ export interface EventType {
   profileName: string;
   amount: number;
   isPaid: boolean;
+  description: string;
 }
