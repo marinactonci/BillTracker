@@ -13,6 +13,7 @@ import { createBillInstance } from "@/utils/supabaseUtils";
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
+import { PlusOutlined } from "@ant-design/icons";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -68,7 +69,8 @@ function CreateBillInstance({ bills, onChange }: CreateProfileProps) {
         className="bg-blue-500"
         onClick={() => setOpen(true)}
       >
-        Add instance
+        <PlusOutlined className="md:hidden" />
+        <div className="hidden md:block">Add instance</div>
       </Button>
       <Modal
         title={"Add a bill instance"}

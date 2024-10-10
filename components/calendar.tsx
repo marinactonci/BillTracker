@@ -1,10 +1,15 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { CaretLeftFilled, CaretRightFilled } from "@ant-design/icons";
 import { Button } from "antd";
 import { BillInstanceType } from "@/types/bill-instance";
-import { getBillById, getProfileById, getProfiles, getBills } from "@/utils/supabaseUtils";
+import {
+  getBillById,
+  getProfileById,
+  getProfiles,
+  getBills,
+} from "@/utils/supabaseUtils";
 import { BillType } from "@/types/bill";
 import { ProfileType } from "@/types/profile";
 import CreateBillInstance from "./create.bill-instance";
@@ -20,6 +25,9 @@ const Calendar = ({ billInstances, onChange }: CalendarProps) => {
   const [currentDate, setCurrentDate] = useState(new Date(2024, 9, 1)); // October 2024
   const [events, setEvents] = useState<EventType[]>([]);
   const [bills, setBills] = useState<{ id: number; name: string }[]>([]);
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+
+  const selectedDateRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetchEventDetails();
@@ -95,6 +103,21 @@ const Calendar = ({ billInstances, onChange }: CalendarProps) => {
     );
   };
 
+  const handleSelectDate = (date: Date) => {
+    setSelectedDate(date);
+    setTimeout(() => {
+      selectedDateRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 100); // Small delay to ensure the div is rendered before scrolling
+  };
+
+  const isSameDate = (date1: Date, date2: Date) => {
+    return (
+      date1.getDate() === date2.getDate() &&
+      date1.getMonth() === date2.getMonth() &&
+      date1.getFullYear() === date2.getFullYear()
+    );
+  };
+
   const renderCalendar = () => {
     const totalDays = daysInMonth(currentDate);
     const startDay = firstDayOfMonth(currentDate);
@@ -151,9 +174,10 @@ const Calendar = ({ billInstances, onChange }: CalendarProps) => {
       cells.push(
         <td
           key={day}
-          className={`border h-32 border-gray-200 p-1 align-top ${
+          className={`border md:h-32 border-gray-200 p-1 align-top ${
             isToday(date) ? "bg-blue-50" : ""
           }`}
+          onClick={() => handleSelectDate(date)}
         >
           <div className="h-full flex flex-col">
             <div
@@ -163,7 +187,17 @@ const Calendar = ({ billInstances, onChange }: CalendarProps) => {
             >
               {day}
             </div>
-            <div className="grid grid-cols-1 gap-2 mt-1">
+            <div className="md:hidden flex items-center flex-wrap gap-2 mt-1">
+              {dayEvents.map((event, index) => (
+                <div
+                  className={` w-2 h-2 rounded-full ${
+                    event.isPaid ? "bg-green-600" : "bg-red-600"
+                  }`}
+                  key={index}
+                ></div>
+              ))}
+            </div>
+            <div className="hidden md:grid grid-cols-1 gap-2 mt-1">
               {dayEvents.map((event, index) => (
                 <BillInstance event={event} onChange={onChange} key={index} />
               ))}
@@ -204,48 +238,88 @@ const Calendar = ({ billInstances, onChange }: CalendarProps) => {
     }
 
     return (
-      <div className="flex flex-col h-full">
-        <div className="flex justify-between items-center mb-4 py-2 border-b border-gray-200">
-          <h2 className="text-xl font-bold">
-            {months[currentDate.getMonth()]} {currentDate.getFullYear()}
-          </h2>
-          <div className="flex items-center space-x-2">
-            <button
-              onClick={prevMonth}
-              className="p-1 rounded hover:bg-gray-100"
-            >
-              <CaretLeftFilled />
-            </button>
-            <Button onClick={goToToday}>Today</Button>
-            <button
-              onClick={nextMonth}
-              className="p-1 rounded hover:bg-gray-100"
-            >
-              <CaretRightFilled />
-            </button>
-            <CreateBillInstance bills={bills} onChange={onChange} />
+      <div className="flex flex-col gap-6 h-full">
+        <div>
+          <div className="flex justify-between items-center mb-4 py-2 border-b border-gray-200">
+            <h2 className="text-xl font-bold">
+              {months[currentDate.getMonth()]} {currentDate.getFullYear()}
+            </h2>
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={prevMonth}
+                className="p-1 rounded hover:bg-gray-100"
+              >
+                <CaretLeftFilled />
+              </button>
+              <Button className="hidden md:block" onClick={goToToday}>
+                Today
+              </Button>
+              <button
+                onClick={nextMonth}
+                className="p-1 rounded hover:bg-gray-100"
+              >
+                <CaretRightFilled />
+              </button>
+              <CreateBillInstance bills={bills} onChange={onChange} />
+            </div>
           </div>
+          <table className="w-full border-collapse table-fixed">
+            <thead>
+              <tr className="hidden md:table-row w-full">
+                {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(
+                  (day, index) => (
+                    <th
+                      key={index}
+                      className="border border-gray-200 p-1 text-left text-lg font-bold text-gray-500"
+                    >
+                      {day}
+                    </th>
+                  )
+                )}
+              </tr>
+              <tr className="md:hidden">
+                {["M", "T", "W", "T", "F", "S", "S"].map((day, index) => (
+                  <th
+                    key={index}
+                    className="border border-gray-200 p-1 text-left text-lg font-bold text-gray-500"
+                  >
+                    {day}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>{rows}</tbody>
+          </table>
         </div>
-        <table className="w-full border-collapse table-fixed">
-          <thead>
-            <tr>
-              {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
-                <th
-                  key={day}
-                  className="border border-gray-200 p-1 text-left text-lg font-bold text-gray-500"
-                >
-                  {day}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>{rows}</tbody>
-        </table>
+        {selectedDate && (
+          <div
+            className="md:hidden bg-gray-100 border p-4 mt-4"
+            ref={selectedDateRef}
+          >
+            <div className="font-bold mb-2">{selectedDate.toDateString()}</div>
+            <div className="grid grid-cols-1 gap-2">
+              {events
+                .filter((event) =>
+                  isSameDate(new Date(event.dueDate), selectedDate)
+                )
+                .map((event, index) => (
+                  <BillInstance event={event} onChange={onChange} key={index} />
+                ))}
+              {events.filter((event) =>
+                isSameDate(new Date(event.dueDate), selectedDate)
+              ).length === 0 && (
+                <div className="text-gray-500 italic">
+                  No bill instances for this date.
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     );
   };
 
-  return <div className="w-full h-screen p-4 bg-white">{renderCalendar()}</div>;
+  return <div className="w-full min-h-screen p-4 bg-white">{renderCalendar()}</div>;
 };
 
 export default Calendar;

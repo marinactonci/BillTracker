@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Button, DatePicker, Input, InputNumber, Switch, message } from "antd";
+import {
+  Modal,
+  Button,
+  DatePicker,
+  Input,
+  InputNumber,
+  Switch,
+  message,
+} from "antd";
 import dayjs from "dayjs";
 import { updateBillInstance, deleteBillInstance } from "@/utils/supabaseUtils";
 
@@ -50,7 +58,7 @@ function BillInstance({ event, onChange }: BillInstanceProps) {
         due_date: dueDate.toDate(),
         amount,
         is_paid: isPaid,
-        description
+        description,
       });
       setOpen(false);
       onChange();
@@ -87,8 +95,8 @@ function BillInstance({ event, onChange }: BillInstanceProps) {
     <>
       <div
         onClick={() => setOpen(true)}
-        className={`text-xs hover:cursor-pointer ${
-          event.isPaid ? "bg-green-100" : "bg-red-100"
+        className={`text-xs hover:cursor-pointer border ${
+          event.isPaid ? "bg-green-100 border-green-600" : "bg-red-100 border-red-600"
         } p-1 rounded`}
       >
         <div className="font-medium">{event.billName}</div>
@@ -148,7 +156,11 @@ function BillInstance({ event, onChange }: BillInstanceProps) {
           </label>
           <label className="flex flex-col w-full">
             <span className="text-gray-700">Description</span>
-            <TextArea rows={4} value={description} onChange={(e) => setDescription(e.target.value)} />
+            <TextArea
+              rows={4}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
           </label>
           <div className="flex items-center gap-3">
             <Switch

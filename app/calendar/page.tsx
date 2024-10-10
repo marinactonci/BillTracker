@@ -54,7 +54,7 @@ function Dashboard() {
   }
 
   return (
-    <div className="flex flex-col items-center p-10">
+    <div className="flex flex-col items-center p-4 md:p-10">
       <Calendar billInstances={billInstances} onChange={fetchBillInstances} />
     </div>
   );
