@@ -24,7 +24,7 @@ interface CalendarProps {
 const Calendar = ({ billInstances, onChange }: CalendarProps) => {
   const [currentDate, setCurrentDate] = useState(new Date(2024, 9, 1)); // October 2024
   const [events, setEvents] = useState<EventType[]>([]);
-  const [bills, setBills] = useState<{ id: number; name: string }[]>([]);
+  const [bills, setBills] = useState<{ id: number; name: string; profile_id: number }[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
   const selectedDateRef = useRef<HTMLDivElement>(null);
@@ -63,8 +63,8 @@ const Calendar = ({ billInstances, onChange }: CalendarProps) => {
         const profileBills = await getBills(profile.id);
         allBills = [...allBills, ...profileBills];
       }
-
-      setBills(allBills.map((bill) => ({ id: bill.id, name: bill.name })));
+      console.log("allBills", allBills);
+      setBills(allBills.map((bill) => ({ id: bill.id, name: bill.name, profile_id: bill.profile_id })));
     } catch (error) {
       console.error("Error fetching bills", error);
     }

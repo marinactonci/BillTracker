@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Modal,
   Button,
@@ -9,17 +9,18 @@ import {
   Select,
 } from "antd";
 import { notification } from "antd";
-import { createBillInstance } from "@/utils/supabaseUtils";
+import { createBillInstance, getProfiles } from "@/utils/supabaseUtils";
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import { PlusOutlined } from "@ant-design/icons";
+import { ProfileType } from "@/types/profile";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
 interface CreateProfileProps {
-  bills: { id: number; name: string }[];
+  bills: { id: number; name: string; profile_id: number }[];
   onChange: () => void;
 }
 
@@ -33,9 +34,24 @@ function CreateBillInstance({ bills, onChange }: CreateProfileProps) {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [profiles, SetProfiles] = useState<ProfileType[] | null>();
 
   const { TextArea } = Input;
   const [api, contextHolder] = notification.useNotification();
+
+  useEffect(() => {
+    const fetchProfiles = async () => {
+      try {
+        await getProfiles().then((data) => {
+          SetProfiles(data);
+        });
+      } catch (error) {
+        setError((error as Error).message);
+      }
+    };
+
+    fetchProfiles();
+  }, []);
 
   const handleCreate = async () => {
     setIsLoading(true);
@@ -136,10 +152,15 @@ function CreateBillInstance({ bills, onChange }: CreateProfileProps) {
             <Select
               placeholder="Select a bill"
               onChange={(value) => setBillId(value)}
-              options={bills.map((bill) => ({
-                value: bill.id,
-                label: bill.name,
-              }))}
+              options={bills.map((bill) => {
+                const profile = profiles?.find(
+                  (profile) => profile.id === bill.profile_id
+                );
+                return {
+                  value: bill.id,
+                  label: `${bill.name} (${profile ? profile.name : "Unknown"})`,
+                };
+              })}
             />
           </label>
           <div className="flex items-center gap-3">
