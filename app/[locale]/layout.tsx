@@ -3,10 +3,11 @@ import localFont from "next/font/local";
 import "./globals.css";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
-import { NextIntlClientProvider } from "next-intl";
+import { NextIntlClientProvider, useMessages } from "next-intl";
+import { unstable_setRequestLocale } from "next-intl/server";
 
 export function generateStaticParams() {
-  return [{ locale: "en" }, { locale: "hr" }];
+  return ['en', 'hr'].map((locale) => ({ locale }));
 }
 
 const geistSans = localFont({
@@ -25,19 +26,15 @@ export const metadata: Metadata = {
   description: "Track your bills and payments easily.",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
   params: { locale },
 }: Readonly<{
   children: React.ReactNode;
   params: { locale: string };
 }>) {
-  let messages;
-  try {
-    messages = (await import(`../../messages/${locale}.json`)).default;
-  } catch (error) {
-    console.error(`No messages found for locale: ${locale}`, error);
-  }
+  unstable_setRequestLocale(locale);
+  const messages = useMessages();
 
   return (
     <html lang={locale}>

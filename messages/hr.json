@@ -106,6 +106,9 @@
   "bills": {
     "title": "Kreirajte novi račun ili uredite postojeće",
     "not_logged_in": "Morate se prijaviti kako biste pristupili ovoj stranici.",
+    "no_profiles": "Nemate kreiranih profila. Molimo kreirajte profil prije dodavanja računa.",
+    "create_profile": "Kreiraj profil",
+    "login": "Prijavi se",
     "title_create": "Kreirajte novi račun",
     "title_edit": "Uredite račun ",
     "bills_for": "Računi za ",
