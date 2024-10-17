@@ -10,6 +10,9 @@ import {
 } from "antd";
 import dayjs from "dayjs";
 import { updateBillInstance, deleteBillInstance } from "@/utils/supabaseUtils";
+import { useTranslations } from "next-intl";
+import enUS from "antd/es/date-picker/locale/en_US";
+import hrHR from "antd/es/date-picker/locale/hr_HR";
 
 interface BillInstanceProps {
   event: {
@@ -36,6 +39,8 @@ function BillInstance({ event, onChange }: BillInstanceProps) {
   const [isLoadingDelete, setIsLoadingDelete] = useState(false);
 
   const { TextArea } = Input;
+
+  const t = useTranslations("calendar.bill_instance");
 
   useEffect(() => {
     setMonth(dayjs(event.month));
@@ -86,9 +91,9 @@ function BillInstance({ event, onChange }: BillInstanceProps) {
     } catch (error) {
       console.error("Error deleting bill instance:", error);
       message.error("Failed to delete bill instance");
-    } finally {
-      setIsLoadingDelete(false);
     }
+
+    setIsLoadingDelete(false);
   };
 
   return (
@@ -96,7 +101,9 @@ function BillInstance({ event, onChange }: BillInstanceProps) {
       <div
         onClick={() => setOpen(true)}
         className={`text-xs hover:cursor-pointer border ${
-          event.isPaid ? "bg-green-100 border-green-600" : "bg-red-100 border-red-600"
+          event.isPaid
+            ? "bg-green-100 border-green-600"
+            : "bg-red-100 border-red-600"
         } p-1 rounded`}
       >
         <div className="font-medium">{event.billName}</div>
@@ -107,7 +114,7 @@ function BillInstance({ event, onChange }: BillInstanceProps) {
         </div>
       </div>
       <Modal
-        title={"Update bill instance"}
+        title={t("title_update")}
         centered
         open={open}
         destroyOnClose
@@ -120,18 +127,19 @@ function BillInstance({ event, onChange }: BillInstanceProps) {
           className="flex flex-col gap-3"
         >
           <label className="flex flex-col w-full">
-            <span className="text-gray-700">Month</span>
+            <span className="text-gray-700">{t("month")}</span>
             <DatePicker
               format={"MM.YYYY"}
               picker="month"
               value={month}
+              locale={localStorage.getItem("locale") === "hr" ? hrHR : enUS}
               onChange={(value) => {
                 if (value) setMonth(value);
               }}
             />
           </label>
           <label className="flex flex-col w-full">
-            <span className="text-gray-700">Amount</span>
+            <span className="text-gray-700">{t("amount")}</span>
             <InputNumber
               className="w-full"
               min={0}
@@ -145,17 +153,18 @@ function BillInstance({ event, onChange }: BillInstanceProps) {
             />
           </label>
           <label className="flex flex-col w-full">
-            <span className="text-gray-700">Due date</span>
+            <span className="text-gray-700">{t("due_date")}</span>
             <DatePicker
               format={"DD.MM.YYYY"}
               value={dueDate}
+              locale={localStorage.getItem('locale') === 'hr' ? hrHR : enUS}
               onChange={(value) => {
                 if (value) setDueDate(value.hour(12).minute(0).second(0));
               }}
             />
           </label>
           <label className="flex flex-col w-full">
-            <span className="text-gray-700">Description</span>
+            <span className="text-gray-700">{t("description")}</span>
             <TextArea
               rows={4}
               value={description}
@@ -168,13 +177,13 @@ function BillInstance({ event, onChange }: BillInstanceProps) {
               onChange={(checked: boolean) => setIsPaid(checked)}
             />
             <span className="label-text">
-              Status: {isPaid ? "Paid" : "Unpaid"}
+              Status: {isPaid ? t("paid") : t("unpaid")}
             </span>
           </div>
         </form>
         <div className="flex items-center justify-end mt-8">
           <div className="flex gap-3">
-            <Button onClick={() => setOpen(false)}>Cancel</Button>
+            <Button onClick={() => setOpen(false)}>{t("cancel")}</Button>
             <Button
               color="danger"
               variant="solid"
@@ -183,13 +192,13 @@ function BillInstance({ event, onChange }: BillInstanceProps) {
               {isLoadingDelete && (
                 <span className="loading loading-spinner loading-md"></span>
               )}
-              {!isLoadingDelete && "Delete"}
+              {!isLoadingDelete && t("delete")}
             </Button>
             <Button type="primary" onClick={handleUpdate}>
               {isLoadingUpdate && (
                 <span className="loading loading-spinner loading-md"></span>
               )}
-              {!isLoadingUpdate && "Update"}
+              {!isLoadingUpdate && t("submit_update")}
             </Button>
           </div>
         </div>

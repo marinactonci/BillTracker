@@ -14,6 +14,7 @@ import Image from "next/image";
 import { Button, Drawer } from "antd";
 import { UserType } from "@/types/user";
 import LanguageSelect from "./language-select";
+import { useTranslations } from "next-intl";
 
 function Navbar() {
   const [user, setUser] = useState<UserType | null>(null);
@@ -22,11 +23,13 @@ function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
 
+  const t = useTranslations("navbar");
+
   const links = [
-    { name: "Home", to: "/" },
-    { name: "Calendar", to: "/calendar" },
-    { name: "Profiles", to: "/profiles" },
-    { name: "Bills", to: "/bills" },
+    { name: t("home"), to: "/" },
+    { name: t("calendar"), to: "/calendar" },
+    { name: t("profiles"), to: "/profiles" },
+    { name: t("bills"), to: "/bills" },
   ];
 
   useEffect(() => {
@@ -132,7 +135,7 @@ function Navbar() {
             </div>
           ) : (
             <Button type="primary" size="large" href="/login">
-              Log In
+              {t("login")}
             </Button>
           )}
         </div>
@@ -169,13 +172,13 @@ function Navbar() {
           {isLoggedIn ? (
             <div className="flex justify-center">
               <Button type="primary" size="large" onClick={handleSignout}>
-                Sign Out
+                {t("logout")}
               </Button>
             </div>
           ) : (
             <div className="flex justify-center">
               <Button type="primary" size="large" href="/login">
-                Log In
+                {t("login")}
               </Button>
             </div>
           )}

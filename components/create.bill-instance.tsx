@@ -15,6 +15,9 @@ import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import { PlusOutlined } from "@ant-design/icons";
 import { ProfileType } from "@/types/profile";
+import { useTranslations } from "next-intl";
+import enUS from "antd/es/date-picker/locale/en_US";
+import hrHR from "antd/es/date-picker/locale/hr_HR";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -38,6 +41,7 @@ function CreateBillInstance({ bills, onChange }: CreateProfileProps) {
 
   const { TextArea } = Input;
   const [api, contextHolder] = notification.useNotification();
+  const t = useTranslations("calendar.bill_instance");
 
   useEffect(() => {
     const fetchProfiles = async () => {
@@ -86,10 +90,10 @@ function CreateBillInstance({ bills, onChange }: CreateProfileProps) {
         onClick={() => setOpen(true)}
       >
         <PlusOutlined className="md:hidden" />
-        <div className="hidden md:block">Add instance</div>
+        <div className="hidden md:block">{t("add")}</div>
       </Button>
       <Modal
-        title={"Add a bill instance"}
+        title={t("title_add")}
         centered
         open={open}
         destroyOnClose
@@ -102,11 +106,12 @@ function CreateBillInstance({ bills, onChange }: CreateProfileProps) {
           className="flex flex-col gap-3"
         >
           <label className="flex flex-col w-full">
-            <span className="text-gray-700">Month</span>
+            <span className="text-gray-700">{t("month")}</span>
             <DatePicker
               format={"MM.YYYY."}
               picker="month"
               showNow
+              locale={localStorage.getItem('locale') === 'hr' ? hrHR : enUS}
               defaultValue={month}
               onChange={(value) => {
                 if (!value) return;
@@ -115,7 +120,7 @@ function CreateBillInstance({ bills, onChange }: CreateProfileProps) {
             />
           </label>
           <label className="flex flex-col w-full">
-            <span className="text-gray-700">Amount</span>
+            <span className="text-gray-700">{t("amount")}</span>
             <InputNumber
               className="w-full"
               min={0}
@@ -129,10 +134,11 @@ function CreateBillInstance({ bills, onChange }: CreateProfileProps) {
             />
           </label>
           <label className="flex flex-col w-full">
-            <span className="text-gray-700">Due date</span>
+            <span className="text-gray-700">{t("due_date")}</span>
             <DatePicker
               format={"DD.MM.YYYY."}
               showNow
+              locale={localStorage.getItem('locale') === 'hr' ? hrHR : enUS}
               defaultValue={dayjs()}
               onChange={(value) => {
                 if (!value) return;
@@ -141,16 +147,16 @@ function CreateBillInstance({ bills, onChange }: CreateProfileProps) {
             />
           </label>
           <label className="flex flex-col w-full">
-            <span className="text-gray-700">Description</span>
+            <span className="text-gray-700">{t("description")}</span>
             <TextArea
               rows={4}
               onChange={(e) => setDescription(e.target.value)}
             />
           </label>
           <label className="flex flex-col w-full">
-            <span className="text-gray-700">Instance for bill</span>
+            <span className="text-gray-700">{t("instance")}</span>
             <Select
-              placeholder="Select a bill"
+              placeholder={t("select")}
               onChange={(value) => setBillId(value)}
               options={bills.map((bill) => {
                 const profile = profiles?.find(
@@ -169,7 +175,7 @@ function CreateBillInstance({ bills, onChange }: CreateProfileProps) {
               onChange={(checked: boolean) => setIsPaid(checked)}
             />
             <span className="label-text">
-              Status: {isPaid ? "Paid" : "Unpaid"}
+              Status: {isPaid ? t("paid") : t("unpaid")}
             </span>
           </div>
           {error && (
@@ -178,12 +184,12 @@ function CreateBillInstance({ bills, onChange }: CreateProfileProps) {
         </form>
         <div className="flex items-center justify-end mt-8">
           <div className="flex gap-3">
-            <Button onClick={() => setOpen(false)}>Cancel</Button>
+            <Button onClick={() => setOpen(false)}>{t("cancel")}</Button>
             <Button type="primary" onClick={() => handleCreate()}>
               {isLoading && (
                 <span className="loading loading-spinner loading-md"></span>
               )}
-              {!isLoading && "Add"}
+              {!isLoading && t("submit_add")}
             </Button>
           </div>
         </div>

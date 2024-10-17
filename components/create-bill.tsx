@@ -8,6 +8,7 @@ import {
 import { createBill } from "@/utils/supabaseUtils";
 import { notification } from "antd";
 import { encrypt } from "@/utils/encryption";
+import { useTranslations } from "next-intl";
 
 interface AddBillProps {
   profileId: number;
@@ -26,6 +27,8 @@ function CreateBill({ profileId, onChange }: AddBillProps) {
   const [error, setError] = useState<string | null>(null);
 
   const [api, contextHolder] = notification.useNotification();
+
+  const t = useTranslations('bills');
 
   const handleAdd = async () => {
     setIsLoading(true);
@@ -76,7 +79,7 @@ function CreateBill({ profileId, onChange }: AddBillProps) {
         </Button>
       </div>
       <Modal
-        title={"Add a new bill"}
+        title={t('title_create')}
         centered
         open={open}
         destroyOnClose
@@ -92,10 +95,10 @@ function CreateBill({ profileId, onChange }: AddBillProps) {
           onSubmit={(e) => e.preventDefault()}
         >
           <label className="flex flex-col w-full">
-            <span className="text-gray-700">Name</span>
+            <span className="text-gray-700">{t('name')}</span>
             <Input
               type="text"
-              placeholder="Bill name"
+              placeholder={t('name_placeholder')}
               onChange={(e) => {
                 setName(e.target.value);
               }}
@@ -105,36 +108,36 @@ function CreateBill({ profileId, onChange }: AddBillProps) {
             checked={isRecurring}
             onChange={(e) => setIsRecurring(e.target.checked)}
           >
-            Is recurring
+            {t('recurring')}
           </Checkbox>
           <label className="text-gray-900 mt-3 text-lg">
-            E-bill (optional)
+          {t('e-bill')} ({t('optional')})
           </label>
           <label className="flex flex-col w-full">
-            <span className="text-gray-700">Link</span>
+            <span className="text-gray-700">{t('link')}</span>
             <Input
               type="text"
-              placeholder="https://www.example.com"
+              placeholder={t('link_placeholder')}
               onChange={(e) => {
                 setLink(e.target.value);
               }}
             />
           </label>
-          <label className="text-gray-900 text-md">Credentials</label>
+          <label className="text-gray-900 text-md">{t('credentials')}</label>
           <label className="flex flex-col w-full">
-            <span className="text-gray-700">Username</span>
+            <span className="text-gray-700">{t('username')}</span>
             <Input
               type="text"
-              placeholder="Username or email for login"
+              placeholder={t('username_placeholder')}
               onChange={(e) => {
                 setUsername(e.target.value);
               }}
             />
           </label>
           <label className="flex flex-col w-full">
-            <span className="text-gray-700">Password</span>
+            <span className="text-gray-700">{t('password')}</span>
             <Input.Password
-              placeholder="Password for login"
+              placeholder={t('password_placeholder')}
               visibilityToggle={{
                 visible: passwordVisible,
                 onVisibleChange: setPasswordVisible,
@@ -150,13 +153,13 @@ function CreateBill({ profileId, onChange }: AddBillProps) {
         <div className="flex items-center justify-end mt-6">
           <div className="flex gap-3">
             <Button onClick={() => setOpen(false)} disabled={isLoading}>
-              Cancel
+            {t('cancel')}
             </Button>
             <Button onClick={handleAdd} disabled={isLoading} type="primary">
               {isLoading && (
                 <span className="loading loading-spinner loading-md"></span>
               )}
-              {!isLoading && "Add"}
+              {!isLoading && t('create')}
             </Button>
           </div>
         </div>

@@ -9,29 +9,25 @@ import {
   GithubFilled,
 } from "@ant-design/icons";
 import {
-  signUpWithPassword,
   signInWithGithub,
+  signInWithPassword,
   signInWithGoogle,
-} from "../../utils/authUtils";
-import { notification } from "antd";
+} from "@/utils/authUtils";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
+import { useTranslations } from "next-intl";
 
-function Register() {
+function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [passwordConfirmVisible, setPasswordConfirmVisible] = useState(false);
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [githubLoading, setGithubLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const [api, contextHolder] = notification.useNotification();
   const router = useRouter();
-
-  const isDisabled = loading || !email || !password || !confirmPassword;
+  const t = useTranslations('login');
 
   useEffect(() => {
     const initialize = async () => {
@@ -50,28 +46,17 @@ function Register() {
     initialize();
   }, []);
 
-  const handleRegister = async () => {
+  const handleLogin = async () => {
     setLoading(true);
     setError("");
-
-    if (password !== confirmPassword) {
-      setError("Passwords do not match");
-      setLoading(false);
-      return;
-    }
-
     try {
-      await signUpWithPassword(email, password);
-      api.success({
-        message: "Registration successful",
-        description:
-          "A confirmation email has been sent to your email address. Please verify your email to login.",
-      });
+      await signInWithPassword(email, password);
+      router.push("/dashboard");
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
       } else {
-        setError("An unknown error occurred");
+        setError(t('unknown_error'));
       }
     }
     setLoading(false);
@@ -86,7 +71,7 @@ function Register() {
       if (error instanceof Error) {
         setError(error.message);
       } else {
-        setError("An unknown error occurred");
+        setError(t('unknown_error'));
       }
     }
     setGithubLoading(false);
@@ -101,19 +86,20 @@ function Register() {
       if (error instanceof Error) {
         setError(error.message);
       } else {
-        setError("An unknown error occurred");
+        setError(t('unknown_error'));
       }
     }
     setGoogleLoading(false);
   };
 
+  const isDisabled = loading || !email || !password;
+
   return (
     <>
-      {contextHolder}
-      <div className="min-h-[84vh] px-4 sm:px-0  grid place-items-center bg-gray-100">
-        <div className="w-full max-w-md p-8 space-y-4 bg-white shadow-lg rounded-xl">
+      <div className="min-h-[84vh] px-4 sm:px-0 grid place-items-center bg-gray-100">
+        <div className="w-full max-w-md p-8 space-y-4 bg-white shadow-md rounded-xl">
           <h2 className="text-2xl font-semibold text-center text-gray-700">
-            Register a new account
+            {t('title')}
           </h2>
           <div className="grid grid-cols-2 gap-4 my-4">
             <button
@@ -152,7 +138,7 @@ function Register() {
             </div>
             <div className="relative flex justify-center text-sm">
               <span className="px-2 bg-white text-gray-500">
-                Or register with your email
+                {t('continue_with_email')}
               </span>
             </div>
           </div>
@@ -162,7 +148,7 @@ function Register() {
                 className="text-sm font-medium text-gray-700"
                 htmlFor="email"
               >
-                Email Address
+                {t('email')}
               </label>
               <Input
                 type="email"
@@ -176,7 +162,7 @@ function Register() {
                 className="text-sm font-medium text-gray-700"
                 htmlFor="password"
               >
-                Password
+                {t('password')}
               </label>
               <Input.Password
                 visibilityToggle={{
@@ -189,24 +175,6 @@ function Register() {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-            <div>
-              <label
-                className="text-sm font-medium text-gray-700"
-                htmlFor="confirm_password"
-              >
-                Confirm Password
-              </label>
-              <Input.Password
-                visibilityToggle={{
-                  visible: passwordConfirmVisible,
-                  onVisibleChange: setPasswordConfirmVisible,
-                }}
-                iconRender={(visible) =>
-                  visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
-                }
-                onChange={(e) => setConfirmPassword(e.target.value)}
-              />
-            </div>
             {error && (
               <div className="text-red-500 text-sm text-center">{error}</div>
             )}
@@ -214,21 +182,25 @@ function Register() {
               type="primary"
               variant="solid"
               className="w-full"
-              onClick={handleRegister}
+              onClick={handleLogin}
               disabled={isDisabled}
             >
-              Sign Up
+              {loading ? (
+                <span className="loading loading-spinner-small"></span>
+              ) : (
+                t('submit')
+              )}
             </Button>
           </form>
           <div className="flex items-center justify-center">
             <span className="text-sm text-gray-600">
-              Already have an account?{" "}
+              {t('no_account')}{" "}
             </span>
             <Link
               className="ml-1 text-sm font-medium text-blue-600 hover:text-blue-300 transition-colors hover:underline"
-              href="/login"
+              href="/register"
             >
-              Log In
+              {t('sign_up')}
             </Link>
           </div>
         </div>
@@ -237,4 +209,4 @@ function Register() {
   );
 }
 
-export default Register;
+export default Login;

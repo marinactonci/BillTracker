@@ -1,8 +1,34 @@
-import React from "react";
+import React, { useCallback, useEffect } from "react";
 import { TranslationOutlined, CaretDownOutlined } from "@ant-design/icons";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
+import { usePathname, useRouter } from "next/navigation";
 
 function LanguageSelect() {
+  const t = useTranslations("navbar");
+  const pathname = usePathname();
+  const router = useRouter();
+
+  useEffect(() => {
+    const locale = localStorage.getItem("locale");
+    if (locale && !pathname.startsWith(`/${locale}`)) {
+      router.push(pathname.replace(/^\/[a-z]{2}/, `/${locale}`));
+    }
+  }, [pathname, router]);
+
+  const setLanguage = useCallback((lang: string) => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem("locale", lang);
+    }
+    const newPathname = pathname.replace(/^\/[a-z]{2}/, `/${lang}`);
+    router.push(newPathname);
+  }, [pathname, router]);
+
+  const handleLanguageChange = (lang: string) => (e: React.MouseEvent) => {
+    e.preventDefault();
+    setLanguage(lang);
+  };
+
   return (
     <div className="dropdown dropdown-end">
       <label tabIndex={0} className="w-auto cursor-pointer">
@@ -13,28 +39,28 @@ function LanguageSelect() {
       </label>
       <ul
         tabIndex={0}
-        className="dropdown-content z-[1] menu p-2 w-[125px] shadow bg-base-100 rounded-box"
+        className="dropdown-content z-[50] menu p-2 w-[125px] shadow bg-base-100 rounded-box"
       >
         <li>
-          <a className="flex items-center gap-2">
+          <a onClick={handleLanguageChange('hr')} className="flex items-center gap-2">
             <Image
               src="/flags/hr.png"
               alt="Croatian flag icon"
               width={15}
               height={15}
             />
-            <span>Croatian</span>
+            <span>{t("croatian")}</span>
           </a>
         </li>
         <li>
-          <a className="flex items-center gap-2">
+          <a onClick={handleLanguageChange('en')} className="flex items-center gap-2">
             <Image
               src="/flags/en.png"
               alt="English flag icon"
               width={15}
               height={15}
             />
-            <span>English</span>
+            <span>{t("english")}</span>
           </a>
         </li>
       </ul>

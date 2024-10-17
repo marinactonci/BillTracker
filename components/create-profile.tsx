@@ -4,6 +4,7 @@ import { countries } from "@/utils/countries";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { createProfile } from "@/utils/supabaseUtils";
 import { notification } from "antd";
+import { useTranslations } from "next-intl";
 
 interface CreateProfileProps {
   onChange: () => void;
@@ -20,11 +21,14 @@ function CreateProfile({ onChange }: CreateProfileProps) {
 
   const [api, contextHolder] = notification.useNotification();
 
+  const t = useTranslations("profiles");
+
   const handleCreate = async () => {
     setIsLoading(true);
     setError(null);
 
     if (!name || !street || !city || !country) {
+      console.log(country);
       setError("Please fill in all fields.");
       setIsLoading(false);
       return;
@@ -60,7 +64,7 @@ function CreateProfile({ onChange }: CreateProfileProps) {
       </div>
 
       <Modal
-        title="Create a new profile"
+        title={t("title_create")}
         centered
         open={open}
         destroyOnClose
@@ -76,51 +80,64 @@ function CreateProfile({ onChange }: CreateProfileProps) {
           onSubmit={(e) => e.preventDefault()}
         >
           <label className="flex flex-col w-full">
-            <span className="text-gray-700">Name</span>
+            <span className="text-gray-700">{t("name")}</span>
             <Input
               type="text"
-              placeholder="Enter profile name"
+              placeholder={t("name_placeholder")}
               onChange={(e) => {
                 setName(e.target.value);
               }}
             />
           </label>
-          <label className="text-gray-900 mt-3 text-lg">Address</label>
+          <label className="text-gray-900 mt-3 text-lg">{t("address")}</label>
           <label className="flex flex-col w-full">
-            <span className="text-gray-700">Street</span>
+            <span className="text-gray-700">{t("street")}</span>
             <Input
               type="text"
-              placeholder="Eg. 123 Main St."
+              placeholder={t("street_placeholder")}
               onChange={(e) => {
                 setStreet(e.target.value);
               }}
             />
           </label>
           <label className="flex flex-col w-full">
-            <span className="text-gray-700">City</span>
+            <span className="text-gray-700">{t("city")}</span>
             <Input
               type="text"
-              placeholder="Eg. New York"
+              placeholder={t("city_placeholder")}
               onChange={(e) => {
                 setCity(e.target.value);
               }}
             />
           </label>
           <label className="flex flex-col w-full">
-            <span className="text-gray-700">Country</span>
+            <span className="text-gray-700">{t("country")}</span>
             <AutoComplete
               allowClear
               options={countries.map((country) => {
                 return {
-                  value: country.name,
-                  name: country.name,
-                  label: country.name,
+                  value:
+                    country[
+                      `name_${localStorage.getItem("locale") as "en" | "hr"}`
+                    ],
+                  name: country[
+                    `name_${localStorage.getItem("locale") as "en" | "hr"}`
+                  ],
+                  label:
+                    country[
+                      `name_${localStorage.getItem("locale") as "en" | "hr"}`
+                    ],
                 };
               })}
               onChange={(value) => {
-                countries.forEach((country) => {
-                  if (country.name === value) {
-                    setCountry(country.code);
+                const selectedValue = Array.isArray(value) ? value[0] : value;
+                countries.forEach((countryItem) => {
+                  if (
+                    countryItem[
+                      `name_${localStorage.getItem("locale") as "en" | "hr"}`
+                    ] === selectedValue
+                  ) {
+                    setCountry(countryItem.code);
                   }
                 });
               }}
@@ -132,7 +149,7 @@ function CreateProfile({ onChange }: CreateProfileProps) {
                     .indexOf(inputValue.toUpperCase()) !== -1
                 );
               }}
-              placeholder="Eg. United States"
+              placeholder={t("country_placeholder")}
             />
           </label>
           {error && (
@@ -147,13 +164,13 @@ function CreateProfile({ onChange }: CreateProfileProps) {
             }}
             disabled={isLoading}
           >
-            Cancel
+            {t("cancel")}
           </Button>
           <Button onClick={handleCreate} disabled={isLoading} type="primary">
             {isLoading && (
               <span className="loading loading-spinner loading-md"></span>
             )}
-            {!isLoading && "Create"}
+            {!isLoading && t("create")}
           </Button>
         </div>
       </Modal>

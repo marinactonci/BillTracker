@@ -11,6 +11,7 @@ import { Button } from "antd";
 import { updateProfile, deleteProfile } from "@/utils/supabaseUtils";
 import { notification } from "antd";
 import { ProfileType } from "@/types/profile";
+import { useTranslations } from "next-intl";
 
 interface ProfileProps {
   profile: ProfileType;
@@ -23,12 +24,22 @@ function Profile({ profile, onChange }: ProfileProps) {
   const [street, setStreet] = useState("");
   const [city, setCity] = useState("");
   const [country, setCountry] = useState("");
+  const [defaultValue, setDefaultValue] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const [api, contextHolder] = notification.useNotification();
 
+  const t = useTranslations("profiles");
+
   useEffect(() => {
+    const locale = localStorage.getItem("locale") as "en" | "hr";
+    const selectedCountry = countries.find(
+      (country) => country.code === profile.country
+    );
+    if (selectedCountry) {
+      setDefaultValue(selectedCountry[`name_${locale}`]);
+    }
     setName(profile.name);
     setStreet(profile.street);
     setCity(profile.city);
@@ -97,8 +108,9 @@ function Profile({ profile, onChange }: ProfileProps) {
             <p className=" text-zinc-500">
               {profile.street}, {profile.city},{" "}
               {countries.map((countryItem) => {
-                if (countryItem.name === profile.country) {
-                  return countryItem.name;
+                if (countryItem.code === profile.country) {
+                  const locale = localStorage.getItem("locale") as "en" | "hr";
+                  return countryItem[`name_${locale}`];
                 }
               })}
             </p>
@@ -109,7 +121,7 @@ function Profile({ profile, onChange }: ProfileProps) {
               onClick={() => setOpen(true)}
             >
               <EditOutlined />
-              <span>Edit</span>
+              <span>{t("edit")}</span>
             </Button>
             <Button
               className="flex items-center gap-2"
@@ -118,18 +130,18 @@ function Profile({ profile, onChange }: ProfileProps) {
               onClick={() => handleDelete()}
             >
               <DeleteOutlined />
-              <span>Delete</span>
+              <span>{t("delete")}</span>
             </Button>
           </div>
         </div>
       </div>
       <Modal
-        title={"Edit " + profile.name}
+        title={t('title_edit') + profile.name}
         centered
         open={open}
         destroyOnClose
         keyboard
-        okText="Create"
+        okText="Update"
         cancelText="Cancel"
         footer={null}
         onOk={() => setOpen(false)}
@@ -143,19 +155,19 @@ function Profile({ profile, onChange }: ProfileProps) {
             <span className="text-gray-700">Name</span>
             <Input
               type="text"
-              placeholder="Entert profile name"
+              placeholder={t("name_placeholder")}
               defaultValue={name}
               onChange={(e) => {
                 setName(e.target.value);
               }}
             />
           </label>
-          <label className="text-gray-900 mt-3 text-lg">Address</label>
+          <label className="text-gray-900 mt-3 text-lg">{t("address")}</label>
           <label className="flex flex-col w-full">
-            <span className="text-gray-700">Street</span>
+            <span className="text-gray-700">{t("street")}</span>
             <Input
               type="text"
-              placeholder="Eg. 123 Main St."
+              placeholder={t("street_placeholder")}
               defaultValue={profile.street}
               onChange={(e) => {
                 setStreet(e.target.value);
@@ -163,10 +175,10 @@ function Profile({ profile, onChange }: ProfileProps) {
             />
           </label>
           <label className="flex flex-col w-full">
-            <span className="text-gray-700">City</span>
+            <span className="text-gray-700">{t("city")}</span>
             <Input
               type="text"
-              placeholder="Eg. New York"
+              placeholder={t("city_placeholder")}
               defaultValue={city}
               onChange={(e) => {
                 setCity(e.target.value);
@@ -174,24 +186,34 @@ function Profile({ profile, onChange }: ProfileProps) {
             />
           </label>
           <label className="flex flex-col w-full">
-            <span className="text-gray-700">Country</span>
+            <span className="text-gray-700">{t("country")}</span>
             <AutoComplete
               allowClear
-              defaultValue={
-                countries.find((countryItem) => countryItem.name === country)
-                  ?.name
-              }
+              defaultValue={defaultValue}
               options={countries.map((country) => {
                 return {
-                  value: country.name,
-                  name: country.name,
-                  label: country.name,
+                  value:
+                    country[
+                      `name_${localStorage.getItem("locale") as "en" | "hr"}`
+                    ],
+                  name: country[
+                    `name_${localStorage.getItem("locale") as "en" | "hr"}`
+                  ],
+                  label:
+                    country[
+                      `name_${localStorage.getItem("locale") as "en" | "hr"}`
+                    ],
                 };
               })}
               onChange={(value) => {
+                const selectedValue = Array.isArray(value) ? value[0] : value;
                 countries.forEach((countryItem) => {
-                  if (countryItem.name === value) {
-                    setCountry(countryItem.name);
+                  if (
+                    countryItem[
+                      `name_${localStorage.getItem("locale") as "en" | "hr"}`
+                    ] === selectedValue
+                  ) {
+                    setCountry(countryItem.code);
                   }
                 });
               }}
@@ -203,7 +225,7 @@ function Profile({ profile, onChange }: ProfileProps) {
                     .indexOf(inputValue.toUpperCase()) !== -1
                 );
               }}
-              placeholder="Eg. United States"
+              placeholder={t("country_placeholder")}
             />
           </label>
           {error && (
@@ -218,13 +240,13 @@ function Profile({ profile, onChange }: ProfileProps) {
             }}
             disabled={isLoading}
           >
-            Cancel
+            {t("cancel")}
           </Button>
           <Button onClick={handleSave} disabled={isLoading} type="primary">
             {isLoading && (
               <span className="loading loading-spinner loading-md"></span>
             )}
-            {!isLoading && "Update"}
+            {!isLoading && t("submit")}
           </Button>
         </div>
       </Modal>
