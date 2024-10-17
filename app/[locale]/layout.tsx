@@ -36,7 +36,7 @@ export default async function RootLayout({
   try {
     messages = (await import(`../../messages/${locale}.json`)).default;
   } catch (error) {
-    console.error(`No messages found for locale: ${locale}`);
+    console.error(`No messages found for locale: ${locale}`, error);
   }
 
   return (
