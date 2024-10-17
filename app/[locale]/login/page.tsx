@@ -51,7 +51,7 @@ function Login() {
     setError("");
     try {
       await signInWithPassword(email, password);
-      router.push("/dashboard");
+      router.push("/");
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
