@@ -107,7 +107,7 @@
   "bills": {
     "title": "Create a new bill or edit existing ones",
     "not_logged_in": "You have to be signed in to view this page.",
-    "no_profiles": "You don't have any profiles yet. Please creae a profile first.",
+    "no_profiles": "You don't have any profiles yet. Please create a profile first.",
     "create_profile": "Create Profile",
     "login": "Log In",
     "title_create": "Create a new bill",
@@ -126,7 +126,7 @@
     "password": "Password",
     "password_placeholder": "Password for e-bill",
     "submit": "Update",
-    "edit": "Uredi",
+    "edit": "Edit",
     "delete": "Delete",
     "create": "Create",
     "cancel": "Cancel"
