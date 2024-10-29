@@ -28,7 +28,6 @@ function CreateProfile({ onChange }: CreateProfileProps) {
     setError(null);
 
     if (!name || !street || !city || !country) {
-      console.log(country);
       setError("Please fill in all fields.");
       setIsLoading(false);
       return;

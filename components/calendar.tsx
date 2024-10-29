@@ -65,7 +65,6 @@ const Calendar = ({ billInstances, onChange }: CalendarProps) => {
         const profileBills = await getBills(profile.id);
         allBills = [...allBills, ...profileBills];
       }
-      console.log("allBills", allBills);
       setBills(allBills.map((bill) => ({ id: bill.id, name: bill.name, profile_id: bill.profile_id })));
     } catch (error) {
       console.error("Error fetching bills", error);

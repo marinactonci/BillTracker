@@ -131,6 +131,12 @@
     "create": "Create",
     "cancel": "Cancel"
   },
+  "confirm_modal": {
+    "title": "Are you sure?",
+    "description": "This action cannot be undone.",
+    "cancel": "Cancel",
+    "delete": "Delete"
+  },
   "footer": {
     "copyright": "Copyright",
     "all_rights_reserved": "All rights reserved."

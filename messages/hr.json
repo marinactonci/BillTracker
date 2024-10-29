@@ -130,6 +130,12 @@
     "create": "Kreiraj",
     "cancel": "Odustani"
   },
+  "confirm_modal": {
+    "title": "Jeste li sigurni?",
+    "description": "Ova akcija je nepovratna.",
+    "cancel": "Odustani",
+    "delete": "Obriši"
+  },
   "footer": {
     "copyright": "Copyright",
     "all_rights_reserved": "Sva prava pridržana."

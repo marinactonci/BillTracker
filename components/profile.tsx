@@ -12,6 +12,7 @@ import { updateProfile, deleteProfile } from "@/utils/supabaseUtils";
 import { notification } from "antd";
 import { ProfileType } from "@/types/profile";
 import { useTranslations } from "next-intl";
+import ConfirmModal from "./confirm-modal";
 
 interface ProfileProps {
   profile: ProfileType;
@@ -123,20 +124,12 @@ function Profile({ profile, onChange }: ProfileProps) {
               <EditOutlined />
               <span>{t("edit")}</span>
             </Button>
-            <Button
-              className="flex items-center gap-2"
-              color="danger"
-              variant="solid"
-              onClick={() => handleDelete()}
-            >
-              <DeleteOutlined />
-              <span>{t("delete")}</span>
-            </Button>
+            <ConfirmModal onConfirm={handleDelete} isLoading={isLoading} />
           </div>
         </div>
       </div>
       <Modal
-        title={t('title_edit') + profile.name}
+        title={t("title_edit") + profile.name}
         centered
         open={open}
         destroyOnClose

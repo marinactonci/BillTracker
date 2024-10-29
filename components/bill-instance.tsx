@@ -13,6 +13,7 @@ import { updateBillInstance, deleteBillInstance } from "@/utils/supabaseUtils";
 import { useTranslations } from "next-intl";
 import enUS from "antd/es/date-picker/locale/en_US";
 import hrHR from "antd/es/date-picker/locale/hr_HR";
+import ConfirmModal from "./confirm-modal";
 
 interface BillInstanceProps {
   event: {
@@ -184,16 +185,7 @@ function BillInstance({ event, onChange }: BillInstanceProps) {
         <div className="flex items-center justify-end mt-8">
           <div className="flex gap-3">
             <Button onClick={() => setOpen(false)}>{t("cancel")}</Button>
-            <Button
-              color="danger"
-              variant="solid"
-              onClick={() => handleDelete()}
-            >
-              {isLoadingDelete && (
-                <span className="loading loading-spinner loading-md"></span>
-              )}
-              {!isLoadingDelete && t("delete")}
-            </Button>
+            <ConfirmModal onConfirm={handleDelete} isLoading={isLoadingDelete} />
             <Button type="primary" onClick={handleUpdate}>
               {isLoadingUpdate && (
                 <span className="loading loading-spinner loading-md"></span>

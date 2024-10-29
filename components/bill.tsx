@@ -13,6 +13,7 @@ import { notification } from "antd";
 import { encrypt, decrypt } from "@/utils/encryption";
 import { BillType } from "@/types/bill";
 import { useTranslations } from "next-intl";
+import ConfirmModal from "./confirm-modal";
 
 interface BillProps {
   bill: BillType;
@@ -179,22 +180,14 @@ function Bill({ bill, onChange }: BillProps) {
               onClick={() => setOpen(true)}
             >
               <EditOutlined />
-              <span>{t('edit')}</span>
+              <span>{t("edit")}</span>
             </Button>
-            <Button
-              className="flex items-center gap-2"
-              color="danger"
-              variant="solid"
-              onClick={() => handleDelete()}
-            >
-              <DeleteOutlined />
-              <span>{t('delete')}</span>
-            </Button>
+            <ConfirmModal onConfirm={handleDelete} isLoading={isLoading} />
           </div>
         </div>
       </div>
       <Modal
-        title={t('title_edit') + bill.name}
+        title={t("title_edit") + bill.name}
         centered
         open={open}
         destroyOnClose
@@ -210,10 +203,10 @@ function Bill({ bill, onChange }: BillProps) {
           onSubmit={(e) => e.preventDefault()}
         >
           <label className="flex flex-col w-full">
-            <span className="text-gray-700">{t('name')}</span>
+            <span className="text-gray-700">{t("name")}</span>
             <Input
               type="text"
-              placeholder={t('name_placeholder')}
+              placeholder={t("name_placeholder")}
               defaultValue={bill.name}
               onChange={(e) => {
                 setName(e.target.value);
@@ -224,26 +217,26 @@ function Bill({ bill, onChange }: BillProps) {
             checked={isRecurring}
             onChange={(e) => setIsRecurring(e.target.checked)}
           >
-            {t('recurring')}
+            {t("recurring")}
           </Checkbox>
-          <label className="text-gray-900 mt-3 text-lg">{t('e-bill')}</label>
+          <label className="text-gray-900 mt-3 text-lg">{t("e-bill")}</label>
           <label className="flex flex-col w-full">
-            <span className="text-gray-700">{t('link')}</span>
+            <span className="text-gray-700">{t("link")}</span>
             <Input
               type="text"
-              placeholder={t('link_placeholder')}
+              placeholder={t("link_placeholder")}
               defaultValue={bill.link}
               onChange={(e) => {
                 setLink(e.target.value);
               }}
             />
           </label>
-          <label className="text-gray-900 text-md">{t('credentials')}</label>
+          <label className="text-gray-900 text-md">{t("credentials")}</label>
           <label className="flex flex-col w-full">
-            <span className="text-gray-700">{t('username')}</span>
+            <span className="text-gray-700">{t("username")}</span>
             <Input
               type="text"
-              placeholder={t('username_placeholder')}
+              placeholder={t("username_placeholder")}
               defaultValue={decrypt(bill.username)}
               onChange={(e) => {
                 setUsername(e.target.value);
@@ -251,7 +244,7 @@ function Bill({ bill, onChange }: BillProps) {
             />
           </label>
           <label className="flex flex-col w-full">
-            <span className="text-gray-700">{t('password')}</span>
+            <span className="text-gray-700">{t("password")}</span>
             <Input.Password
               visibilityToggle={{
                 visible: passwordVisible,
@@ -261,7 +254,7 @@ function Bill({ bill, onChange }: BillProps) {
                 visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
               }
               defaultValue={decrypt(bill.password)}
-              placeholder={t('password_placeholder')}
+              placeholder={t("password_placeholder")}
               onChange={(e) => setPassword(e.target.value)}
             />
           </label>
@@ -277,13 +270,13 @@ function Bill({ bill, onChange }: BillProps) {
             }}
             disabled={isLoading}
           >
-            {t('cancel')}
+            {t("cancel")}
           </Button>
           <Button onClick={handleSave} disabled={isLoading} type="primary">
             {isLoading && (
               <span className="loading loading-spinner loading-md"></span>
             )}
-            {!isLoading && t('submit')}
+            {!isLoading && t("submit")}
           </Button>
         </div>
       </Modal>
