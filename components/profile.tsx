@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Modal, AutoComplete, Input } from "antd";
 import { countries } from "../utils/countries";
 import {
-  DeleteOutlined,
   EditOutlined,
   HomeOutlined,
   PushpinOutlined,

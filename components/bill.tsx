@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Modal, Input, Button, Checkbox } from "antd";
 import {
   CopyOutlined,
-  DeleteOutlined,
   EditOutlined,
   ExportOutlined,
   EyeInvisibleOutlined,
