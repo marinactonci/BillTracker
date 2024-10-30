@@ -93,7 +93,8 @@ function Navbar() {
               key={link.name}
               href={link.to}
               className={`transition-colors hover:text-blue-300 ${
-                pathname === link.to
+                pathname.endsWith(link.to) ||
+                (link.to === "/" && (pathname === "/en" || pathname === "/hr"))
                   ? "text-blue-600 font-bold"
                   : "text-gray-800"
               }`}
@@ -158,9 +159,10 @@ function Navbar() {
               <Link
                 key={link.name}
                 href={link.to}
-                onClick={() => setOpen(false)}
                 className={`transition-colors hover:text-blue-300 ${
-                  pathname === link.to
+                  pathname.endsWith(link.to) ||
+                  (link.to === "/" &&
+                    (pathname === "/en" || pathname === "/hr"))
                     ? "text-blue-600 font-bold"
                     : "text-gray-800"
                 }`}
