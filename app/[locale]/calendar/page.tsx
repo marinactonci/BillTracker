@@ -11,6 +11,7 @@ import { useTranslations } from "next-intl";
 function Dashboard() {
   const [billInstances, setBillInstances] = useState<BillInstanceType[]>([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const t = useTranslations("calendar");
 
@@ -30,12 +31,38 @@ function Dashboard() {
     fetchBillInstances();
   }, []);
 
+  async function generateMissingInstances() {
+    try {
+      const { data, error } = await supabase.rpc(
+        "generate_missing_bill_instances"
+      );
+
+      if (error) throw error;
+
+      if (data.inserted_count > 0) {
+        console.log(
+          `Generated ${data.inserted_count} new bill instances for ${data.month}`
+        );
+      }
+    } catch (error) {
+      console.error("Error generating missing bill instances:", error);
+    }
+  }
+
   async function fetchBillInstances() {
     try {
+      setIsLoading(true);
+
+      // First, generate any missing instances
+      await generateMissingInstances();
+
+      // Then fetch all instances (including newly generated ones)
       const instances = await getBillInstances();
       setBillInstances(instances);
     } catch (error) {
       console.error("Error fetching bill instances:", error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -44,9 +71,7 @@ function Dashboard() {
       <>
         <div className="min-h-[84vh] grid place-items-center">
           <div className="flex flex-col items-center justify-center gap-3">
-            <p className="text-xl">
-              {t("you_have_to_login")}
-            </p>
+            <p className="text-xl">{t("you_have_to_login")}</p>
             <Button type="primary" size="large" href="/login">
               {t("login")}
             </Button>
@@ -58,7 +83,15 @@ function Dashboard() {
 
   return (
     <div className="flex flex-col items-center p-4 md:p-10">
-      <Calendar billInstances={billInstances} onChange={fetchBillInstances} />
+      {isLoading ? (
+        <div className="min-h-[84vh] grid place-items-center">
+          <div className="flex flex-col items-center justify-center gap-3">
+            <p className="text-xl">{t("loading")}</p>
+          </div>
+        </div>
+      ) : (
+        <Calendar billInstances={billInstances} onChange={fetchBillInstances} />
+      )}
     </div>
   );
 }

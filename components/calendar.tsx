@@ -23,17 +23,37 @@ interface CalendarProps {
 }
 
 const Calendar = ({ billInstances, onChange }: CalendarProps) => {
-  const [currentDate, setCurrentDate] = useState(new Date(2024, 9, 1)); // October 2024
+  const [currentDate, setCurrentDate] = useState(new Date());
   const [events, setEvents] = useState<EventType[]>([]);
-  const [bills, setBills] = useState<{ id: number; name: string; profile_id: number }[]>([]);
+  const [bills, setBills] = useState<
+    { id: number; name: string; profile_id: number }[]
+  >([]);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [isLoading, setIsLoading] = useState(false);
+  const [skeletonDays, setSkeletonDays] = useState<number[]>([]);
 
   const selectedDateRef = useRef<HTMLDivElement>(null);
-  const t = useTranslations('calendar');
+  const t = useTranslations("calendar");
 
   useEffect(() => {
-    fetchEventDetails();
-    fetchBills();
+    const fetchData = async () => {
+      setIsLoading(true);
+      if (skeletonDays.length === 0) {
+        setSkeletonDays(
+          Array.from({ length: 31 }, (_, i) => i + 1).filter(
+            () => Math.random() < 0.3
+          )
+        );
+      }
+      goToToday();
+      await fetchEventDetails();
+      await fetchBills();
+      setIsLoading(false);
+    };
+
+    fetchData();
+
+    return () => {};
   }, [billInstances]);
 
   const fetchEventDetails = async () => {
@@ -65,7 +85,13 @@ const Calendar = ({ billInstances, onChange }: CalendarProps) => {
         const profileBills = await getBills(profile.id);
         allBills = [...allBills, ...profileBills];
       }
-      setBills(allBills.map((bill) => ({ id: bill.id, name: bill.name, profile_id: bill.profile_id })));
+      setBills(
+        allBills.map((bill) => ({
+          id: bill.id,
+          name: bill.name,
+          profile_id: bill.profile_id,
+        }))
+      );
     } catch (error) {
       console.error("Error fetching bills", error);
     }
@@ -108,7 +134,7 @@ const Calendar = ({ billInstances, onChange }: CalendarProps) => {
     setSelectedDate(date);
     setTimeout(() => {
       selectedDateRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, 100); // Small delay to ensure the div is rendered before scrolling
+    }, 100);
   };
 
   const isSameDate = (date1: Date, date2: Date) => {
@@ -198,11 +224,21 @@ const Calendar = ({ billInstances, onChange }: CalendarProps) => {
                 ></div>
               ))}
             </div>
-            <div className="hidden md:grid grid-cols-1 gap-2 mt-1">
-              {dayEvents.map((event, index) => (
-                <BillInstance event={event} onChange={onChange} key={index} />
-              ))}
-            </div>
+            {isLoading ? (
+              skeletonDays.includes(day) && (
+                <div className="flex w-full flex-col gap-4">
+                  <div className="skeleton h-4 w-1/3"></div>
+                  <div className="skeleton h-4 w-full"></div>
+                  <div className="skeleton h-4 w-full"></div>
+                </div>
+              )
+            ) : (
+              <div className="hidden md:grid grid-cols-1 gap-2 mt-1">
+                {dayEvents.map((event, index) => (
+                  <BillInstance event={event} onChange={onChange} key={index} />
+                ))}
+              </div>
+            )}
           </div>
         </td>
       );
@@ -267,19 +303,33 @@ const Calendar = ({ billInstances, onChange }: CalendarProps) => {
           <table className="w-full border-collapse table-fixed">
             <thead>
               <tr className="hidden md:table-row w-full">
-                {[t('monday'), t('tuesday'), t('wednesday'), t('thursday'), t('friday'), t('saturday'), t('sunday')].map(
-                  (day, index) => (
-                    <th
-                      key={index}
-                      className="border border-gray-200 p-1 text-left text-lg font-bold text-gray-500"
-                    >
-                      {day}
-                    </th>
-                  )
-                )}
+                {[
+                  t("monday"),
+                  t("tuesday"),
+                  t("wednesday"),
+                  t("thursday"),
+                  t("friday"),
+                  t("saturday"),
+                  t("sunday"),
+                ].map((day, index) => (
+                  <th
+                    key={index}
+                    className="border border-gray-200 p-1 text-left text-lg font-bold text-gray-500"
+                  >
+                    {day}
+                  </th>
+                ))}
               </tr>
               <tr className="md:hidden">
-                {[t('monday_short'), t('tuesday_short'), t('wednesday_short'), t('thursday_short'), t('friday_short'), t('saturday_short'), t('sunday_short')].map((day, index) => (
+                {[
+                  t("monday_short"),
+                  t("tuesday_short"),
+                  t("wednesday_short"),
+                  t("thursday_short"),
+                  t("friday_short"),
+                  t("saturday_short"),
+                  t("sunday_short"),
+                ].map((day, index) => (
                   <th
                     key={index}
                     className="border border-gray-200 p-1 text-left text-lg font-bold text-gray-500"
@@ -320,7 +370,9 @@ const Calendar = ({ billInstances, onChange }: CalendarProps) => {
     );
   };
 
-  return <div className="w-full min-h-screen p-4 bg-white">{renderCalendar()}</div>;
+  return (
+    <div className="w-full min-h-screen p-4 bg-white">{renderCalendar()}</div>
+  );
 };
 
 export default Calendar;
