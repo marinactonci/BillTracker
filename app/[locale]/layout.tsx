@@ -7,7 +7,7 @@ import { NextIntlClientProvider, useMessages } from "next-intl";
 import { unstable_setRequestLocale } from "next-intl/server";
 
 export function generateStaticParams() {
-  return ['en', 'hr'].map((locale) => ({ locale }));
+  return ['en'].map((locale) => ({ locale }));
 }
 
 const geistSans = localFont({

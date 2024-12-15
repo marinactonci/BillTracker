@@ -1,6 +1,7 @@
 {
   "navbar": {
     "home": "Home",
+    "dashboard": "Dashboard",
     "calendar": "Calendar",
     "profiles": "Profiles",
     "bills": "Bills",

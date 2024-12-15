@@ -27,6 +27,7 @@ function Navbar() {
 
   const links = [
     { name: t("home"), to: "/" },
+    { name: t("dashboard"), to: "/dashboard" },
     { name: t("calendar"), to: "/calendar" },
     { name: t("profiles"), to: "/profiles" },
     { name: t("bills"), to: "/bills" },
@@ -102,7 +103,7 @@ function Navbar() {
               {link.name}
             </Link>
           ))}
-          <LanguageSelect />
+          {/* <LanguageSelect /> */}
 
           {isLoggedIn ? (
             <div className="dropdown dropdown-end">
@@ -141,7 +142,7 @@ function Navbar() {
           )}
         </div>
         <div className="flex sm:hidden items-center gap-4">
-          <LanguageSelect />
+          {/* <LanguageSelect /> */}
           <Button onClick={() => setOpen(true)}>
             <MenuOutlined />
           </Button>
