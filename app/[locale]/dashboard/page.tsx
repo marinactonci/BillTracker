@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, Row, Col, Statistic } from "antd";
+import { Card, Row, Col, Statistic, Button } from "antd";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -16,6 +16,8 @@ import {
 } from "chart.js";
 import { Line, Bar, Pie } from "react-chartjs-2";
 import { getProfiles, getBills, getBillInstances } from "@/utils/supabaseUtils";
+import { getCurrentUser } from "@/utils/authUtils";
+import { useTranslations } from "next-intl";
 
 ChartJS.register(
   CategoryScale,
@@ -42,12 +44,19 @@ export default function Dashboard() {
     labels: string[];
     bills: number[];
   }>({ labels: [], bills: [] });
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const t = useTranslations("bills");
 
   useEffect(() => {
     fetchData();
   }, []);
 
   const fetchData = async () => {
+    if (await getCurrentUser()) {
+      setIsLoggedIn(true);
+    }
+
     try {
       const profiles = await getProfiles();
       const allBillsByProfile = await Promise.all(
@@ -137,6 +146,21 @@ export default function Dashboard() {
     responsive: true,
     maintainAspectRatio: false,
   };
+
+  if (!isLoggedIn) {
+    return (
+      <>
+        <div className="px-4 sm:px-0 min-h-[84vh] grid place-items-center">
+          <div className="flex flex-col items-center justify-center gap-3">
+            <p className="text-xl text-center">{t("not_logged_in")}</p>
+            <Button type="primary" size="large" href="/login">
+              {t("login")}
+            </Button>
+          </div>
+        </div>
+      </>
+    );
+  }
 
   return (
     <div className="p-6">
