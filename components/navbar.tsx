@@ -18,6 +18,7 @@ import { useTranslations } from "next-intl";
 function Navbar() {
   const [user, setUser] = useState<UserType | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
@@ -34,20 +35,28 @@ function Navbar() {
 
   useEffect(() => {
     const checkUser = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      setIsLoggedIn(!!session);
-      const user = await getCurrentUser();
-      if (user) {
-        setUser({
-          id: user.id,
-          email: user.email ? user.email : "",
-          full_name: user.user_metadata?.full_name || "",
-          created_at: new Date(user.created_at),
-        });
-      } else {
-        setUser(null);
+      try {
+        setIsLoading(true);
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+        setIsLoggedIn(!!session);
+
+        if (session) {
+          const user = await getCurrentUser();
+          if (user) {
+            setUser({
+              id: user.id,
+              email: user.email ? user.email : "",
+              full_name: user.user_metadata?.full_name || "",
+              created_at: new Date(user.created_at),
+            });
+          }
+        }
+      } catch (error) {
+        console.error("Error checking user:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -55,8 +64,21 @@ function Navbar() {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setIsLoggedIn(!!session);
+      if (session) {
+        const user = await getCurrentUser();
+        if (user) {
+          setUser({
+            id: user.id,
+            email: user.email ? user.email : "",
+            full_name: user.user_metadata?.full_name || "",
+            created_at: new Date(user.created_at),
+          });
+        }
+      } else {
+        setUser(null);
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -102,9 +124,8 @@ function Navbar() {
               {link.name}
             </Link>
           ))}
-          {/* <LanguageSelect /> */}
 
-          {isLoggedIn ? (
+          {isLoggedIn && !isLoading ? (
             <div className="dropdown dropdown-end">
               <label tabIndex={0} className="w-auto cursor-pointer">
                 <div className="grid place-items-center w-12 h-12 rounded-full bg-blue-600 group hover:bg-blue-300 transition-colors">
@@ -122,7 +143,7 @@ function Navbar() {
                   <div className="flex items-center gap-2">
                     <UserOutlined />
                     <Link href="#" className="whitespace-nowrap">
-                      {user?.full_name ? user.full_name : user?.email}
+                      {user?.full_name || user?.email || "Loading..."}
                     </Link>
                   </div>
                 </li>
@@ -141,7 +162,6 @@ function Navbar() {
           )}
         </div>
         <div className="flex sm:hidden items-center gap-4">
-          {/* <LanguageSelect /> */}
           <Button onClick={() => setOpen(true)}>
             <MenuOutlined />
           </Button>
@@ -171,7 +191,7 @@ function Navbar() {
               </Link>
             ))}
           </div>
-          {isLoggedIn ? (
+          {isLoggedIn && !isLoading ? (
             <div className="flex justify-center">
               <Button type="primary" size="large" onClick={handleSignout}>
                 {t("logout")}
