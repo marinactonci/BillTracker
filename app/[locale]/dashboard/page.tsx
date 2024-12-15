@@ -66,7 +66,11 @@ export default function Dashboard() {
       // Count paid and unpaid bills from instances
       const { paid, unpaid, monthlyAmounts } = billInstances.reduce(
         (acc, instance) => {
-          instance.is_paid ? acc.paid++ : acc.unpaid++;
+          if (instance.is_paid) {
+            acc.paid++;
+          } else {
+            acc.unpaid++;
+          }
           const month = new Date(instance.month).toLocaleString("default", {
             month: "long",
           });
