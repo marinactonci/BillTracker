@@ -15,7 +15,6 @@ import {
   Legend,
 } from "chart.js";
 import { Line, Bar, Pie } from "react-chartjs-2";
-import { BillInstanceType } from "@/types/bill-instance";
 import { getProfiles, getBills, getBillInstances } from "@/utils/supabaseUtils";
 
 ChartJS.register(

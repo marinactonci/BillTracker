@@ -13,7 +13,6 @@ import {
 import Image from "next/image";
 import { Button, Drawer } from "antd";
 import { UserType } from "@/types/user";
-import LanguageSelect from "./language-select";
 import { useTranslations } from "next-intl";
 
 function Navbar() {
