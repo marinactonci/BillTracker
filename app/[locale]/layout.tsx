@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import Navbar from "@/components/navbar";
-import Footer from "@/components/footer";
 import { NextIntlClientProvider, useMessages } from "next-intl";
 import { unstable_setRequestLocale } from "next-intl/server";
 
@@ -44,7 +43,6 @@ export default function RootLayout({
         <NextIntlClientProvider locale={locale} messages={messages}>
           <Navbar />
           {children}
-          <Footer />
         </NextIntlClientProvider>
       </body>
     </html>
