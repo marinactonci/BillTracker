@@ -13,7 +13,6 @@ import {
 import Image from "next/image";
 import { Button, Drawer } from "antd";
 import { UserType } from "@/types/user";
-import { useTranslations } from "next-intl";
 
 function Navbar() {
   const [user, setUser] = useState<UserType | null>(null);
@@ -23,14 +22,12 @@ function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
 
-  const t = useTranslations("navbar");
-
   const links = [
-    { name: t("home"), to: "/" },
-    { name: t("dashboard"), to: "/dashboard" },
-    { name: t("calendar"), to: "/calendar" },
-    { name: t("profiles"), to: "/profiles" },
-    { name: t("bills"), to: "/bills" },
+    { name: "Home", to: "/" },
+    { name: "Dashboard", to: "/dashboard" },
+    { name: "Calendar", to: "/calendar" },
+    { name: "Profiles", to: "/profiles" },
+    { name: "Bills", to: "/bills" },
   ];
 
   useEffect(() => {
@@ -157,7 +154,7 @@ function Navbar() {
             </div>
           ) : (
             <Button type="primary" size="large" href="/login">
-              {t("login")}
+              Login
             </Button>
           )}
         </div>
@@ -194,13 +191,13 @@ function Navbar() {
           {isLoggedIn && !isLoading ? (
             <div className="flex justify-center">
               <Button type="primary" size="large" onClick={handleSignout}>
-                {t("logout")}
+                Sign out
               </Button>
             </div>
           ) : (
             <div className="flex justify-center">
               <Button type="primary" size="large" href="/login">
-                {t("login")}
+                Login
               </Button>
             </div>
           )}

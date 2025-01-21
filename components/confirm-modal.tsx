@@ -1,6 +1,5 @@
 import { DeleteOutlined } from "@ant-design/icons";
 import { Button, Modal } from "antd";
-import { useTranslations } from "next-intl";
 import React, { useState } from "react";
 
 interface ConfirmModalProps {
@@ -11,8 +10,6 @@ interface ConfirmModalProps {
 function ConfirmModal({ isLoading, onConfirm }: ConfirmModalProps) {
   const [open, setOpen] = useState(false);
 
-  const t = useTranslations("confirm_modal");
-
   return (
     <>
       <Button
@@ -22,10 +19,10 @@ function ConfirmModal({ isLoading, onConfirm }: ConfirmModalProps) {
         onClick={() => setOpen(true)}
       >
         <DeleteOutlined />
-        <span>{t("delete")}</span>
+        <span>Delete</span>
       </Button>
       <Modal
-        title={t("title")}
+        title="Are you sure?"
         centered
         open={open}
         destroyOnClose
@@ -36,10 +33,10 @@ function ConfirmModal({ isLoading, onConfirm }: ConfirmModalProps) {
         onOk={() => setOpen(false)}
         onCancel={() => setOpen(false)}
       >
-        <p>{t("description")}</p>
+        <p>This action cannot be undone.</p>
         <div className="flex items-center justify-end mt-6">
           <div className="flex gap-3">
-            <Button onClick={() => setOpen(false)}>{t("cancel")}</Button>
+            <Button onClick={() => setOpen(false)}>Cancel</Button>
             <Button
               onClick={onConfirm}
               type="primary"
@@ -49,7 +46,7 @@ function ConfirmModal({ isLoading, onConfirm }: ConfirmModalProps) {
               {isLoading && (
                 <span className="loading loading-spinner loading-md"></span>
               )}
-              {!isLoading && t("delete")}
+              {!isLoading && "Delete"}
             </Button>
           </div>
         </div>

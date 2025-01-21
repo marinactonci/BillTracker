@@ -4,7 +4,6 @@ import { countries } from "@/utils/countries";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { createProfile } from "@/utils/supabaseUtils";
 import { notification } from "antd";
-import { useTranslations } from "next-intl";
 
 interface CreateProfileProps {
   onChange: () => void;
@@ -20,8 +19,6 @@ function CreateProfile({ onChange }: CreateProfileProps) {
   const [error, setError] = useState<string | null>(null);
 
   const [api, contextHolder] = notification.useNotification();
-
-  const t = useTranslations("profiles");
 
   const handleCreate = async () => {
     setIsLoading(true);
@@ -63,7 +60,7 @@ function CreateProfile({ onChange }: CreateProfileProps) {
       </div>
 
       <Modal
-        title={t("title_create")}
+        title="Create a new profile"
         centered
         open={open}
         destroyOnClose
@@ -79,38 +76,38 @@ function CreateProfile({ onChange }: CreateProfileProps) {
           onSubmit={(e) => e.preventDefault()}
         >
           <label className="flex flex-col w-full">
-            <span className="text-gray-700">{t("name")}</span>
+            <span className="text-gray-700">Name</span>
             <Input
               type="text"
-              placeholder={t("name_placeholder")}
+              placeholder="Enter profile name"
               onChange={(e) => {
                 setName(e.target.value);
               }}
             />
           </label>
-          <label className="text-gray-900 mt-3 text-lg">{t("address")}</label>
+          <label className="text-gray-900 mt-3 text-lg">Address</label>
           <label className="flex flex-col w-full">
-            <span className="text-gray-700">{t("street")}</span>
+            <span className="text-gray-700">Street</span>
             <Input
               type="text"
-              placeholder={t("street_placeholder")}
+              placeholder="E.g. Example Street 123"
               onChange={(e) => {
                 setStreet(e.target.value);
               }}
             />
           </label>
           <label className="flex flex-col w-full">
-            <span className="text-gray-700">{t("city")}</span>
+            <span className="text-gray-700">City</span>
             <Input
               type="text"
-              placeholder={t("city_placeholder")}
+              placeholder="E.g. New York"
               onChange={(e) => {
                 setCity(e.target.value);
               }}
             />
           </label>
           <label className="flex flex-col w-full">
-            <span className="text-gray-700">{t("country")}</span>
+            <span className="text-gray-700">Country</span>
             <AutoComplete
               allowClear
               options={countries.map((country) => {
@@ -148,7 +145,7 @@ function CreateProfile({ onChange }: CreateProfileProps) {
                     .indexOf(inputValue.toUpperCase()) !== -1
                 );
               }}
-              placeholder={t("country_placeholder")}
+              placeholder="E.g. United States"
             />
           </label>
           {error && (
@@ -163,13 +160,13 @@ function CreateProfile({ onChange }: CreateProfileProps) {
             }}
             disabled={isLoading}
           >
-            {t("cancel")}
+            Cancel
           </Button>
           <Button onClick={handleCreate} disabled={isLoading} type="primary">
             {isLoading && (
               <span className="loading loading-spinner loading-md"></span>
             )}
-            {!isLoading && t("create")}
+            {!isLoading && "Create"}
           </Button>
         </div>
       </Modal>

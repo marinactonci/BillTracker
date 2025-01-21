@@ -1,11 +1,9 @@
 import React, { useCallback, useEffect } from "react";
 import { TranslationOutlined, CaretDownOutlined } from "@ant-design/icons";
 import Image from "next/image";
-import { useTranslations } from "next-intl";
 import { usePathname, useRouter } from "next/navigation";
 
 function LanguageSelect() {
-  const t = useTranslations("navbar");
   const pathname = usePathname();
   const router = useRouter();
 
@@ -49,7 +47,7 @@ function LanguageSelect() {
               width={15}
               height={15}
             />
-            <span>{t("croatian")}</span>
+            <span>Croatian</span>
           </a>
         </li>
         <li>
@@ -60,7 +58,7 @@ function LanguageSelect() {
               width={15}
               height={15}
             />
-            <span>{t("english")}</span>
+            <span>English</span>
           </a>
         </li>
       </ul>

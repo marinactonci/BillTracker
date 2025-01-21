@@ -12,10 +12,9 @@ import {
 } from "@/utils/supabaseUtils";
 import { BillType } from "@/types/bill";
 import { ProfileType } from "@/types/profile";
-import CreateBillInstance from "./create.bill-instance";
+import CreateBillInstance from "./create-bill-instance";
 import BillInstance from "./bill-instance";
 import { EventType } from "@/types/event";
-import { useTranslations } from "next-intl";
 
 interface CalendarProps {
   billInstances: BillInstanceType[];
@@ -33,7 +32,6 @@ const Calendar = ({ billInstances, onChange }: CalendarProps) => {
   const [skeletonDays, setSkeletonDays] = useState<number[]>([]);
 
   const selectedDateRef = useRef<HTMLDivElement>(null);
-  const t = useTranslations("calendar");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -152,18 +150,18 @@ const Calendar = ({ billInstances, onChange }: CalendarProps) => {
     let cells = [];
 
     const months = [
-      t("january"),
-      t("february"),
-      t("march"),
-      t("april"),
-      t("may"),
-      t("june"),
-      t("july"),
-      t("august"),
-      t("september"),
-      t("october"),
-      t("november"),
-      t("december"),
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
     ];
 
     const adjustedStartDay = startDay === 0 ? 6 : startDay - 1;
@@ -289,7 +287,7 @@ const Calendar = ({ billInstances, onChange }: CalendarProps) => {
                 <CaretLeftFilled />
               </button>
               <Button className="hidden md:block" onClick={goToToday}>
-                {t("today")}
+                Today
               </Button>
               <button
                 onClick={nextMonth}
@@ -304,13 +302,13 @@ const Calendar = ({ billInstances, onChange }: CalendarProps) => {
             <thead>
               <tr className="hidden md:table-row w-full">
                 {[
-                  t("monday"),
-                  t("tuesday"),
-                  t("wednesday"),
-                  t("thursday"),
-                  t("friday"),
-                  t("saturday"),
-                  t("sunday"),
+                  "Monday",
+                  "Tuesday",
+                  "Wednesday",
+                  "Thursday",
+                  "Friday",
+                  "Saturday",
+                  "Sunday",
                 ].map((day, index) => (
                   <th
                     key={index}
@@ -322,13 +320,13 @@ const Calendar = ({ billInstances, onChange }: CalendarProps) => {
               </tr>
               <tr className="md:hidden">
                 {[
-                  t("monday_short"),
-                  t("tuesday_short"),
-                  t("wednesday_short"),
-                  t("thursday_short"),
-                  t("friday_short"),
-                  t("saturday_short"),
-                  t("sunday_short"),
+                  "M",
+                  "T",
+                  "W",  
+                  "T",
+                  "F",
+                  "S",
+                  "S",
                 ].map((day, index) => (
                   <th
                     key={index}

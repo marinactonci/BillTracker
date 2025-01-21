@@ -8,14 +8,11 @@ import CreateBill from "@/components/create-bill";
 import { ProfileType } from "@/types/profile";
 import { BillType } from "@/types/bill";
 import { Button } from "antd";
-import { useTranslations } from "next-intl";
 
 function Bills() {
   const [profiles, setProfiles] = useState<ProfileType[]>([]);
   const [bills, setBills] = useState<BillType[]>([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  const t = useTranslations("bills");
 
   useEffect(() => {
     const initialize = async () => {
@@ -63,10 +60,10 @@ function Bills() {
         <div className="px-4 sm:px-0 min-h-[84vh] grid place-items-center">
           <div className="flex flex-col items-center justify-center gap-3">
             <p className="text-xl text-center">
-              {t('not_logged_in')}
+              You have to be signed in to view this page.
             </p>
             <Button type="primary" size="large" href="/login">
-              {t("login")}
+              Log In
             </Button>
           </div>
         </div>
@@ -80,10 +77,10 @@ function Bills() {
         <div className="px-4 sm:px-0 min-h-[84vh] grid place-items-center">
           <div className="flex flex-col items-center justify-center gap-3">
             <p className="text-xl text-center">
-              {t("no_profiles")}
+              You don't have any profiles yet. Please create a profile first.
             </p>
             <Button type="primary" size="large" href="/profiles">
-              {t("create_profile")}
+              Create Profile
             </Button>
           </div>
         </div>
@@ -94,12 +91,12 @@ function Bills() {
   return (
     <>
       <div className="px-4 sm:px-0 container mx-auto min-h-[84vh] py-20">
-        <h1 className="text-3xl font-medium mb-6">{t("title")}</h1>
+        <h1 className="text-3xl font-medium mb-6">Create a new bill or edit existing ones</h1>
         <div className="flex flex-col gap-6">
           {profiles.map((profile) => (
             <div key={profile.id}>
               <h2 className="text-2xl font-semibold mb-4">
-                {t("bills_for")} {profile.name}
+                Bills for {profile.name}
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 {bills &&

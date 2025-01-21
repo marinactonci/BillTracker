@@ -6,14 +6,11 @@ import { getBillInstances } from "@/utils/supabaseUtils";
 import { BillInstanceType } from "@/types/bill-instance";
 import { supabase } from "@/lib/supabaseClient";
 import { Button } from "antd";
-import { useTranslations } from "next-intl";
 
 function Dashboard() {
   const [billInstances, setBillInstances] = useState<BillInstanceType[]>([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-
-  const t = useTranslations("calendar");
 
   useEffect(() => {
     const checkUser = async () => {
@@ -71,9 +68,11 @@ function Dashboard() {
       <>
         <div className="min-h-[84vh] grid place-items-center">
           <div className="flex flex-col items-center justify-center gap-3">
-            <p className="text-xl">{t("you_have_to_login")}</p>
+            <p className="text-xl">
+              You have to be signed in to view this page.
+            </p>
             <Button type="primary" size="large" href="/login">
-              {t("login")}
+              Log In
             </Button>
           </div>
         </div>
@@ -86,7 +85,7 @@ function Dashboard() {
       {isLoading ? (
         <div className="min-h-[84vh] grid place-items-center">
           <div className="flex flex-col items-center justify-center gap-3">
-            <p className="text-xl">{t("loading")}</p>
+            <p className="text-xl">Loading...</p>
           </div>
         </div>
       ) : (

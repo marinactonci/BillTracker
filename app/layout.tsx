@@ -2,12 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import Navbar from "@/components/navbar";
-import { NextIntlClientProvider, useMessages } from "next-intl";
-import { unstable_setRequestLocale } from "next-intl/server";
-
-export function generateStaticParams() {
-  return ['en'].map((locale) => ({ locale }));
-}
+import { Analytics } from "@vercel/analytics/react"
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -27,23 +22,19 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-  params: { locale },
-}: Readonly<{
+}: {
   children: React.ReactNode;
-  params: { locale: string };
-}>) {
-  unstable_setRequestLocale(locale);
-  const messages = useMessages();
-
+}) {
   return (
-    <html lang={locale}>
+    <html lang="en">
+      {" "}
+      {/* Hardcode the language if needed */}
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <NextIntlClientProvider locale={locale} messages={messages}>
-          <Navbar />
-          {children}
-        </NextIntlClientProvider>
+        <Navbar />
+        {children}
+        <Analytics />
       </body>
     </html>
   );

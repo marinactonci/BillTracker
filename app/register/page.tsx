@@ -9,25 +9,29 @@ import {
   GithubFilled,
 } from "@ant-design/icons";
 import {
+  signUpWithPassword,
   signInWithGithub,
-  signInWithPassword,
   signInWithGoogle,
-} from "@/utils/authUtils";
+} from "../../utils/authUtils";
+import { notification } from "antd";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
-import { useTranslations } from "next-intl";
 
-function Login() {
+function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [passwordConfirmVisible, setPasswordConfirmVisible] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [githubLoading, setGithubLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const [api, contextHolder] = notification.useNotification();
   const router = useRouter();
-  const t = useTranslations('login');
+
+  const isDisabled = loading || !email || !password || !confirmPassword;
 
   useEffect(() => {
     const initialize = async () => {
@@ -46,17 +50,28 @@ function Login() {
     initialize();
   }, []);
 
-  const handleLogin = async () => {
+  const handleRegister = async () => {
     setLoading(true);
     setError("");
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      setLoading(false);
+      return;
+    }
+
     try {
-      await signInWithPassword(email, password);
-      router.push("/");
+      await signUpWithPassword(email, password);
+      api.success({
+        message: "Registration successful",
+        description:
+          "A confirmation email has been sent to your email address. Please verify your email to login.",
+      });
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
       } else {
-        setError(t('unknown_error'));
+        setError("An unknown error occurred. Please try again later.");
       }
     }
     setLoading(false);
@@ -71,7 +86,7 @@ function Login() {
       if (error instanceof Error) {
         setError(error.message);
       } else {
-        setError(t('unknown_error'));
+        setError("An unknown error occurred. Please try again later.");
       }
     }
     setGithubLoading(false);
@@ -86,20 +101,19 @@ function Login() {
       if (error instanceof Error) {
         setError(error.message);
       } else {
-        setError(t('unknown_error'));
+        setError("An unknown error occurred. Please try again later.");
       }
     }
     setGoogleLoading(false);
   };
 
-  const isDisabled = loading || !email || !password;
-
   return (
     <>
-      <div className="min-h-[92vh] px-4 sm:px-0 grid place-items-center bg-gray-100">
-        <div className="w-full max-w-md p-8 space-y-4 bg-white shadow-md rounded-xl">
+      {contextHolder}
+      <div className="min-h-[92vh] px-4 sm:px-0  grid place-items-center bg-gray-100">
+        <div className="w-full max-w-md p-8 space-y-4 bg-white shadow-lg rounded-xl">
           <h2 className="text-2xl font-semibold text-center text-gray-700">
-            {t('title')}
+            Register a new account
           </h2>
           <div className="grid grid-cols-2 gap-4 my-4">
             <button
@@ -138,7 +152,7 @@ function Login() {
             </div>
             <div className="relative flex justify-center text-sm">
               <span className="px-2 bg-white text-gray-500">
-                {t('continue_with_email')}
+                Or register with your email
               </span>
             </div>
           </div>
@@ -148,7 +162,7 @@ function Login() {
                 className="text-sm font-medium text-gray-700"
                 htmlFor="email"
               >
-                {t('email')}
+                Email Address
               </label>
               <Input
                 type="email"
@@ -162,7 +176,7 @@ function Login() {
                 className="text-sm font-medium text-gray-700"
                 htmlFor="password"
               >
-                {t('password')}
+                Password
               </label>
               <Input.Password
                 visibilityToggle={{
@@ -175,6 +189,24 @@ function Login() {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
+            <div>
+              <label
+                className="text-sm font-medium text-gray-700"
+                htmlFor="confirm_password"
+              >
+                Confirm Password
+              </label>
+              <Input.Password
+                visibilityToggle={{
+                  visible: passwordConfirmVisible,
+                  onVisibleChange: setPasswordConfirmVisible,
+                }}
+                iconRender={(visible) =>
+                  visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
+                }
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+            </div>
             {error && (
               <div className="text-red-500 text-sm text-center">{error}</div>
             )}
@@ -182,25 +214,25 @@ function Login() {
               type="primary"
               variant="solid"
               className="w-full"
-              onClick={handleLogin}
+              onClick={handleRegister}
               disabled={isDisabled}
             >
               {loading ? (
                 <span className="loading loading-spinner-small"></span>
               ) : (
-                t('submit')
+                "Sign Up"
               )}
             </Button>
           </form>
           <div className="flex items-center justify-center">
             <span className="text-sm text-gray-600">
-              {t('no_account')}{" "}
+              Already have an account?{" "}
             </span>
             <Link
               className="ml-1 text-sm font-medium text-blue-600 hover:text-blue-300 transition-colors hover:underline"
-              href="/register"
+              href="/login"
             >
-              {t('sign_up')}
+              Log In
             </Link>
           </div>
         </div>
@@ -209,4 +241,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Register;

@@ -17,7 +17,6 @@ import {
 import { Line, Bar, Pie } from "react-chartjs-2";
 import { getProfiles, getBills, getBillInstances } from "@/utils/supabaseUtils";
 import { getCurrentUser } from "@/utils/authUtils";
-import { useTranslations } from "next-intl";
 
 ChartJS.register(
   CategoryScale,
@@ -45,8 +44,6 @@ export default function Dashboard() {
     bills: number[];
   }>({ labels: [], bills: [] });
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  const t = useTranslations("bills");
 
   useEffect(() => {
     fetchData();
@@ -152,9 +149,11 @@ export default function Dashboard() {
       <>
         <div className="px-4 sm:px-0 min-h-[84vh] grid place-items-center">
           <div className="flex flex-col items-center justify-center gap-3">
-            <p className="text-xl text-center">{t("not_logged_in")}</p>
+            <p className="text-xl text-center">
+              You have to be signed in to view this page.
+            </p>
             <Button type="primary" size="large" href="/login">
-              {t("login")}
+              Log In
             </Button>
           </div>
         </div>

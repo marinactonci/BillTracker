@@ -1,16 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Modal, AutoComplete, Input } from "antd";
 import { countries } from "../utils/countries";
-import {
-  EditOutlined,
-  HomeOutlined,
-  PushpinOutlined,
-} from "@ant-design/icons";
+import { EditOutlined, HomeOutlined, PushpinOutlined } from "@ant-design/icons";
 import { Button } from "antd";
 import { updateProfile, deleteProfile } from "@/utils/supabaseUtils";
 import { notification } from "antd";
 import { ProfileType } from "@/types/profile";
-import { useTranslations } from "next-intl";
 import ConfirmModal from "./confirm-modal";
 
 interface ProfileProps {
@@ -29,8 +24,6 @@ function Profile({ profile, onChange }: ProfileProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   const [api, contextHolder] = notification.useNotification();
-
-  const t = useTranslations("profiles");
 
   useEffect(() => {
     const locale = localStorage.getItem("locale") as "en" | "hr";
@@ -121,14 +114,14 @@ function Profile({ profile, onChange }: ProfileProps) {
               onClick={() => setOpen(true)}
             >
               <EditOutlined />
-              <span>{t("edit")}</span>
+              <span>Edit</span>
             </Button>
             <ConfirmModal onConfirm={handleDelete} isLoading={isLoading} />
           </div>
         </div>
       </div>
       <Modal
-        title={t("title_edit") + profile.name}
+        title={"Edit profile " + profile.name}
         centered
         open={open}
         destroyOnClose
@@ -147,19 +140,19 @@ function Profile({ profile, onChange }: ProfileProps) {
             <span className="text-gray-700">Name</span>
             <Input
               type="text"
-              placeholder={t("name_placeholder")}
+              placeholder="Enter profile name"
               defaultValue={name}
               onChange={(e) => {
                 setName(e.target.value);
               }}
             />
           </label>
-          <label className="text-gray-900 mt-3 text-lg">{t("address")}</label>
+          <label className="text-gray-900 mt-3 text-lg">Address</label>
           <label className="flex flex-col w-full">
-            <span className="text-gray-700">{t("street")}</span>
+            <span className="text-gray-700">Street</span>
             <Input
               type="text"
-              placeholder={t("street_placeholder")}
+              placeholder="E.g. Example Street 123"
               defaultValue={profile.street}
               onChange={(e) => {
                 setStreet(e.target.value);
@@ -167,10 +160,10 @@ function Profile({ profile, onChange }: ProfileProps) {
             />
           </label>
           <label className="flex flex-col w-full">
-            <span className="text-gray-700">{t("city")}</span>
+            <span className="text-gray-700">City</span>
             <Input
               type="text"
-              placeholder={t("city_placeholder")}
+              placeholder="E.g. New York"
               defaultValue={city}
               onChange={(e) => {
                 setCity(e.target.value);
@@ -178,7 +171,7 @@ function Profile({ profile, onChange }: ProfileProps) {
             />
           </label>
           <label className="flex flex-col w-full">
-            <span className="text-gray-700">{t("country")}</span>
+            <span className="text-gray-700">Country</span>
             <AutoComplete
               allowClear
               defaultValue={defaultValue}
@@ -217,7 +210,7 @@ function Profile({ profile, onChange }: ProfileProps) {
                     .indexOf(inputValue.toUpperCase()) !== -1
                 );
               }}
-              placeholder={t("country_placeholder")}
+              placeholder="E.g. United States"
             />
           </label>
           {error && (
@@ -232,13 +225,13 @@ function Profile({ profile, onChange }: ProfileProps) {
             }}
             disabled={isLoading}
           >
-            {t("cancel")}
+            Cancel
           </Button>
           <Button onClick={handleSave} disabled={isLoading} type="primary">
             {isLoading && (
               <span className="loading loading-spinner loading-md"></span>
             )}
-            {!isLoading && t("submit")}
+            {!isLoading && "Update"}
           </Button>
         </div>
       </Modal>
