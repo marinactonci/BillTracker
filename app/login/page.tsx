@@ -191,7 +191,7 @@ function Login() {
             </Button>
           </form>
           <div className="flex items-center justify-center">
-            <span className="text-sm text-gray-600">Don't have an account? </span>
+            <span className="text-sm text-gray-600">Don&apos;t have an account? </span>
             <Link
               className="ml-1 text-sm font-medium text-blue-600 hover:text-blue-300 transition-colors hover:underline"
               href="/register"

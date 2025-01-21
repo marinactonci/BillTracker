@@ -77,7 +77,7 @@ function Bills() {
         <div className="px-4 sm:px-0 min-h-[84vh] grid place-items-center">
           <div className="flex flex-col items-center justify-center gap-3">
             <p className="text-xl text-center">
-              You don't have any profiles yet. Please create a profile first.
+              You don&apos;t have any profiles yet. Please create a profile first.
             </p>
             <Button type="primary" size="large" href="/profiles">
               Create Profile
