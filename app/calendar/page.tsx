@@ -1,14 +1,13 @@
-// app/dashboard/page.tsx
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import Calendar from "@/components/calendar";
 import { BillInstanceType } from "@/types/bill-instance";
 import { supabase } from "@/lib/supabaseClient";
 import { Button } from "antd";
 import { useSearchParams, useRouter } from "next/navigation";
 
-function Dashboard() {
+function CalendarPageContent() {
   const [billInstances, setBillInstances] = useState<BillInstanceType[]>([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const searchParams = useSearchParams();
@@ -94,4 +93,10 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default function CalendarPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <CalendarPageContent />
+    </Suspense>
+  );
+}
