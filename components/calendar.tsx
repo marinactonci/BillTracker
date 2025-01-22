@@ -5,14 +5,6 @@ import React, { useState, useEffect, useRef } from "react";
 import { CaretLeftFilled, CaretRightFilled } from "@ant-design/icons";
 import { Button } from "antd";
 import { BillInstanceType } from "@/types/bill-instance";
-import {
-  getBillById,
-  getProfileById,
-  getProfiles,
-  getBills,
-} from "@/utils/supabaseUtils";
-import { BillType } from "@/types/bill";
-import { ProfileType } from "@/types/profile";
 import CreateBillInstance from "./create-bill-instance";
 import BillInstance from "./bill-instance";
 import { EventType } from "@/types/event";
@@ -68,7 +60,7 @@ const Calendar = ({
       { length: daysInCurrentMonth },
       (_, i) => i + 1
     ).filter(
-      () => Math.random() < 0.3 // Adjust the probability as needed
+      () => Math.random() < 0.15 // Adjust the probability as needed
     );
 
     // Update the skeletonDays state
