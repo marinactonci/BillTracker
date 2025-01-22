@@ -1,3 +1,5 @@
+// utils/supabaseUtils.ts
+
 import { supabase } from "../lib/supabaseClient";
 
 export async function getProfiles() {
@@ -133,6 +135,20 @@ export async function getBillInstances() {
   return data
 }
 
+export async function getBillInstancesForMonth(month: Date) {
+  const startOfMonth = new Date(month.getFullYear(), month.getMonth(), 1);
+  const endOfMonth = new Date(month.getFullYear(), month.getMonth() + 1, 0);
+
+  const { data, error } = await supabase
+    .from('bill_instances')
+    .select('*')
+    .gte('due_date', startOfMonth.toISOString())
+    .lte('due_date', endOfMonth.toISOString());
+
+  if (error) throw error;
+  return data;
+}
+
 export async function createBillInstance(bill_id: number, month:Date, due_date: Date, amount: number, is_paid: boolean, description: string) {
   try {
     const { data, error } = await supabase
@@ -142,7 +158,8 @@ export async function createBillInstance(bill_id: number, month:Date, due_date: 
         month,
         due_date,
         amount,
-        is_paid
+        is_paid,
+        description
       })
       .single();
     if (error) throw error;

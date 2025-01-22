@@ -1,3 +1,4 @@
+// app/calendar/page.tsx
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
@@ -15,14 +16,21 @@ import { ProfileType } from "@/types/profile";
 import CreateBillInstance from "./create-bill-instance";
 import BillInstance from "./bill-instance";
 import { EventType } from "@/types/event";
+import { supabase } from "@/lib/supabaseClient";
 
 interface CalendarProps {
   billInstances: BillInstanceType[];
+  currentDate: Date;
   onChange: () => void;
+  onMonthChange: (newDate: Date) => void;
 }
 
-const Calendar = ({ billInstances, onChange }: CalendarProps) => {
-  const [currentDate, setCurrentDate] = useState(new Date());
+const Calendar = ({
+  billInstances,
+  currentDate,
+  onChange,
+  onMonthChange,
+}: CalendarProps) => {
   const [events, setEvents] = useState<EventType[]>([]);
   const [bills, setBills] = useState<
     { id: number; name: string; profile_id: number }[]
@@ -36,63 +44,118 @@ const Calendar = ({ billInstances, onChange }: CalendarProps) => {
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
-      if (skeletonDays.length === 0) {
-        setSkeletonDays(
-          Array.from({ length: 31 }, (_, i) => i + 1).filter(
-            () => Math.random() < 0.3
-          )
-        );
-      }
-      goToToday();
-      await fetchEventDetails();
-      await fetchBills();
+
+      addSkeletonDays();
+
+      // Fetch all data in parallel
+      await Promise.all([fetchEventDetails(), fetchBills()]);
+
       setIsLoading(false);
     };
 
     fetchData();
-
-    return () => {};
   }, [billInstances]);
 
+  const addSkeletonDays = () => {
+    const daysInCurrentMonth = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth() + 1,
+      0
+    ).getDate();
+
+    // Generate random days for skeleton loading (e.g., ~30% of the days)
+    const newSkeletonDays = Array.from(
+      { length: daysInCurrentMonth },
+      (_, i) => i + 1
+    ).filter(
+      () => Math.random() < 0.3 // Adjust the probability as needed
+    );
+
+    // Update the skeletonDays state
+    setSkeletonDays((prevSkeletonDays) => [
+      ...prevSkeletonDays,
+      ...newSkeletonDays,
+    ]);
+  };
+
   const fetchEventDetails = async () => {
-    const enhancedEvents = await Promise.all(
-      billInstances.map(async (instance) => {
-        const bill: BillType = await getBillById(instance.bill_id);
-        const profile: ProfileType = await getProfileById(bill.profile_id);
+    try {
+      const { data: billsData, error: billsError } = await supabase
+        .from("bills")
+        .select("*");
+      if (billsError) throw billsError;
+
+      const { data: profilesData, error: profilesError } = await supabase
+        .from("profiles")
+        .select("*");
+      if (profilesError) throw profilesError;
+
+      const enhancedEvents = billInstances.map((instance) => {
+        const bill = billsData.find((b) => b.id === instance.bill_id);
+        const profile = profilesData.find((p) => p.id === bill?.profile_id);
         return {
           id: instance.id,
           month: new Date(instance.month),
           dueDate: new Date(instance.due_date),
-          billName: bill.name,
-          profileName: profile.name,
+          billName: bill?.name || "",
+          profileName: profile?.name || "",
           amount: instance.amount,
           isPaid: instance.is_paid,
           description: instance.description,
         };
-      })
-    );
-    setEvents(enhancedEvents);
+      });
+
+      setEvents(enhancedEvents);
+    } catch (error) {
+      console.error("Error fetching event details:", error);
+    }
   };
 
   const fetchBills = async () => {
     try {
-      const profiles: ProfileType[] = await getProfiles();
+      const { data: profilesData, error: profilesError } = await supabase
+        .from("profiles")
+        .select("*");
+      if (profilesError) throw profilesError;
 
-      let allBills: BillType[] = [];
-      for (const profile of profiles) {
-        const profileBills = await getBills(profile.id);
-        allBills = [...allBills, ...profileBills];
-      }
+      const { data: billsData, error: billsError } = await supabase
+        .from("bills")
+        .select("*");
+      if (billsError) throw billsError;
+
       setBills(
-        allBills.map((bill) => ({
+        billsData.map((bill) => ({
           id: bill.id,
           name: bill.name,
           profile_id: bill.profile_id,
         }))
       );
     } catch (error) {
-      console.error("Error fetching bills", error);
+      console.error("Error fetching bills:", error);
     }
+  };
+
+  const prevMonth = () => {
+    const newDate = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth() - 1,
+      1
+    );
+    onMonthChange(newDate);
+  };
+
+  const nextMonth = () => {
+    const newDate = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth() + 1,
+      1
+    );
+    onMonthChange(newDate);
+  };
+
+  const goToToday = () => {
+    const today = new Date();
+    onMonthChange(today);
   };
 
   const daysInMonth = (date: Date) => {
@@ -101,22 +164,6 @@ const Calendar = ({ billInstances, onChange }: CalendarProps) => {
 
   const firstDayOfMonth = (date: Date) => {
     return new Date(date.getFullYear(), date.getMonth(), 1).getDay();
-  };
-
-  const prevMonth = () => {
-    setCurrentDate(
-      new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1)
-    );
-  };
-
-  const nextMonth = () => {
-    setCurrentDate(
-      new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1)
-    );
-  };
-
-  const goToToday = () => {
-    setCurrentDate(new Date());
   };
 
   const isToday = (date: Date) => {
@@ -319,15 +366,7 @@ const Calendar = ({ billInstances, onChange }: CalendarProps) => {
                 ))}
               </tr>
               <tr className="md:hidden">
-                {[
-                  "M",
-                  "T",
-                  "W",  
-                  "T",
-                  "F",
-                  "S",
-                  "S",
-                ].map((day, index) => (
+                {["M", "T", "W", "T", "F", "S", "S"].map((day, index) => (
                   <th
                     key={index}
                     className="border border-gray-200 p-1 text-left text-lg font-bold text-gray-500"
