@@ -105,11 +105,6 @@ const Calendar = ({
 
   const fetchBills = async () => {
     try {
-      const { data: profilesData, error: profilesError } = await supabase
-        .from("profiles")
-        .select("*");
-      if (profilesError) throw profilesError;
-
       const { data: billsData, error: billsError } = await supabase
         .from("bills")
         .select("*");
