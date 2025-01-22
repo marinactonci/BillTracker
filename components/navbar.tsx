@@ -49,6 +49,8 @@ function Navbar() {
               created_at: new Date(user.created_at),
             });
           }
+        } else {
+          setUser(null);
         }
       } catch (error) {
         console.error("Error checking user:", error);
@@ -58,27 +60,6 @@ function Navbar() {
     };
 
     checkUser();
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      setIsLoggedIn(!!session);
-      if (session) {
-        const user = await getCurrentUser();
-        if (user) {
-          setUser({
-            id: user.id,
-            email: user.email ? user.email : "",
-            full_name: user.user_metadata?.full_name || "",
-            created_at: new Date(user.created_at),
-          });
-        }
-      } else {
-        setUser(null);
-      }
-    });
-
-    return () => subscription.unsubscribe();
   }, []);
 
   const handleSignout = async () => {
