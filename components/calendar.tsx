@@ -1,7 +1,7 @@
 // app/calendar/page.tsx
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, Suspense } from "react";
 import { CaretLeftFilled, CaretRightFilled } from "@ant-design/icons";
 import { Button } from "antd";
 import { BillInstanceType } from "@/types/bill-instance";
@@ -395,7 +395,9 @@ const Calendar = ({
   };
 
   return (
-    <div className="w-full min-h-screen p-4 bg-white">{renderCalendar()}</div>
+    <Suspense fallback={<div>Loading...</div>}>
+      <div className="w-full min-h-screen p-4 bg-white">{renderCalendar()}</div>
+    </Suspense>
   );
 };
 
