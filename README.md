@@ -43,8 +43,8 @@ To run the project locally, you need:
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/rachuni.git
-cd rachuni
+git clone https://github.com/marinactonci/BillTracker.git
+cd BillTracker
 ```
 
 2. Install the dependencies:
@@ -76,7 +76,7 @@ Project Structure
 ├── components        # Reusable components
 ├── app               # Next.js app router
 ├── public            # Static assets
-└──  utils             # Utility functions and helpers
+└──  utils            # Utility functions and helpers
 ```
 
 ## Contributing
