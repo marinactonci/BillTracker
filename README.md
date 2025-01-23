@@ -76,7 +76,7 @@ Project Structure
 ├── components        # Reusable components
 ├── app               # Next.js app router
 ├── public            # Static assets
-└──  utils            # Utility functions and helpers
+└── utils             # Utility functions and helpers
 ```
 
 ## Contributing
