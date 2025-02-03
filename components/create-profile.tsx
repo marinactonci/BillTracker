@@ -110,41 +110,18 @@ function CreateProfile({ onChange }: CreateProfileProps) {
             <span className="text-gray-700">Country</span>
             <AutoComplete
               allowClear
-              options={countries.map((country) => {
-                return {
-                  value:
-                    country[
-                      `name_${localStorage.getItem("locale") as "en" | "hr"}`
-                    ],
-                  name: country[
-                    `name_${localStorage.getItem("locale") as "en" | "hr"}`
-                  ],
-                  label:
-                    country[
-                      `name_${localStorage.getItem("locale") as "en" | "hr"}`
-                    ],
-                };
-              })}
+              options={countries.map((country) => ({
+                value: country.code,
+                label: country.name_en,
+              }))}
               onChange={(value) => {
-                const selectedValue = Array.isArray(value) ? value[0] : value;
-                countries.forEach((countryItem) => {
-                  if (
-                    countryItem[
-                      `name_${localStorage.getItem("locale") as "en" | "hr"}`
-                    ] === selectedValue
-                  ) {
-                    setCountry(countryItem.code);
-                  }
-                });
+                setCountry(value);
               }}
-              filterOption={(inputValue, option) => {
-                if (option?.value === undefined) return false;
-                return (
-                  option?.name
-                    .toUpperCase()
-                    .indexOf(inputValue.toUpperCase()) !== -1
-                );
-              }}
+              filterOption={(inputValue, option) =>
+                option?.label
+                  .toUpperCase()
+                  .indexOf(inputValue.toUpperCase()) !== -1
+              }
               placeholder="E.g. United States"
             />
           </label>

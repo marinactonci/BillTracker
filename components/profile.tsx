@@ -26,12 +26,11 @@ function Profile({ profile, onChange }: ProfileProps) {
   const [api, contextHolder] = notification.useNotification();
 
   useEffect(() => {
-    const locale = localStorage.getItem("locale") as "en" | "hr";
     const selectedCountry = countries.find(
       (country) => country.code === profile.country
     );
     if (selectedCountry) {
-      setDefaultValue(selectedCountry[`name_${locale}`]);
+      setDefaultValue(selectedCountry.name_en);
     }
     setName(profile.name);
     setStreet(profile.street);
@@ -100,12 +99,7 @@ function Profile({ profile, onChange }: ProfileProps) {
             <PushpinOutlined />
             <p className=" text-zinc-500">
               {profile.street}, {profile.city},{" "}
-              {countries.map((countryItem) => {
-                if (countryItem.code === profile.country) {
-                  const locale = localStorage.getItem("locale") as "en" | "hr";
-                  return countryItem[`name_${locale}`];
-                }
-              })}
+              {countries.find((countryItem) => countryItem.code === profile.country)?.name_en}
             </p>
           </div>
           <div className="flex justify-end items-center gap-2">
@@ -174,42 +168,18 @@ function Profile({ profile, onChange }: ProfileProps) {
             <span className="text-gray-700">Country</span>
             <AutoComplete
               allowClear
-              defaultValue={defaultValue}
-              options={countries.map((country) => {
-                return {
-                  value:
-                    country[
-                      `name_${localStorage.getItem("locale") as "en" | "hr"}`
-                    ],
-                  name: country[
-                    `name_${localStorage.getItem("locale") as "en" | "hr"}`
-                  ],
-                  label:
-                    country[
-                      `name_${localStorage.getItem("locale") as "en" | "hr"}`
-                    ],
-                };
-              })}
+              value={defaultValue}
+              options={countries.map((country) => ({
+                value: country.code,
+                label: country.name_en,
+              }))}
               onChange={(value) => {
-                const selectedValue = Array.isArray(value) ? value[0] : value;
-                countries.forEach((countryItem) => {
-                  if (
-                    countryItem[
-                      `name_${localStorage.getItem("locale") as "en" | "hr"}`
-                    ] === selectedValue
-                  ) {
-                    setCountry(countryItem.code);
-                  }
-                });
+                setCountry(value);
+                setDefaultValue(countries.find(c => c.code === value)?.name_en || '');
               }}
-              filterOption={(inputValue, option) => {
-                if (option?.value === undefined) return false;
-                return (
-                  option?.name
-                    .toUpperCase()
-                    .indexOf(inputValue.toUpperCase()) !== -1
-                );
-              }}
+              filterOption={(inputValue, option) =>
+                option?.label.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+              }
               placeholder="E.g. United States"
             />
           </label>

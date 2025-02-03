@@ -96,8 +96,8 @@ function Bill({ bill, onChange }: BillProps) {
   return (
     <>
       {contextHolder}
-      <div className="flex flex-col p-6 gap-3 border rounded-lg">
-        <div className="flex flex-col gap-6 justify-between">
+      <div className="flex flex-col justify-between h-full p-6 gap-3 border rounded-lg">
+        <div className="flex flex-col gap-6 h-full justify-between">
           <h1 className="text-2xl font-bold">{bill.name}</h1>
           <div className="flex flex-col gap-2">
             {bill.link && (

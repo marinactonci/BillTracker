@@ -25,6 +25,8 @@ function Navbar() {
   const links = [
     { name: "Home", to: "/" },
     { name: "Dashboard", to: "/dashboard" },
+    { name: "Analytics", to: "/analytics" },
+    { name: "Recommendations", to: "/recommendations"},
     { name: "Calendar", to: "/calendar" },
     { name: "Profiles", to: "/profiles" },
     { name: "Bills", to: "/bills" },
