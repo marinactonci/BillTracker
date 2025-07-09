@@ -208,3 +208,11 @@ This project has evolved into **[Fiskalio](https://github.com/marinactonci/Fiska
 ## 📄 License
 
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+--
+
+## 🔗 Links
+
+- **Live Demo**: [https://fiskalio.vercel.app](https://rachuni.vercel.app)
+- **Portfolio**: [https://www.marinactonci.com/](https://www.marinactonci.com/)
+- **LinkedIn**: [https://www.linkedin.com/in/marinactonci/](https://www.linkedin.com/in/marinactonci/)
